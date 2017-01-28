@@ -28,7 +28,7 @@ public class SinglePlayerActivity extends MainActivity {
                     for (int column = 0; column < board.length; column++) {
 
                         //board[row][column] = (char)('A' + (int)(Math.random()*26));
-                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
+                        board[row][column] = letterdist.charAt((int)(Math.random()*(letterdist.length()-1)));
                     }
                 }
                 // 1st row
