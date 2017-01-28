@@ -33,23 +33,6 @@
         android:layout_alignStart="@+id/button_single_player_mode"
         android:layout_marginTop="119dp"
         android:id="@+id/button_double_player_mode" />
-</RelativeLayout>
 
-        android:text="Hello World!" />
-
-
-</LinearLayout>
-
-
-
-    <Button
-        android:text="Double Player Mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button_single_player_mode"
-        android:layout_alignLeft="@+id/button_single_player_mode"
-        android:layout_alignStart="@+id/button_single_player_mode"
-        android:layout_marginTop="119dp"
-        android:id="@+id/button_double_player_mode" />
 </RelativeLayout>
 
