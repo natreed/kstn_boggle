@@ -23,9 +23,12 @@ public class SinglePlayerActivity extends MainActivity {
                 // Perform action on click
                 // BoggleBoard();
                 board = new char[4][4];
+                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
                 for (int row = 0; row < board.length; row++) {
                     for (int column = 0; column < board.length; column++) {
-                        board[row][column] = (char)('A' + (int)(Math.random()*26));
+
+                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
+                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
                     }
                 }
                 // 1st row
