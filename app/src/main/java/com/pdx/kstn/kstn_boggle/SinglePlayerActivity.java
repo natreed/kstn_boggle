@@ -17,6 +17,7 @@ public class SinglePlayerActivity extends MainActivity {
 
 
 
+
         final Button shake = (Button) findViewById(R.id.shake);
         shake.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
