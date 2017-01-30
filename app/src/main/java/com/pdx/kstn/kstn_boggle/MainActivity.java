@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
         final Button single_player_mode = (Button) findViewById(R.id.button_single_player_mode);
         final Button double_player_mode = (Button) findViewById(R.id.button_double_player_mode);
 
+        System.out.print("Hello hello\n");
+
         single_player_mode.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click

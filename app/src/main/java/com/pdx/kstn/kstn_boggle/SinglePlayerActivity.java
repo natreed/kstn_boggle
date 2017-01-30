@@ -1,8 +1,11 @@
 package com.pdx.kstn.kstn_boggle;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.InputStream;
 
 /**
  * Created by Sharmistha on 1/27/2017.
@@ -23,6 +26,20 @@ public class SinglePlayerActivity extends MainActivity {
             public void onClick(View v) {
                 // Perform action on click
                 // BoggleBoard();
+
+                try {
+                    Resources res = getResources();
+                    InputStream ins = res.openRawResource(R.raw.dictionary);
+                    Dictionary dic = new Dictionary();
+                    dic.createDictionary(ins);
+
+                    System.out.print("Come here!\n");
+                } catch (Exception e) {
+
+                }
+
+                System.out.print("Hello World!");
+
                 board = new char[4][4];
                 String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
                 for (int row = 0; row < board.length; row++) {
