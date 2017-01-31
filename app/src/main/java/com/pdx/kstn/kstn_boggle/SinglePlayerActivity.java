@@ -34,6 +34,15 @@ public class SinglePlayerActivity extends MainActivity {
                     dic.createDictionary(ins);
 
                     System.out.print("Come here!\n");
+
+                    if (dic.isValidWord("student"))
+                        System.out.printf("student is in dictionary\n");
+
+                    if (dic.isValidWord("school"))
+                        System.out.print("school is in dictionary\n");
+
+
+
                 } catch (Exception e) {
 
                 }

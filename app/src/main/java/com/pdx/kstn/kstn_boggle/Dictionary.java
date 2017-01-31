@@ -10,16 +10,6 @@ import java.io.InputStreamReader;
 
 public class Dictionary {
 
-     class Node {
-        Node[] links;
-        boolean isWord;
-
-        public Node() {
-            this.isWord = false;
-            this.links = new Node[26];
-        }
-    }
-
     private Node root;
 
     public Dictionary() {
@@ -64,7 +54,6 @@ public class Dictionary {
 
         return current;
     }
-
 
     public void createDictionary(InputStream in) throws Exception{
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
