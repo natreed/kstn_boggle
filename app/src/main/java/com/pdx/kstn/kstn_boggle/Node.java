@@ -14,16 +14,4 @@ public class Node {
         this.links = new Node[26];
     }
 
-    /**
-     *
-     * @param letterIndex
-     * @param node
-     * @return
-     */
-    static public Node findNextNode(int letterIndex, Node node) {
-        if (node.links[letterIndex] != null)
-            return node.links[letterIndex];
-
-        return null;
-    }
 }

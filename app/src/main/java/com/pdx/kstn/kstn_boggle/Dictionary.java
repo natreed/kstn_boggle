@@ -3,6 +3,7 @@ package com.pdx.kstn.kstn_boggle;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  * Created by thanhhoang on 1/28/17.
@@ -11,6 +12,7 @@ import java.io.InputStreamReader;
 public class Dictionary {
 
     private Node root;
+    public ArrayList<String> listWord;
 
     public Dictionary() {
         this.root = new Node();
@@ -18,6 +20,7 @@ public class Dictionary {
 
     private void insert(String word) {
         if (word.length() < 3) return;
+
         Node current = root;
         for (int i = 0; i < word.length(); i++) {
             char letter = word.charAt(i);
@@ -53,6 +56,22 @@ public class Dictionary {
         if (current == root) return null;
 
         return current;
+    }
+
+    public Node getRootDictionary() {
+        return root;
+    }
+
+    static public Node nextNode(String word, Node currentNode) {
+        if (currentNode == null) return null;
+        for (int i = 0; i < word.length(); i++) {
+            char letter = word.charAt(i);
+            int index = letter - 'a';
+
+            if (currentNode.links[index] == null) return null;
+            else currentNode = currentNode.links[index];
+        }
+        return currentNode;
     }
 
     public void createDictionary(InputStream in) throws Exception{
