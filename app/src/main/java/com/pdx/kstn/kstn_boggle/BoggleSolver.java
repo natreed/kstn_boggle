@@ -7,7 +7,6 @@ import java.util.ArrayList;
  */
 
 public class BoggleSolver {
-    //private String board[][] = new String[4][4];
     static int[] row = {0, 0, 1, 1, 1, -1, -1, -1};
     static int[] col = {1, -1, 0, 1, -1, 0, 1, -1};
     static private boolean[][] visited_ = new boolean[][] {
@@ -17,53 +16,54 @@ public class BoggleSolver {
             { false, false, false, false}
     };
 
+    static boolean[][] initVisited() {
+        boolean[][] visisted = new boolean[][] {
+                { false, false, false, false},
+                { false, false, false, false},
+                { false, false, false, false},
+                { false, false, false, false}
+        };
+        return visisted;
+    }
 
-    static public void findWords(char[][] board, boolean[][] visited, int i, int j,
-                                 Node current, String word, ArrayList<String> list) {
-        if (visited[i][j] == true)      // stop checking if this block is visited
-            return;
+     static public ArrayList<String> solver(char[][] board, Dictionary dictionary) {
+         ArrayList<String> listWords = new ArrayList<String>();
+         boolean flag = false;
+         Node current = dictionary.getRootDictionary();
+         boolean[][] visited = visited_;
 
-        visited[i][j] = true;
+         String str = "";
 
-        String str = Character.toString(board[i][j]);
-        if (board[i][j] == 'q')
-            str = "qu";             // special case in dictionary
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                ArrayList<String> list = new ArrayList<String>();
 
-        current = Dictionary.nextNode(str, current);
-        word += str;
+                findWords(dictionary, board, visited, i, j, str, list);
 
-        if (current != null) {
-            if (current.isWord == true)
-                list.add(word);
-
-            // check adjacent bock
-            for (int w = 0; w < 8; w++) {
-                int k = i + row[w];
-                int l = j + col[w];
-
-                if (k < 0 || l < 0 || k > 3 || l > 3)
-                    break;
-
-                findWords(board, visited, k, l, current, word, list);
+                for (String word: list) {
+                    if (!listWords.contains(word))
+                        listWords.add(word);
+                }
             }
         }
 
-        return;
+        return listWords;
     }
 
-    static public ArrayList<String> solver(char[][] board, Dictionary dictionary) {
-        ArrayList<String> listWords = new ArrayList<String>();
-        boolean flag = false;
-        boolean[][] visited = visited_;
-        Node current = dictionary.getRootDictionary();
+    private static void findWords(Dictionary dictionary, char[][] board, boolean[][] visited, int i, int j, String word, ArrayList<String> list) {
+        visited[i][j] = true;
+        word = word + Character.toString(board[i][j]);
 
-        String str = "";
+        if (dictionary.isWord(word))
+            list.add(word);
 
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-                findWords(board, visited, i, j, current, str, listWords);
+        for (int row=i-1; row<=i+1 && row<4; row++)
+            for (int col=j-1; col<=j+1 && col<4; col++)
+                if (row>=0 && col>=0 && !visited[row][col])
+                    findWords(dictionary, board, visited, row, col, word, list);
 
-        return listWords;
+        word.substring(0, word.length()-1);
+        visited[i][j] = false;
     }
 
 }

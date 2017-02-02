@@ -18,7 +18,7 @@ public class Dictionary {
         this.root = new Node();
     }
 
-    private void insert(String word) {
+    public void insert(String word) {
         if (word.length() < 3) return;
 
         Node current = root;
@@ -37,7 +37,7 @@ public class Dictionary {
         current.isWord = true;
     }
 
-    public boolean isValidWord(String word) {
+    public boolean isWord(String word) {
         Node current = searchNode(word);
         if (current != null && current.isWord == true)
             return true;
@@ -62,7 +62,8 @@ public class Dictionary {
         return root;
     }
 
-    static public Node nextNode(String word, Node currentNode) {
+    static public Node nextNode(String word, Node node) {
+        Node currentNode = node;
         if (currentNode == null) return null;
         for (int i = 0; i < word.length(); i++) {
             char letter = word.charAt(i);
