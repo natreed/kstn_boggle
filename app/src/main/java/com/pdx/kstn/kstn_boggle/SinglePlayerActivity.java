@@ -29,6 +29,7 @@ public class SinglePlayerActivity extends MainActivity {
                 // BoggleBoard();
 
 
+
 //                board = new char[4][4];
 //                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
 //                for (int row = 0; row < board.length; row++) {
@@ -82,6 +83,10 @@ public class SinglePlayerActivity extends MainActivity {
                     for (int i = 0; i < words.length; i++) {
                         if (dic.isWord(words[i]) == false)
                             System.out.println(words[i] + ": not found");
+
+                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
+                        board[row][column] = letterdist.charAt((int)(Math.random()*(letterdist.length()-1)));
+
                     }
 
                     long start = System.currentTimeMillis();
