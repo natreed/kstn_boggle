@@ -16,16 +16,6 @@ public class BoggleSolver {
             { false, false, false, false}
     };
 
-    static boolean[][] initVisited() {
-        boolean[][] visisted = new boolean[][] {
-                { false, false, false, false},
-                { false, false, false, false},
-                { false, false, false, false},
-                { false, false, false, false}
-        };
-        return visisted;
-    }
-
      static public ArrayList<String> solver(char[][] board, Dictionary dictionary) {
          ArrayList<String> listWords = new ArrayList<String>();
          boolean flag = false;

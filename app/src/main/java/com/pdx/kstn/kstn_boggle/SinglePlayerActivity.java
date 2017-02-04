@@ -28,61 +28,20 @@ public class SinglePlayerActivity extends MainActivity {
                 // Perform action on click
                 // BoggleBoard();
 
+                board = new char[4][4];
+                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
+                for (int row = 0; row < board.length; row++) {
+                    for (int column = 0; column < board.length; column++) {
+                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
+                    }
+                }
 
-//                board = new char[4][4];
-//                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
-//                for (int row = 0; row < board.length; row++) {
-//                    for (int column = 0; column < board.length; column++) {
-//
-//                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
-//                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
-//                    }
-//                }
-
-                board = new char[][] {
-                        {'w', 'a', 't', 'd'},
-                        {'m', 'e', 'j', 't'},
-                        {'h', 'n', 't', 'i'},
-                        {'c', 'l', 'l', 'p'}
-                };
 
                 try {
                     Resources res = getResources();
                     InputStream ins = res.openRawResource(R.raw.dictionary);
                     Dictionary dic = new Dictionary();
                     dic.createDictionary(ins);
-
-                    System.out.print("Come here!\n");
-
-                    if (dic.isWord("student"))
-                        System.out.printf("student is in dictionary\n");
-
-                    if (dic.isWord("school"))
-                        System.out.print("school is in dictionary\n");
-
-                    String[] words = new String []{
-                            "amen", "ament", "ate", "awe", "cheat", "chew",
-                            "eat",  "eta", "heat", "hem", "hen", "hent",
-                            "het", "hew", "ill", "item", "jam", "jaw",
-                             "jet", "jew", "jill", "jilt", "lip", "lit",
-                            "lite", "litten", "mae", "mat", "mate", "matt",
-                            "maw", "meat", "men", "met", "meta", "mew",
-                            "neat", "nema", "net", "nett", "new" , "pill",
-                            "pit" ,   "tae" , "taj" , "tam", "tame" , "taw",
-                            "tea" , "team", "teat" , "ten", "tench" , "tent",
-                            "tet", "tew", "til" , "till", "tilt" , "tip",
-                            "tit", "wae" , "wame" , "wat" , "wate" , "watt",
-                             "wen" , "wench" , "went" , "wet"
-                    };
-
-//                    for (int i = 0; i < words.length; i++)
-//                        dic.insert(words[i]);
-
-
-                    for (int i = 0; i < words.length; i++) {
-                        if (dic.isWord(words[i]) == false)
-                            System.out.println(words[i] + ": not found");
-                    }
 
                     long start = System.currentTimeMillis();
                     ArrayList<String> list = BoggleSolver.solver(board, dic);
