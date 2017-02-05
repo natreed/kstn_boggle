@@ -15,7 +15,7 @@
     <string name="score">Score</string>
     <string name="words_found">Words Found</string>
     <string name ="dialog_message">Hello world</string>
-    <string name ="dialog_title">Difficulty Level</string>
+    <string name ="dialog_title">Choose Your Difficulty Level</string>
 
     <string name ="ok">Okay</string>
     <string name ="cancel">Cancel</string>
