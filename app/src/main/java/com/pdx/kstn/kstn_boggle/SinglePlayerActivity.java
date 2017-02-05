@@ -79,15 +79,15 @@ public class SinglePlayerActivity extends MainActivity {
 //                    for (int i = 0; i < words.length; i++)
 //                        dic.insert(words[i]);
 
-
-                    for (int i = 0; i < words.length; i++) {
-                        if (dic.isWord(words[i]) == false)
-                            System.out.println(words[i] + ": not found");
-
-                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
-                        board[row][column] = letterdist.charAt((int)(Math.random()*(letterdist.length()-1)));
-
-                    }
+//
+//                    for (int i = 0; i < words.length; i++) {
+//                        if (dic.isWord(words[i]) == false)
+//                            System.out.println(words[i] + ": not found");
+//
+//                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
+//                        board[row][column] = letterdist.charAt((int)(Math.random()*(letterdist.length()-1)));
+//
+//                    }
 
                     long start = System.currentTimeMillis();
                     ArrayList<String> list = BoggleSolver.solver(board, dic);
