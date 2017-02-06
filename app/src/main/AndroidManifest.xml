@@ -19,6 +19,15 @@
         <activity
             android:name=".SinglePlayerActivity"
              />
+        <activity
+            android:name=".RulesActivity"
+            />
+        <activity
+            android:name=".PlayerActivity"
+            />
+        <activity
+            android:name="ScoresActivity"
+            />
     </application>
 
 </manifest>

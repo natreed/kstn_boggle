@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/boggle_background"
     android:weightSum="1"
-    android:id="@+id/button_playGame">
+    android:id="@+id/mainscreen_layout">
 
     <TextView
         android:text="BOGGLE"

@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:text="BOGGLE RULES"
+        android:text="@string/text_rules"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/header_rules"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:gravity="center_horizontal" />
+        android:layout_height="@android:dimen/app_icon_size"
+        android:id="@+id/gameTitle"
+        android:gravity="center_vertical|center_horizontal"
+        android:textSize="40sp"
+        android:textColorLink="@android:color/background_dark"
+        android:fadingEdge="horizontal"
+        android:textStyle="normal|bold"
+        android:textColor="@android:color/background_dark"
+        android:background="@android:color/holo_blue_light" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="365dp"
+        android:scrollbars="vertical"
+        android:fillViewport="true"
+        android:layout_weight="0.10">
+
+
+        <TextView
+            android:text="@string/text_rules_paragraph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2"
+            android:textColor="@android:color/black"
+            android:background="@android:color/holo_blue_light" />
+    </ScrollView>
+
+
+    <Button
+        android:text="@string/button_exit"
+        android:background="@drawable/button_blue_bordered"
+        android:layout_width="@android:dimen/thumbnail_width"
+        android:layout_height="@android:dimen/notification_large_icon_width"
+        android:id="@+id/button_return"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@android:dimen/app_icon_size" />
+
 </LinearLayout>
