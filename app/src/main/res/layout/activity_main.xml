@@ -17,8 +17,9 @@
         android:scaleType="centerCrop"
         android:src="@drawable/choose_mode" />
 
+    <!--android:text="1 Player"-->
     <Button
-        android:text="1 Player"
+
         android:textColor="@android:color/white"
         android:textAllCaps="false"
         android:layout_width="wrap_content"
@@ -26,12 +27,12 @@
 
 
         android:layout_centerInParent="true"
-        android:background="@android:color/darker_gray"
+        android:background="@drawable/onepbtn"
         android:id="@+id/button_single_player_mode" />
 
-
+    <!--android:text="2 Players"-->
     <Button
-        android:text="2 Players"
+
         android:textColor="@android:color/white"
         android:textAllCaps="false"
         android:layout_width="wrap_content"
@@ -40,7 +41,7 @@
         android:layout_alignLeft="@+id/button_single_player_mode"
         android:layout_alignStart="@+id/button_single_player_mode"
         android:layout_marginTop="50dp"
-        android:background="@android:color/darker_gray"
+        android:background="@drawable/twopbtn"
         android:id="@+id/button_double_player_mode" />
 
 </RelativeLayout>
