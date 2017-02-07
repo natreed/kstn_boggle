@@ -3,6 +3,8 @@ package com.pdx.kstn.kstn_boggle;
 import android.widget.ListView;
 import android.content.res.Resources;
 
+import java.io.FileOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -21,8 +23,7 @@ public class HighScore {
 
     public void loadScores() {
         // load scores from text file
-        Resources res = getResources();
-        Scanner s = new Scanner(res.openRawResource(R.raw.scores));
+        Scanner s = new Scanner(("res/raw/scores.txt"));
         scores = new ArrayList<Tuple>();
         String tempString;
         Integer tempInt;
@@ -40,11 +41,11 @@ public class HighScore {
     //Check list of scores and update if new high score is available
     public boolean updateScore(String name, int score) {
         Integer newScore = score;
-        Iterator<Tuple> tupleListIterator = scores.iterator();
-        while(tupleListIterator.hasNext()) {
-            Tuple<String, Integer> entry = tupleListIterator.next();
+        Iterator<Tuple> tupleIterator = scores.iterator();
+        while(tupleIterator.hasNext()) {
+            Tuple<String, Integer> entry = tupleIterator.next();
             if(entry.getScore() < newScore) {
-                tupleListIterator.remove();
+                tupleIterator.remove();
                 scores.add(new Tuple(name, score));
                 return true;
             }
@@ -56,14 +57,24 @@ public class HighScore {
         return false;
     }
 
+    //write the scores back to the file
+    // format is name: score\n
     private void writeBack() {
         try {
-            Resources res = getResources();
-            Scanner s = new Scanner(res.openRawResource(R.raw.scores));
+            File file = new File("res/raw/scores.txt");
+            FileOutputStream fos = new FileOutputStream(file, false);
+            Iterator<Tuple> tupleIterator = scores.iterator();
+            while(tupleIterator.hasNext()) {
+                Tuple<String, Integer> current = tupleIterator.next();
+                String tempString = current.getName();
+                Integer tempInt = current.getScore();
+                tempString = tempString + ": " + tempInt.toString() +"\n";
+                byte[] content = tempString.getBytes();
+                fos.write(content);
+            }
         } catch (Exception e) {
 
         }
-
         return;
     }
 }
