@@ -4,6 +4,7 @@ import android.widget.ListView;
 import android.content.res.Resources;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -19,8 +20,7 @@ public class HighScore {
     }
 
     public void loadScores() {
-        // load scores from text file, update if player reaches new high scores
-        // and update text file
+        // load scores from text file
         Resources res = getResources();
         Scanner s = new Scanner(res.openRawResource(R.raw.scores));
         scores = new ArrayList<Tuple>();
@@ -34,13 +34,36 @@ public class HighScore {
             tempInt = s.nextInt();
             scores.add(new Tuple(tempString, tempInt));
         }
+        s.close();
     }
 
-    public boolean updateScore(int score) {
+    //Check list of scores and update if new high score is available
+    public boolean updateScore(String name, int score) {
+        Integer newScore = score;
+        Iterator<Tuple> tupleListIterator = scores.iterator();
+        while(tupleListIterator.hasNext()) {
+            Tuple<String, Integer> entry = tupleListIterator.next();
+            if(entry.getScore() < newScore) {
+                tupleListIterator.remove();
+                scores.add(new Tuple(name, score));
+                return true;
+            }
+            if(entry.getScore() == newScore) {
+                scores.add(new Tuple(name, score));
+                return true;
+            }
+        }
         return false;
     }
 
     private void writeBack() {
+        try {
+            Resources res = getResources();
+            Scanner s = new Scanner(res.openRawResource(R.raw.scores));
+        } catch (Exception e) {
+
+        }
+
         return;
     }
 }
