@@ -349,24 +349,45 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/round"
-                android:text="ROUND:"
-                android:paddingRight="10dp"
-                android:gravity="center_horizontal"
-                android:paddingLeft="10dp" />
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:text="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/roundCount"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/round"
+                            android:text="ROUND:"
+                            android:paddingRight="10dp"
+                            android:gravity="center_horizontal"
+                            android:paddingLeft="10dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:text="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/roundCount"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                </TableRow>
+
+            </TableLayout>
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -417,7 +438,7 @@
 
                         <ListView
                             android:layout_width="99dp"
-                            android:layout_height="103dp"
+                            android:layout_height="match_parent"
                             android:id="@+id/list_foundWords"/>
                     </LinearLayout>
 
