@@ -4,7 +4,10 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -15,6 +18,9 @@ import java.util.ArrayList;
  */
 public class PlayerActivity extends MainActivity {
     char[][] board;
+    boolean isCounterRunning = false;
+    public CountDownTimer timer = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +28,15 @@ public class PlayerActivity extends MainActivity {
         setContentView(R.layout.player_activity);
 
 
+        //string to test listview
+        String[] cars = {"dodge", "chevy", "toyota", "subaru", "hyundai", "nissan"};
+        ArrayAdapter<String> carsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cars);
+        ListView carsList = (ListView) findViewById(R.id.list_foundWords);
+        carsList.setAdapter(carsAdapter);
+
         final Button button_shake = (Button) findViewById(R.id.shake);
         final Button button_new_game = (Button) findViewById(R.id.button_new_game);
+        final TextView timer_text = (TextView) findViewById(R.id.time_remaining);
 
         button_new_game.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,6 +50,20 @@ public class PlayerActivity extends MainActivity {
                 // Perform action on click
                 // BoggleBoard();
 
+                timer = new CountDownTimer(180000, 1000) {
+
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        timer_text.setText( millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        isCounterRunning = false;
+                    }
+                };
+
+
                 board = new char[4][4];
                 String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
                 for (int row = 0; row < board.length; row++) {
@@ -47,68 +74,41 @@ public class PlayerActivity extends MainActivity {
                     }
                 }
 
-                // 1st row
-                Button button0 = (Button) findViewById(R.id.button0);
-                button0.setText(String.valueOf(board[0][0]));
-
-                Button button1 = (Button) findViewById(R.id.button1);
-                button1.setText(String.valueOf(board[0][1]));
-
-                Button button2 = (Button) findViewById(R.id.button2);
-                button2.setText(String.valueOf(board[0][2]));
-
-                Button button3 = (Button) findViewById(R.id.button3);
-                button3.setText(String.valueOf(board[0][3]));
-                //2nd row
-                Button button4 = (Button) findViewById(R.id.button4);
-                button4.setText(String.valueOf(board[1][0]));
-
-                Button button5 = (Button) findViewById(R.id.button5);
-                button5.setText(String.valueOf(board[1][1]));
-
-                Button button6 = (Button) findViewById(R.id.button6);
-                button6.setText(String.valueOf(board[1][2]));
-
-                Button button7 = (Button) findViewById(R.id.button7);
-                button7.setText(String.valueOf(board[1][3]));
-
-                //3rd row
-                Button button8 = (Button) findViewById(R.id.button8);
-                button8.setText(String.valueOf(board[2][0]));
-
-                Button button9 = (Button) findViewById(R.id.button9);
-                button9.setText(String.valueOf(board[2][1]));
-
-                Button button10 = (Button) findViewById(R.id.button10);
-                button10.setText(String.valueOf(board[2][2]));
-
-                Button button11 = (Button) findViewById(R.id.button11);
-                button11.setText(String.valueOf(board[2][3]));
-
-                //4th row
-                Button button12 = (Button) findViewById(R.id.button12);
-                button12.setText(String.valueOf(board[3][0]));
-
-                Button button13 = (Button) findViewById(R.id.button13);
-                button13.setText(String.valueOf(board[3][1]));
-
-                Button button14 = (Button) findViewById(R.id.button14);
-                button14.setText(String.valueOf(board[3][2]));
-
-                Button button15 = (Button) findViewById(R.id.button15);
-                button15.setText(String.valueOf(board[3][3]));
+                Button BoardButton[] = new Button[16];
+                BoardButton[0] = (Button) findViewById(R.id.button0);
+                BoardButton[1] = (Button) findViewById(R.id.button1);
+                BoardButton[2] = (Button) findViewById(R.id.button2);
+                BoardButton[3] = (Button) findViewById(R.id.button3);
+                BoardButton[4] = (Button) findViewById(R.id.button4);
+                BoardButton[5] = (Button) findViewById(R.id.button5);
+                BoardButton[6] = (Button) findViewById(R.id.button6);
+                BoardButton[7] = (Button) findViewById(R.id.button7);
+                BoardButton[8] = (Button) findViewById(R.id.button8);
+                BoardButton[9] = (Button) findViewById(R.id.button9);
+                BoardButton[10] = (Button) findViewById(R.id.button10);
+                BoardButton[11] = (Button) findViewById(R.id.button11);
+                BoardButton[12] = (Button) findViewById(R.id.button12);
+                BoardButton[13] = (Button) findViewById(R.id.button13);
+                BoardButton[14] = (Button) findViewById(R.id.button14);
+                BoardButton[15] = (Button) findViewById(R.id.button15);
 
 
-                final TextView timer_text = (TextView) findViewById(R.id.timer);
-
-                new CountDownTimer(180000, 1000) {
-                    public void onTick(long millisUntilFinished) {
-                        timer_text.setText("seconds remaining: " + millisUntilFinished / 1000);
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        int ButtonNum = i*4 + j;
+                        BoardButton[ButtonNum].setText(String.valueOf(board[i][j]));
                     }
-                    public void onFinish() {
-                        timer_text.setText("done!");
-                    }
-                }.start();
+                }
+
+               if (!isCounterRunning) {
+                   isCounterRunning = true;
+                   timer.start();
+               }
+               else {
+                   timer.cancel();
+                   timer.start();
+               }
+
             }
         });
     }
