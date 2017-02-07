@@ -30,22 +30,22 @@ public class SinglePlayerActivity extends MainActivity {
 
 
 
-//                board = new char[4][4];
-//                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
-//                for (int row = 0; row < board.length; row++) {
-//                    for (int column = 0; column < board.length; column++) {
-//
-//                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
-//                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
-//                    }
-//                }
+                board = new char[4][4];
+                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
+                for (int row = 0; row < board.length; row++) {
+                    for (int column = 0; column < board.length; column++) {
 
-                board = new char[][] {
-                        {'w', 'a', 't', 'd'},
-                        {'m', 'e', 'j', 't'},
-                        {'h', 'n', 't', 'i'},
-                        {'c', 'l', 'l', 'p'}
-                };
+                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
+                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
+                    }
+                }
+
+//                board = new char[][] {
+//                        {'w', 'a', 't', 'd'},
+//                        {'m', 'e', 'j', 't'},
+//                        {'h', 'n', 't', 'i'},
+//                        {'c', 'l', 'l', 'p'}
+//                };
 
                 try {
                     Resources res = getResources();
