@@ -2,6 +2,7 @@ package com.pdx.kstn.kstn_boggle;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,9 +32,7 @@ public class ChooseModeMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Perform action on click
                 // Start NewActivity.class
-//                Intent myIntent = new Intent(getApplicationContext(),
-//                        SinglePlayerActivity.class);
-//                startActivity(myIntent);
+               //startActivity(myIntent);
                 //Source of the data in the DIalog
                 CharSequence[] difficultylevel = {"Easy","Medium","Hard"};
 
@@ -57,7 +56,9 @@ public class ChooseModeMainActivity extends AppCompatActivity {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 // User clicked OK, so save the mSelectedItems results somewhere
                                                 // or return them to the component that opened the dialog
-
+                                                Intent myIntent = new Intent(getApplicationContext(),
+                                                PlayerActivity.class);
+                                                startActivity(myIntent);
                                             }
                                         })
                                                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
