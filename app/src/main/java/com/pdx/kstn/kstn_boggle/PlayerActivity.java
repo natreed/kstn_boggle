@@ -97,6 +97,12 @@ public class PlayerActivity extends MainActivity {
                     for (int j = 0; j < 4; j++) {
                         int ButtonNum = i*4 + j;
                         BoardButton[ButtonNum].setText(String.valueOf(board[i][j]));
+                        BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
                     }
                 }
 
