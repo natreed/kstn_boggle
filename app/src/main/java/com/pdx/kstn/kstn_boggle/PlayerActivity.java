@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.graphics.Color;
+import android.util.Log;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,12 +22,15 @@ public class PlayerActivity extends MainActivity {
     char[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
+    String foundWord = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
+        final String foundWord = "";
+        String [] solvedWordlist = null;
 
 
         //string to test listview
@@ -36,6 +41,7 @@ public class PlayerActivity extends MainActivity {
 
         final Button button_shake = (Button) findViewById(R.id.shake);
         final Button button_new_game = (Button) findViewById(R.id.button_new_game);
+        final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
         final TextView timer_text = (TextView) findViewById(R.id.time_remaining);
 
         button_new_game.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +80,7 @@ public class PlayerActivity extends MainActivity {
                     }
                 }
 
-                Button BoardButton[] = new Button[16];
+                final Button BoardButton[] = new Button[16];
                 BoardButton[0] = (Button) findViewById(R.id.button0);
                 BoardButton[1] = (Button) findViewById(R.id.button1);
                 BoardButton[2] = (Button) findViewById(R.id.button2);
@@ -95,16 +101,32 @@ public class PlayerActivity extends MainActivity {
 
                 for (int i = 0; i < 4; i++) {
                     for (int j = 0; j < 4; j++) {
-                        int ButtonNum = i*4 + j;
+                        final int ButtonNum = i*4 + j;
+                        BoardButton[ButtonNum].setTextColor(Color.WHITE);
                         BoardButton[ButtonNum].setText(String.valueOf(board[i][j]));
                         BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
+                                BoardButton[ButtonNum].setBackgroundColor(Color.RED);
+                                PlayerActivity.this.foundWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
                             }
+
                         });
                     }
                 }
+
+                button_submit_word.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        if (isWord(foundWord) == 1) {
+
+                        }
+                        else {
+
+                        }
+                    }
+                });
+
 
                if (!isCounterRunning) {
                    isCounterRunning = true;
@@ -118,6 +140,14 @@ public class PlayerActivity extends MainActivity {
             }
         });
     }
+
+
+    //just a prototype
+    private int isWord(String word) {
+        return 2;
+    }
+
+
     private void BoggleBoard(){
 
     }
