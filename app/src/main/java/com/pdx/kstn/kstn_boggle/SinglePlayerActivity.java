@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by Sharmistha on 1/27/2017.
  */
-public class SinglePlayerActivity extends MainActivity {
+public class SinglePlayerActivity extends ChooseModeMainActivity {
     char[][] board;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
