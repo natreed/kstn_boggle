@@ -19,7 +19,10 @@
     <string name="button_rules">RULES</string>
     <string name="text_rules">BOGGLE RULES</string>
     <string name="button_exit">EXIT</string>
+    <string name="Ok">OK</string>
+    <string name="Cancel">cancel</string>
     <string name="text_rules_paragraph">
+
 \n\nBoggle is a popular word game for any number of players. In our version of Boggle you may choose single player or play against a friend.￼
 \n\nBoggle is played with a tray of 16 letter dice, which is shaken to get 16 random letters. In kstn_Boggle, the computer randomly generates this grid for you.
 \n\nPlayers have three minutes (shown by the countdown timer) to find as many words as they can in the grid, according to the following rules:
@@ -45,9 +48,4 @@
 \n\nYou will not be penalised for submitting the same word twice, but doing so will not increase your score. This may be helpful if you do not remember if you have already found a particular word; it is probably faster to type it again than to check your list.
 \n\nA good knowledge of anagrams will help. If you notice the letters S, T, O, and P arranged in a 2x2 square, you will be able to write not only stop but also opts, tops, spot, post, and pots, scoring a total of 6 points.
 </string>
-    <string-array name="foundWordsArray">
-        <item>Apple</item>
-        <item>Bear</item>
-        <item>Cat</item>
-    </string-array>
 </resources>
