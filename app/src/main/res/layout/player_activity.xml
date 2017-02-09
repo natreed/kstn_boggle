@@ -326,25 +326,28 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="0dp"
                 android:id="@+id/shake"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp"
+                android:layout_weight="1"/>
 
             <Button
                 android:text="Submit Word"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/button_submitWord"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp"
+                android:layout_weight="1"/>
 
             <Button
                 android:text="Next Round"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/button_nextRound"
                 android:paddingLeft="10dp"
-                android:paddingRight="5dp" />
+                android:paddingRight="5dp"
+                android:layout_weight="1"/>
         </TableRow>
 
         <TableRow
