@@ -34,8 +34,8 @@ public class PlayerActivity extends MainActivity {
 
 
         //string to test listview
-        String[] cars = {"dodge", "chevy", "toyota", "subaru", "hyundai", "nissan"};
-        ArrayAdapter<String> carsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cars);
+        String[] foundWords = null;
+        ArrayAdapter<String> carsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, foundWords);
         ListView carsList = (ListView) findViewById(R.id.list_foundWords);
         carsList.setAdapter(carsAdapter);
 
@@ -56,7 +56,7 @@ public class PlayerActivity extends MainActivity {
                 // Perform action on click
                 // BoggleBoard();
 
-                timer = new CountDownTimer(180000, 1000) {
+                PlayerActivity.this.timer = new CountDownTimer(180000, 1000) {
 
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -128,13 +128,14 @@ public class PlayerActivity extends MainActivity {
                 });
 
 
-               if (!isCounterRunning) {
+               if (isCounterRunning == false) {
+
                    isCounterRunning = true;
-                   timer.start();
+                   PlayerActivity.this.timer.start();
                }
                else {
-                   timer.cancel();
-                   timer.start();
+                   PlayerActivity.this.timer.cancel();
+                   PlayerActivity.this.timer.start();
                }
 
             }
