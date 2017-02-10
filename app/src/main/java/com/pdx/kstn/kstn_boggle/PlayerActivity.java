@@ -3,6 +3,11 @@ package com.pdx.kstn.kstn_boggle;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AlertDialogLayout;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,7 +29,6 @@ public class PlayerActivity extends MainActivity {
     public CountDownTimer timer = null;
     String foundWord = "";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,10 @@ public class PlayerActivity extends MainActivity {
         final String foundWord = "";
         String [] solvedWordlist = null;
 
+        // menu toolbar
+
+//        toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         //string to test listview
         String[] cars = {"dodge", "chevy", "toyota", "subaru", "hyundai", "nissan"};
@@ -141,6 +149,39 @@ public class PlayerActivity extends MainActivity {
         });
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.item_choose_game:
+                new AlertDialog.Builder(this)
+                        .setTitle("")
+                        .setMessage("Do you want to quit current game?")
+                        .setPositiveButton(android.R.string.yes, null)
+                        .setNegativeButton(android.R.string.no, null).show();
+
+                return true;
+
+            case R.id.item_high_score:
+                return true;
+
+            case R.id.item_instruction:
+                return true;
+
+            case R.id.item_about_us:
+
+                return true;
+
+        }
+        return true;
+    }
 
     //just a prototype
     private int isWord(String word) {
