@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 
 public class BoggleSolver {
+    static int MAX_LENGTH = 8;
     static int[] row = {0, 0, 1, 1, 1, -1, -1, -1};
     static int[] col = {1, -1, 0, 1, -1, 0, 1, -1};
     static private boolean[][] visited_ = new boolean[][] {
@@ -16,15 +17,6 @@ public class BoggleSolver {
             { false, false, false, false}
     };
 
-    static boolean[][] initVisited() {
-        boolean[][] visisted = new boolean[][] {
-                { false, false, false, false},
-                { false, false, false, false},
-                { false, false, false, false},
-                { false, false, false, false}
-        };
-        return visisted;
-    }
 
      static public ArrayList<String> solver(char[][] board, Dictionary dictionary) {
          ArrayList<String> listWords = new ArrayList<String>();
@@ -56,6 +48,12 @@ public class BoggleSolver {
 
         if (dictionary.isWord(word))
             list.add(word);
+
+        if (word.length() >= MAX_LENGTH) {
+            word.substring(0, word.length()-1) ;
+            visited[i][j] = false;
+            return;
+        }
 
         for (int row=i-1; row<=i+1 && row<4; row++)
             for (int col=j-1; col<=j+1 && col<4; col++)
