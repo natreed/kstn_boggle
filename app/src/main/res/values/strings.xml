@@ -19,8 +19,10 @@
     <string name="button_rules">RULES</string>
     <string name="text_rules">BOGGLE RULES</string>
     <string name="button_exit">EXIT</string>
-    <string name="Ok">OK</string>
-    <string name="Cancel">cancel</string>
+    <string name="ok">OK</string>
+    <string name="cancel">cancel</string>
+    <string name="dialog_title">Choose your difficulty</string>
+
     <string name="text_rules_paragraph">
 
 \n\nBoggle is a popular word game for any number of players. In our version of Boggle you may choose single player or play against a friend.￼
