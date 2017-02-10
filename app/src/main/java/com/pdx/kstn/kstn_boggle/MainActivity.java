@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
                 // Perform action on click
                 // Start NewActivity.class
                 Intent myIntent = new Intent(getApplicationContext(),
-                        PlayerActivity.class);
+                        ChooseModeMainActivity.class);
                 startActivity(myIntent);
             }
         });
