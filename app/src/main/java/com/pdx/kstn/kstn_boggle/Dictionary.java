@@ -75,14 +75,19 @@ public class Dictionary {
         return currentNode;
     }
 
-    public void createDictionary(InputStream in) throws Exception{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            insert(line);
+    public void createDictionary(InputStream in) {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                insert(line);
+            }
+            in.close();
+        } catch (Exception e) {
+
         }
-        in.close();
+
     }
 
 }
