@@ -31,6 +31,7 @@ public class PlayerActivity extends MainActivity {
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
     String foundWord = "";
+
     public Player player = new Player();
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
@@ -157,16 +158,17 @@ public class PlayerActivity extends MainActivity {
                     }
                 };
 
-
-                board = new char[4][4];
-                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
-                for (int row = 0; row < board.length; row++) {
-                    for (int column = 0; column < board.length; column++) {
-
-                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
-                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
-                    }
-                }
+                  BoardGenerate boardgenerate = new BoardGenerate();
+                  board =  boardgenerate.createNewBoard();
+//                board = new char[4][4];
+//                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
+//                for (int row = 0; row < board.length; row++) {
+//                    for (int column = 0; column < board.length; column++) {
+//
+//                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
+//                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
+//                    }
+//                }
 
 
 
