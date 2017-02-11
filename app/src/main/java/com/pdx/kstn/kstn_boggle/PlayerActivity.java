@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.graphics.Color;
 import android.util.Log;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -30,18 +31,98 @@ public class PlayerActivity extends MainActivity {
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
     String foundWord = "";
+    public Player player = new Player();
+    public Dictionary dictionary = new Dictionary();
+    public ArrayList<String> allValidWords = new ArrayList<String>();
+
+    public int pressCount = 0;
+    public int lastRow = 0;
+    public int lastCol = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
+
+        final Button BoardButton[] = new Button[16];
+        BoardButton[0] = (Button) findViewById(R.id.button0);
+        BoardButton[1] = (Button) findViewById(R.id.button1);
+        BoardButton[2] = (Button) findViewById(R.id.button2);
+        BoardButton[3] = (Button) findViewById(R.id.button3);
+        BoardButton[4] = (Button) findViewById(R.id.button4);
+        BoardButton[5] = (Button) findViewById(R.id.button5);
+        BoardButton[6] = (Button) findViewById(R.id.button6);
+        BoardButton[7] = (Button) findViewById(R.id.button7);
+        BoardButton[8] = (Button) findViewById(R.id.button8);
+        BoardButton[9] = (Button) findViewById(R.id.button9);
+        BoardButton[10] = (Button) findViewById(R.id.button10);
+        BoardButton[11] = (Button) findViewById(R.id.button11);
+        BoardButton[12] = (Button) findViewById(R.id.button12);
+        BoardButton[13] = (Button) findViewById(R.id.button13);
+        BoardButton[14] = (Button) findViewById(R.id.button14);
+        BoardButton[15] = (Button) findViewById(R.id.button15);
+
+        final Button button_shake = (Button) findViewById(R.id.shake);
+        final Button button_new_game = (Button) findViewById(R.id.button_new_game);
+        final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
+        final TextView timer_text = (TextView) findViewById(R.id.time_remaining);
+
+        // load dictionary file
+        try {
+            InputStream in = getResources().openRawResource(R.raw.dictionary);
+            dictionary.createDictionary(in);
+        } catch (Exception e) { }
+
+        //
+        board = BoardGenerate.createNewBoard();
+        allValidWords = BoggleSolver.solver(board, dictionary);
+
+        boolean[][] pressedButtons = new boolean[4][4];
+        initPressedButtons(pressedButtons);
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                final int ButtonNum = i*4 + j;
+                final int row = i;
+                final int col = j;
+                BoardButton[ButtonNum].setTextColor(Color.WHITE);
+                BoardButton[ButtonNum].setText(String.valueOf(board[i][j]));
+                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        boolean validClick = checkOnClick(row, col);
+
+                        if (validClick == false)
+                            resetBoardButtons(BoardButton);
+                        else {
+                            BoardButton[ButtonNum].setBackgroundColor(Color.RED);
+                            PlayerActivity.this.foundWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
+                        }
+                    }
+
+                });
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         final String foundWord = "";
         String [] solvedWordlist = null;
-
-        // menu toolbar
-
-//        toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         //string to test listview
         String[] cars = {"dodge", "chevy", "toyota", "subaru", "hyundai", "nissan"};
@@ -49,10 +130,7 @@ public class PlayerActivity extends MainActivity {
         ListView carsList = (ListView) findViewById(R.id.list_foundWords);
         carsList.setAdapter(carsAdapter);
 
-        final Button button_shake = (Button) findViewById(R.id.shake);
-        final Button button_new_game = (Button) findViewById(R.id.button_new_game);
-        final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
-        final TextView timer_text = (TextView) findViewById(R.id.time_remaining);
+
 
         button_new_game.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,23 +168,6 @@ public class PlayerActivity extends MainActivity {
                     }
                 }
 
-                final Button BoardButton[] = new Button[16];
-                BoardButton[0] = (Button) findViewById(R.id.button0);
-                BoardButton[1] = (Button) findViewById(R.id.button1);
-                BoardButton[2] = (Button) findViewById(R.id.button2);
-                BoardButton[3] = (Button) findViewById(R.id.button3);
-                BoardButton[4] = (Button) findViewById(R.id.button4);
-                BoardButton[5] = (Button) findViewById(R.id.button5);
-                BoardButton[6] = (Button) findViewById(R.id.button6);
-                BoardButton[7] = (Button) findViewById(R.id.button7);
-                BoardButton[8] = (Button) findViewById(R.id.button8);
-                BoardButton[9] = (Button) findViewById(R.id.button9);
-                BoardButton[10] = (Button) findViewById(R.id.button10);
-                BoardButton[11] = (Button) findViewById(R.id.button11);
-                BoardButton[12] = (Button) findViewById(R.id.button12);
-                BoardButton[13] = (Button) findViewById(R.id.button13);
-                BoardButton[14] = (Button) findViewById(R.id.button14);
-                BoardButton[15] = (Button) findViewById(R.id.button15);
 
 
                 for (int i = 0; i < 4; i++) {
@@ -148,9 +209,11 @@ public class PlayerActivity extends MainActivity {
                }
 
 
+                try {
+                    runningGame();
+                } catch (Exception e) {
+                }
 
-
-                runningGame();
 
             }
         });
@@ -217,14 +280,68 @@ public class PlayerActivity extends MainActivity {
         return 2;
     }
 
-
     private void BoggleBoard(){
     }
 
+    //
+    public void runningGame() throws Exception {
 
-    public void runningGame() {
+
+
+        String word;        // right now, assume that fid
 
     }
 
+    public void initPressedButtons(boolean[][] pressedButtons) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                pressedButtons[i][j] = false;
+            }
+        }
+    }
 
+    public void resetBoardButtons(Button[] buttons) {
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setTextColor(Color.WHITE);
+            buttons[i].setBackgroundColor(Color.BLUE);
+        }
+    }
+
+    public boolean checkOnClick(int row, int col) {
+        if (pressCount == 0) {
+            pressCount += 1;
+            lastRow = row;
+            lastCol = col;
+            return true;
+        }
+
+        boolean isNextToLastButton = false;
+        int[] rowIdx = {0, 0, 1, 1, 1, -1, -1, -1};
+        int[] colIdx = {1, -1, 0, 1, -1, 0, 1, -1};
+        int tempRow, tempCol;
+
+        for (int i = 0; i < 8; i++) {
+            tempRow = lastRow + rowIdx[i];
+            tempCol = lastCol + colIdx[i];
+            if (tempRow < 0 || tempCol < 0 || tempRow > 3 || tempCol > 3)
+                continue;
+            if ((tempRow == row) && (tempCol == col)) {
+                isNextToLastButton = true;
+                break;
+            }
+        }
+
+        if (isNextToLastButton == true) {
+            pressCount += 1;
+            lastRow = row;
+            lastCol = col;
+            return true;
+        } else {
+            pressCount = 0;
+            lastRow = 0;
+            lastCol = 0;
+            return false;
+        }
+
+    }
 }
