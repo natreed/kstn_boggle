@@ -37,7 +37,7 @@
         <TextView
             android:text="0"
             android:layout_height="wrap_content"
-            android:id="@+id/text_P1scoreVal"
+            android:id="@+id/text_player1_score"
             android:paddingLeft="10dp"
             android:paddingBottom="5dp" />
 
@@ -52,16 +52,16 @@
             android:text="0"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:id="@+id/textView19"
+            android:id="@+id/text_player2_score"
             android:paddingLeft="10dp" />
 
-        <Button
-            android:text="Options"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:id="@+id/button_new_game"
-            android:gravity="right|center_vertical|center_horizontal"
-            android:paddingLeft="30dp" />
+        <!--<Button-->
+            <!--android:text="Options"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:id="@+id/button_new_game"-->
+            <!--android:gravity="right|center_vertical|center_horizontal"-->
+            <!--android:paddingLeft="30dp" />-->
 
     </TableRow>
 
@@ -394,7 +394,7 @@
 
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -427,7 +427,7 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="match_parent" >
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -450,17 +450,17 @@
 
         </TableRow>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+        <!--<TableRow-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" >-->
 
-            <Button
-                android:text="Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button " />
+            <!--<Button-->
+                <!--android:text="Button"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/button " />-->
 
-        </TableRow>
+        <!--</TableRow>-->
 
     </TableLayout>
 
