@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/item_choose_game"
+        android:title="@string/item_choose_new_game"
+        app:showAsAction="never"    />
+
+    <item android:id="@+id/item_high_score"
+        android:title="@string/item_high_scores"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/item_instruction"
+        android:title="@string/item_instruction"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/item_about_us"
+        android:title="@string/item_about_us"
+        app:showAsAction="never" />
+
+</menu>
