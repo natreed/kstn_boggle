@@ -23,7 +23,7 @@ public class PlayerActivity extends MainActivity {
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
     String foundWord = "";
-
+    BoardGenerate boardGenerate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +69,17 @@ public class PlayerActivity extends MainActivity {
                     }
                 };
 
-
-                board = new char[4][4];
-                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
-                for (int row = 0; row < board.length; row++) {
-                    for (int column = 0; column < board.length; column++) {
-
-                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
-                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
-                    }
-                }
+                  BoardGenerate boardgenerate = new BoardGenerate();
+                  board =  boardgenerate.createNewBoard();
+//                board = new char[4][4];
+//                String letterdist ="eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
+//                for (int row = 0; row < board.length; row++) {
+//                    for (int column = 0; column < board.length; column++) {
+//
+//                        //board[row][column] = (char)('A' + (int)(Math.random()*26));
+//                        board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
+//                    }
+//                }
 
                 final Button BoardButton[] = new Button[16];
                 BoardButton[0] = (Button) findViewById(R.id.button0);
