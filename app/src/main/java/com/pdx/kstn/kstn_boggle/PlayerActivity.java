@@ -201,12 +201,6 @@ public class PlayerActivity extends MainActivity {
                }
 
 
-//                try {
-//                    runningGame();
-//                } catch (Exception e) {
-//                }
-
-
             }
         });
     }
@@ -270,18 +264,6 @@ public class PlayerActivity extends MainActivity {
     //just a prototype
     private int isWord(String word) {
         return 2;
-    }
-
-    private void BoggleBoard(){
-    }
-
-    //
-    public void runningGame() throws Exception {
-
-
-
-        String word;        // right now, assume that fid
-
     }
 
     public void resetButtonStatus(boolean[][] pressedButtons) {
