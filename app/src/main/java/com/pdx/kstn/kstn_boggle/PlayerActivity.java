@@ -1,5 +1,7 @@
 package com.pdx.kstn.kstn_boggle;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -145,6 +147,11 @@ public class PlayerActivity extends MainActivity {
                    timer.start();
                }
 
+
+
+
+                runningGame();
+
             }
         });
     }
@@ -164,15 +171,37 @@ public class PlayerActivity extends MainActivity {
                 new AlertDialog.Builder(this)
                         .setTitle("")
                         .setMessage("Do you want to quit current game?")
-                        .setPositiveButton(android.R.string.yes, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                startActivity(new Intent(getBaseContext(), ChooseModeMainActivity.class));
+                            }
+                        })
                         .setNegativeButton(android.R.string.no, null).show();
 
                 return true;
 
             case R.id.item_high_score:
+                new AlertDialog.Builder(this)
+                        .setTitle("")
+                        .setMessage("Do you want to quit current game?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                startActivity(new Intent(getBaseContext(), ScoresActivity.class));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
                 return true;
 
             case R.id.item_instruction:
+                new AlertDialog.Builder(this)
+                        .setTitle("")
+                        .setMessage("Do you want to quit current game?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                startActivity(new Intent(getBaseContext(), RulesActivity.class));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
                 return true;
 
             case R.id.item_about_us:
@@ -190,6 +219,12 @@ public class PlayerActivity extends MainActivity {
 
 
     private void BoggleBoard(){
+    }
+
+
+    public void runningGame() {
 
     }
+
+
 }
