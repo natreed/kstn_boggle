@@ -26,6 +26,9 @@ public class Player {
 
     public int getRound() { return this.round; }
 
+    public ArrayList<String> getFoundWords() { return this.foundWords; }
+
+
     /**
      * New timer depend how many score player get from last round
      * @param timeLeft
@@ -45,16 +48,40 @@ public class Player {
     /**
      * Update scores and word lists when found a new word
      * @param word
-     * @param score
      */
-    public boolean updateInfor(String word, int score) {
+    public boolean updateInfor(String word) {
         if (foundWordsCurrentRound.contains(word) == true)
             return false;
 
         foundWordsCurrentRound.add(word);
         foundWords.add(word);
-        this.score += score;
-        this.scoreForCurrentRound += score;
+
+        switch (word.length()) {
+            case 3:
+                this.score += 1;
+                this.scoreForCurrentRound += 1;
+                break;
+            case 4:
+                this.score += 1;
+                this.scoreForCurrentRound += 1;
+                break;
+            case 5:
+                this.score += 2;
+                this.scoreForCurrentRound += 2;
+                break;
+            case 6:
+                this.score += 3;
+                this.scoreForCurrentRound += 3;
+                break;
+            case 7:
+                this.score += 4;
+                this.scoreForCurrentRound += 4;
+                break;
+            default:
+                this.score += 11;
+                this.scoreForCurrentRound += 11;
+                break;
+        }
 
         return true;
     }
