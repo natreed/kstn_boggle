@@ -5,9 +5,12 @@ import android.content.res.Resources;
 
 import java.io.FileOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
+
+import static com.pdx.kstn.kstn_boggle.R.raw.dictionary;
 
 /**
  * Created by thanhhoang on 1/28/17.
@@ -15,27 +18,39 @@ import java.util.Scanner;
 
 public class HighScore {
     private ArrayList<Tuple> scores;
-    private ListView myList;
 
     HighScore () {
         loadScores();
     }
 
+    public String[] getScores() {
+        ArrayList<String> list = new ArrayList<String>();
+        for (Tuple score: scores) {
+            list.add(score.toString());
+        }
+
+        return list.toArray(new String[0]);
+    }
+
+
     public void loadScores() {
         // load scores from text file
-        Scanner s = new Scanner(("res/raw/scores.txt"));
-        scores = new ArrayList<Tuple>();
-        String tempString;
-        Integer tempInt;
-        while(s.hasNext()) {
-            s.useDelimiter(":");
-            tempString = s.next();
-            s.skip(":");
-            s.useDelimiter("\n");
-            tempInt = s.nextInt();
-            scores.add(new Tuple(tempString, tempInt));
-        }
-        s.close();
+
+
+//
+//        Scanner s = new Scanner(("res/raw/scores.txt"));
+//        scores = new ArrayList<Tuple>();
+//        String tempString;
+//        Integer tempInt;
+//        while(s.hasNext()) {
+//            s.useDelimiter(":");
+//            tempString = s.next();
+////            s.skip(":");
+//            s.useDelimiter("\n");
+//            tempInt = s.nextInt();
+//            scores.add(new Tuple(tempString, tempInt));
+//        }
+//        s.close();
     }
 
     //Check list of scores and update if new high score is available

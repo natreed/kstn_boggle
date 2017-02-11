@@ -21,4 +21,8 @@ public class Tuple<String, Integer> {
         return this.score;
     }
 
+    @Override
+    public java.lang.String toString() {
+        return name + ":\t " + score;
+    }
 }
