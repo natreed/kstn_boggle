@@ -14,9 +14,44 @@
     <string name="player2">Player 2</string>
     <string name="score">Score</string>
     <string name="words_found">Words Found</string>
-    <string-array name="foundWordsArray">
-        <item>Apple</item>
-        <item>Bear</item>
-        <item>Cat</item>
-    </string-array>
+    <string name="button_play_game">PLAY GAME</string>
+    <string name="button_scores">SCORES</string>
+    <string name="button_rules">RULES</string>
+    <string name="text_rules">BOGGLE RULES</string>
+    <string name="button_exit">EXIT</string>
+    <string name="ok">OK</string>
+    <string name="cancel">cancel</string>
+    <string name="dialog_title">Choose your difficulty</string>
+
+    <string name="text_rules_paragraph">
+
+\n\nBoggle is a popular word game for any number of players. In our version of Boggle you may choose single player or play against a friend.￼
+\n\nBoggle is played with a tray of 16 letter dice, which is shaken to get 16 random letters. In kstn_Boggle, the computer randomly generates this grid for you.
+\n\nPlayers have three minutes (shown by the countdown timer) to find as many words as they can in the grid, according to the following rules:
+\n	•	The letters must be adjoining in a \'chain\'. (Letter cubes in the chain may be adjacent horizontally, vertically, or diagonally.)
+\n  •	Words must contain at least three letters.
+\n	•	No letter cube may be used more than once within a single word.
+\n\nWhen you see a valid word, click or drag across the word and hit the submit button. The word will appear in the found words list below the game board.
+\n\nWhen the time is up, your words will be submitted automatically and your score calculated. If your score is sufficiently high, your name will enter the all-time Hall of Fame! (If you want to submit your words before the time is up, press the \'Submit Early\' button to generate a new board and continue play until the timer runs out..)
+\n\nStrategy Hints and Scoring
+\nWhilst looking for as many words as possible is a good strategy, it is worth bearing in mind that longer words score more highly, so one 5-letter word is worth two 4-letter words.The scoring is as follows:
+\n	•	Fewer than 3 Letters: no score
+\n	•	3 Letters: 1 point
+\n	•	4 Letters: 1 point
+\n	•	5 Letters: 2 points
+\n	•	6 Letters: 3 points
+\n	•	7 Letters: 4 points
+\n	•	8 or More Letters: 11 points
+\n\nAlthough the \'Qu\' cube occupies a single space in the grid, it counts as two letters for the purpose of scoring.
+\n\nFull credit is awarded for both the singular and plural forms of a noun provided you list them as separate words, so cat and cats each score a point. The same is true for all other derived forms (e.g. chew, chews, chewed, etc.).
+\n\nIf a word appears more than once in the grid, it may not be counted twice. Also, multiple meanings of the same word do not earn multiple credit.
+\n\nAny dictionary word is allowed. As in most word games, you will not receive credit for proper names, abbreviations, contractions, hyphenated words, or foreign words that are not in an English dictionary. You will be penalised 1 point for each guess you make that is not recognised as a valid word.
+\n\nWords within other words are permissible. This can be a valuable fact to remember, for if you spot the word part, you can also write down par and art. In this case, it is also a word in reverse: trap.
+\n\nYou will not be penalised for submitting the same word twice, but doing so will not increase your score. This may be helpful if you do not remember if you have already found a particular word; it is probably faster to type it again than to check your list.
+\n\nA good knowledge of anagrams will help. If you notice the letters S, T, O, and P arranged in a 2x2 square, you will be able to write not only stop but also opts, tops, spot, post, and pots, scoring a total of 6 points.
+</string>
+    <string name="item_choose_new_game">Choose New Game</string>
+    <string name="item_about_us">About Us</string>
+    <string name="item_instruction">Instruction</string>
+    <string name="item_high_scores">High Scores</string>
 </resources>

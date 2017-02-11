@@ -12,23 +12,65 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+//THIS IS WHERE NATHANS CODE STARTS
+        setContentView(R.layout.mainscreen);
 
-        final Button single_player_mode = (Button) findViewById(R.id.button_single_player_mode);
-        final Button double_player_mode = (Button) findViewById(R.id.button_double_player_mode);
+        final Button button_play_game = (Button) findViewById(R.id.button_play);
+        final Button button_high_scores = (Button) findViewById(R.id.button_scores);
+        final Button button_rules = (Button) findViewById(R.id.button_rules);
 
-        System.out.print("Hello hello\n");
-
-        single_player_mode.setOnClickListener(new View.OnClickListener() {
+        button_play_game.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 // Start NewActivity.class
                 Intent myIntent = new Intent(getApplicationContext(),
-                        SinglePlayerActivity.class);
+                        ChooseModeMainActivity.class);
                 startActivity(myIntent);
             }
         });
+
+        button_high_scores.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                // Start NewActivity.class
+                Intent myIntent = new Intent(getApplicationContext(),
+                        ScoresActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
+        button_rules.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                // Start NewActivity.class
+                Intent myIntent = new Intent(getApplicationContext(),
+                        RulesActivity.class);
+                startActivity(myIntent);
+            }
+        });
+
+//THIS IS WHERE NATHANS CODE ENDS
+
+        //setContentView(R.layout.activity_main);
+
+
+//        final Button single_player_mode = (Button) findViewById(R.id.button_single_player_mode);
+//        final Button double_player_mode = (Button) findViewById(R.id.button_double_player_mode);
+//
+//        System.out.print("Hello hello\n");
+//
+//
+
+//        single_player_mode.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                // Perform action on click
+//                // Start NewActivity.class
+//                Intent myIntent = new Intent(getApplicationContext(),
+//                        SinglePlayerActivity.class);
+//                startActivity(myIntent);
+//            }
+//        });
 
     }
 

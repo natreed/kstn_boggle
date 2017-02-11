@@ -8,30 +8,40 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.pdx.kstn.kstn_boggle.MainActivity">
+    android:background="@drawable/gameboard_background"
+    tools:context="com.pdx.kstn.kstn_boggle.ChooseModeMainActivity">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/choose_mode" />
 
+    <!--android:text="1 Player"-->
     <Button
-        android:text="Single Player Mode"
+
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="118dp"
-        android:layout_marginStart="118dp"
-        android:layout_marginTop="104dp"
+
+        android:layout_centerInParent="true"
+        android:background="@drawable/onepbtn"
         android:id="@+id/button_single_player_mode" />
 
-
+    <!--android:text="2 Players"-->
     <Button
-        android:text="Double Player Mode"
+
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button_single_player_mode"
         android:layout_alignLeft="@+id/button_single_player_mode"
         android:layout_alignStart="@+id/button_single_player_mode"
-        android:layout_marginTop="119dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/twopbtn"
         android:id="@+id/button_double_player_mode" />
 
 </RelativeLayout>
