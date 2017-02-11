@@ -41,19 +41,39 @@
             android:paddingLeft="10dp"
             android:paddingBottom="5dp" />
 
-        <TextView
-            android:text="Score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView20"
-            android:paddingLeft="30dp" />
+        <!--<TextView-->
+            <!--android:text="Score"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/textView20"-->
+            <!--android:paddingLeft="30dp" />-->
+
+        <!--<TextView-->
+            <!--android:text="0"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/text_player2_score"-->
+            <!--android:paddingLeft="10dp" />-->
 
         <TextView
-            android:text="0"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text_player2_score"
-            android:paddingLeft="10dp" />
+            android:id="@+id/round"
+            android:text="ROUND:"
+            android:paddingRight="10dp"
+            android:gravity="center_horizontal"
+            android:paddingLeft="10dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:text="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/roundCount"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_weight="1" />
+
 
         <!--<Button-->
             <!--android:text="Options"-->
@@ -313,23 +333,24 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-            <Button
-                android:text="Shake"
-                android:layout_width="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="0dp"
-                android:id="@+id/shake"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_weight="1"/>
+            <!--<Button-->
+                <!--android:text="Shake"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginBottom="0dp"-->
+                <!--android:id="@+id/shake"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:paddingLeft="10dp"-->
+                <!--android:paddingRight="10dp"-->
+                <!--android:layout_weight="1"/>-->
 
             <Button
                 android:text="Submit Word"
@@ -355,42 +376,6 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal">
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/round"
-                            android:text="ROUND:"
-                            android:paddingRight="10dp"
-                            android:gravity="center_horizontal"
-                            android:paddingLeft="10dp"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:text="1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/roundCount"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                </TableRow>
-
-            </TableLayout>
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -404,14 +389,6 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:text="Solved"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/list_solvedWords"
-                            android:layout_weight="2.05"
-                            android:gravity="center_horizontal" />
 
                         <TextView
                             android:text="FOUND"
@@ -434,10 +411,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <ListView
-                            android:layout_width="98dp"
-                            android:layout_height="match_parent"
-                            android:id="@+id/list_solver"/>
+                        <!--<ListView-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:id="@+id/list_solver"/>-->
 
                         <ListView
                             android:layout_width="99dp"
@@ -450,17 +427,6 @@
 
         </TableRow>
 
-        <!--<TableRow-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent" >-->
-
-            <!--<Button-->
-                <!--android:text="Button"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/button " />-->
-
-        <!--</TableRow>-->
 
     </TableLayout>
 
