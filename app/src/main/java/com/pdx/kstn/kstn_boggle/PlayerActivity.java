@@ -23,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import static com.pdx.kstn.kstn_boggle.ChooseModeMainActivity.selectedDifficultyLevel;
+
 /**
  * Created by Sharmistha on 1/27/2017.
  */
@@ -45,10 +47,44 @@ public class PlayerActivity extends MainActivity {
     long second = 0;
     long totalTime = 180000;
 
+    // get difficulty level
+
+
+
+    public void setDifficulty(int getDifficulty) {
+
+        switch(getDifficulty) {
+            case 0:
+                passingwords = 2;
+                break;
+            case 1:
+                passingwords = 5;
+                break;
+            case 2:
+                passingwords =7;
+                break;
+        }
+    }
+
+
+
+
+
+
+
+
+
+    int passingwords;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
+        System.out.println(selectedDifficultyLevel);
+
+        setDifficulty(selectedDifficultyLevel);
+
+
 
         final Button BoardButton[] = new Button[16];
         BoardButton[0] = (Button) findViewById(R.id.button0);
@@ -180,7 +216,7 @@ public class PlayerActivity extends MainActivity {
             public void onClick(View v) {
                 // Perform action on click
                 // BoggleBoard();
-                if (player.getNumWordLastRound() < 5)
+                if (player.getNumWordLastRound() < passingwords)
                     return;
 
                 newRound(BoardButton, dictionary);
