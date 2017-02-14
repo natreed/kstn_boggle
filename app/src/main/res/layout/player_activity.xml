@@ -32,36 +32,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/text_score"
-            android:paddingLeft="10dp" />
+            android:paddingLeft="50dp" />
 
         <TextView
             android:text="0"
             android:layout_height="wrap_content"
-            android:id="@+id/text_P1scoreVal"
+            android:id="@+id/text_player1_score"
             android:paddingLeft="10dp"
-            android:paddingBottom="5dp" />
+            android:paddingBottom="5dp"
+            android:layout_width="match_parent" />
+
 
         <TextView
-            android:text="Score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView20"
-            android:paddingLeft="30dp" />
+            android:id="@+id/round"
+            android:text="ROUND:"
+            android:paddingRight="10dp"
+            android:gravity="center_horizontal"
+            android:paddingLeft="70dp"
+            android:layout_weight="1" />
 
         <TextView
-            android:text="0"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView19"
-            android:paddingLeft="10dp" />
-
-        <Button
-            android:text="Options"
+            android:text="1"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:id="@+id/button_new_game"
-            android:gravity="right|center_vertical|center_horizontal"
-            android:paddingLeft="30dp" />
+            android:layout_height="wrap_content"
+            android:id="@+id/roundCount"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_weight="1" />
 
     </TableRow>
 
@@ -81,8 +80,8 @@
                 android:id="@+id/button0"
                 android:layout_column="0"
                 android:text="1"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -97,8 +96,8 @@
                 android:id="@+id/button1"
                 android:layout_column="1"
                 android:text="2"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -110,8 +109,8 @@
                 android:id="@+id/button2"
                 android:layout_column="2"
                 android:text="3"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -123,8 +122,8 @@
                 android:id="@+id/button3"
                 android:layout_column="3"
                 android:text="4"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -143,8 +142,8 @@
                 android:id="@+id/button4"
                 android:layout_column="0"
                 android:text="5"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -156,8 +155,8 @@
                 android:id="@+id/button5"
                 android:layout_column="1"
                 android:text="6"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -169,8 +168,8 @@
                 android:id="@+id/button6"
                 android:layout_column="2"
                 android:text="7"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -182,8 +181,8 @@
                 android:id="@+id/button7"
                 android:layout_column="3"
                 android:text="8"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -202,8 +201,8 @@
                 android:id="@+id/button8"
                 android:layout_column="0"
                 android:text="9"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -215,8 +214,8 @@
                 android:id="@+id/button9"
                 android:layout_column="1"
                 android:text="10"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -228,8 +227,8 @@
                 android:id="@+id/button10"
                 android:layout_column="2"
                 android:text="11"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -240,8 +239,8 @@
                 android:id="@+id/button11"
                 android:layout_column="3"
                 android:text="12"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -260,8 +259,8 @@
                 android:id="@+id/button12"
                 android:layout_column="0"
                 android:text="13"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -273,8 +272,8 @@
                 android:id="@+id/button13"
                 android:layout_column="1"
                 android:text="14"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -286,8 +285,8 @@
                 android:id="@+id/button14"
                 android:layout_column="2"
                 android:text="15"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -299,8 +298,8 @@
                 android:id="@+id/button15"
                 android:layout_column="3"
                 android:text="16"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@drawable/background_neural"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="2.5dp"
@@ -309,27 +308,37 @@
                 android:textSize="40dp" />
 
         </TableRow>
+
     </TableLayout>
+
+
+    <TableRow android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+
+        android:id="@+id/display_screen">
+
+        <TextView
+            android:text="Welcome to Boggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:fontFamily="monospace"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:id="@+id/text_display_screen" />
+    </TableRow>
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Button
-                android:text="Shake"
-                android:layout_width="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="0dp"
-                android:id="@+id/shake"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:layout_weight="1"/>
+            android:layout_height="match_parent"
+            android:id="@+id/text_screen">
 
             <Button
                 android:text="Submit Word"
@@ -355,46 +364,10 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal">
 
+
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/round"
-                            android:text="ROUND:"
-                            android:paddingRight="10dp"
-                            android:gravity="center_horizontal"
-                            android:paddingLeft="10dp"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:text="1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/roundCount"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                </TableRow>
-
-            </TableLayout>
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -404,14 +377,6 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <TextView
-                            android:text="Solved"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/list_solvedWords"
-                            android:layout_weight="2.05"
-                            android:gravity="center_horizontal" />
 
                         <TextView
                             android:text="FOUND"
@@ -427,17 +392,12 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="match_parent" >
 
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <ListView
-                            android:layout_width="98dp"
-                            android:layout_height="match_parent"
-                            android:id="@+id/list_solver"/>
 
                         <ListView
                             android:layout_width="99dp"
@@ -450,18 +410,9 @@
 
         </TableRow>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Button
-                android:text="Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button " />
-
-        </TableRow>
 
     </TableLayout>
 
 </LinearLayout>
+
+
