@@ -73,6 +73,7 @@ public class PlayerActivity extends MainActivity {
         final TextView p1_score = (TextView) findViewById(R.id.text_player1_score);
         final TextView text_round_count = (TextView) findViewById(R.id.roundCount);
         final TextView timer_text = (TextView) findViewById(R.id.time_remaining);
+        final TextView text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
         ListView wordList = (ListView) findViewById(R.id.list_foundWords);
@@ -108,6 +109,7 @@ public class PlayerActivity extends MainActivity {
                         }
                         else {
                             BoardButton[ButtonNum].setBackgroundColor(Color.RED);
+                            text_display.setText(inputWord);
                             //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
 
                         }
@@ -129,6 +131,8 @@ public class PlayerActivity extends MainActivity {
                 System.out.println(inputWord);
                 // check inputWord is in list
                 if (allValidWords.contains(inputWord)) {
+                    text_display.setText("Valid!");
+
                     System.out.println("Found word: " + inputWord);
 
                     player.updateInfor(inputWord);
@@ -142,7 +146,10 @@ public class PlayerActivity extends MainActivity {
 
                     resetBoardButtons(BoardButton);
                     resetButtonStatus();
-
+                } else {
+                    text_display.setText("Invalid word!");
+                    resetBoardButtons(BoardButton);
+                    resetButtonStatus();
                 }
             }
         });
