@@ -3,9 +3,11 @@ package com.pdx.kstn.kstn_boggle;
 import android.widget.ListView;
 import android.content.res.Resources;
 
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -17,45 +19,37 @@ import static com.pdx.kstn.kstn_boggle.R.raw.dictionary;
  */
 
 public class HighScore {
-    private ArrayList<Tuple> scores;
+    private ArrayList<String> scores = new ArrayList<String>();
 
-    HighScore () {
-        loadScores();
-    }
-
-    public String[] getScores() {
-        ArrayList<String> list = new ArrayList<String>();
-        for (Tuple score: scores) {
-            list.add(score.toString());
-        }
-
-        return list.toArray(new String[0]);
+    public ArrayList<String> getScores() {
+//        ArrayList<String> list = new ArrayList<String>();
+//        for (String str: scores) {
+//            list.add(str.toString());
+//        }
+//        return list.toArray(new String[0]);
+        return this.scores;
     }
 
 
-    public void loadScores() {
+    public void loadScores(InputStream in) {
         // load scores from text file
 
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                scores.add(line);
+            }
+            in.close();
+        } catch (Exception e) {
 
-//
-//        Scanner s = new Scanner(("res/raw/scores.txt"));
-//        scores = new ArrayList<Tuple>();
-//        String tempString;
-//        Integer tempInt;
-//        while(s.hasNext()) {
-//            s.useDelimiter(":");
-//            tempString = s.next();
-////            s.skip(":");
-//            s.useDelimiter("\n");
-//            tempInt = s.nextInt();
-//            scores.add(new Tuple(tempString, tempInt));
-//        }
-//        s.close();
+        }
     }
 
     //Check list of scores and update if new high score is available
     public boolean updateScore(String name, int score) {
-        Integer newScore = score;
+        /*Integer newScore = score;
         Iterator<Tuple> tupleIterator = scores.iterator();
         while(tupleIterator.hasNext()) {
             Tuple<String, Integer> entry = tupleIterator.next();
@@ -68,14 +62,14 @@ public class HighScore {
                 scores.add(new Tuple(name, score));
                 return true;
             }
-        }
+        }*/
         return false;
     }
 
     //write the scores back to the file
     // format is name: score\n
     private void writeBack() {
-        try {
+        /*try {
             File file = new File("res/raw/scores.txt");
             FileOutputStream fos = new FileOutputStream(file, false);
             Iterator<Tuple> tupleIterator = scores.iterator();
@@ -89,7 +83,7 @@ public class HighScore {
             }
         } catch (Exception e) {
 
-        }
+        }*/
         return;
     }
 }
