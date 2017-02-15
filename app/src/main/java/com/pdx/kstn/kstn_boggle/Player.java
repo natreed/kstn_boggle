@@ -24,24 +24,25 @@ public class Player {
 
     public int getScore() { return this.score; }
 
+    public int getScoreForCurrentRound() { return this.scoreForCurrentRound; }
+
     public int getRound() { return this.round; }
 
     public ArrayList<String> getFoundWords() { return this.foundWords; }
 
+    public ArrayList<String> getFoundWordsCurrentRound() { return foundWordsCurrentRound; }
 
-    /**
-     * New timer depend how many score player get from last round
-     * @param timeLeft
-     * @param score
-     * @return
-     */
-    static public int getNewTimer(int timeLeft, int score) {
-        return timeLeft + score;
+
+//    static public int getNewTimer(int timeLeft, int score) {
+//        return timeLeft + score;
+//    }
+    public int getNumWordLastRound() {
+        return foundWordsCurrentRound.size();
     }
-
 
     public void moveToNextRound() {
         this.scoreForCurrentRound = 0;
+        round += 1;
         this.foundWordsCurrentRound = new ArrayList<String>();
     }
 
@@ -74,12 +75,12 @@ public class Player {
                 this.scoreForCurrentRound += 3;
                 break;
             case 7:
-                this.score += 4;
-                this.scoreForCurrentRound += 4;
+                this.score += 5;
+                this.scoreForCurrentRound += 5;
                 break;
             default:
-                this.score += 11;
-                this.scoreForCurrentRound += 11;
+                this.score += 10;
+                this.scoreForCurrentRound += 10;
                 break;
         }
 
