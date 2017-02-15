@@ -19,20 +19,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/timer"
-            android:paddingLeft="20dp" />
+            android:paddingLeft="20dp"
+            android:textSize="18dp"/>
 
         <TextView
             android:layout_height="wrap_content"
             android:id="@+id/time_remaining"
             android:paddingLeft="10dp"
-            android:layout_width="40dp" />
+            android:layout_width="100dp"
+            android:textSize="18dp"/>
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/round"-->
+            <!--android:text="ROUND:"-->
+            <!--android:paddingRight="10dp"-->
+            <!--android:gravity="center_horizontal"-->
+            <!--android:paddingLeft="70dp"-->
+            <!--android:layout_weight="1" />-->
+
+        <!--<TextView-->
+            <!--android:text="1"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/roundCount"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:paddingRight="10dp"-->
+            <!--android:layout_weight="1" />-->
+
 
         <TextView
             android:text="Score:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/text_score"
-            android:paddingLeft="50dp" />
+            android:paddingLeft="90dp"
+            android:textSize="18dp"/>
 
         <TextView
             android:text="0"
@@ -40,27 +63,10 @@
             android:id="@+id/text_player1_score"
             android:paddingLeft="10dp"
             android:paddingBottom="5dp"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            android:textSize="18dp"/>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/round"
-            android:text="ROUND:"
-            android:paddingRight="10dp"
-            android:gravity="center_horizontal"
-            android:paddingLeft="70dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:text="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/roundCount"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_weight="1" />
 
     </TableRow>
 
@@ -350,10 +356,10 @@
                 android:layout_weight="1"/>
 
             <Button
-                android:text="Next Round"
+                android:text="Cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/button_nextRound"
+                android:id="@+id/button_cancel"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:layout_weight="1"/>
