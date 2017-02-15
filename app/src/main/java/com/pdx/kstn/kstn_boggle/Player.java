@@ -75,12 +75,12 @@ public class Player {
                 this.scoreForCurrentRound += 3;
                 break;
             case 7:
-                this.score += 4;
-                this.scoreForCurrentRound += 4;
+                this.score += 5;
+                this.scoreForCurrentRound += 5;
                 break;
             default:
-                this.score += 11;
-                this.scoreForCurrentRound += 11;
+                this.score += 10;
+                this.scoreForCurrentRound += 10;
                 break;
         }
 
