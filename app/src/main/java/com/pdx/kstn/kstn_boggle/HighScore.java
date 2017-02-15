@@ -22,11 +22,6 @@ public class HighScore {
     private ArrayList<String> scores = new ArrayList<String>();
 
     public ArrayList<String> getScores() {
-//        ArrayList<String> list = new ArrayList<String>();
-//        for (String str: scores) {
-//            list.add(str.toString());
-//        }
-//        return list.toArray(new String[0]);
         return this.scores;
     }
 
