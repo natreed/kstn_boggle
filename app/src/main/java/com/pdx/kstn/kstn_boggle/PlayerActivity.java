@@ -35,9 +35,9 @@ public class PlayerActivity extends MainActivity {
     boolean[][] buttonStatus = new boolean[4][4];
     String inputWord = "";
     String[] foundWords = {};
-    long minute = 0;
-    long second = 0;
-    long totalTime = 180000;
+    public long totalTime = 18000;
+
+    public TextView text_timer;
 
 
     @Override
@@ -66,7 +66,6 @@ public class PlayerActivity extends MainActivity {
         final Button btt_cancel = (Button) findViewById(R.id.button_cancel);
         final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
         final TextView p1_score = (TextView) findViewById(R.id.text_player1_score);
-        final TextView timer_text = (TextView) findViewById(R.id.time_remaining);
         final TextView text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
@@ -85,13 +84,17 @@ public class PlayerActivity extends MainActivity {
 
         resetButtonStatus();
 
+        // board init and handler
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 final int ButtonNum = i*4 + j;
                 final int row = i;
                 final int col = j;
+                String str = String.valueOf(board[i][j]);
+                if (str.equals("q")) str = "qu";
+
                 BoardButton[ButtonNum].setTextColor(Color.WHITE);
-                BoardButton[ButtonNum].setText(String.valueOf(board[i][j]));
+                BoardButton[ButtonNum].setText(str);
                 BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -148,35 +151,11 @@ public class PlayerActivity extends MainActivity {
             }
         });
 
-        // timer
-        timer = new CountDownTimer(totalTime, 1000) {
 
-            @Override
-            public void onTick(long millisUntilFinished) {
-  //              minute = millisUntilFinished/60000;
-//                second = millisUntilFinished/1000 % (millisUntilFinished/60000*60);
-//                totalTime = minute*60000 + second*1000;
-                //timer_text.setText(minute + ":" + second);
-                timer_text.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
-            }
-
-            @Override
-            public void onFinish() {
-                isCounterRunning = false;
-            }
-        };
-
-        if (!isCounterRunning) {
-            isCounterRunning = true;
-            timer.start();
-        }
-        else {
-            //timer.cancel();
-            //totalTime = minute*60000 + second*1000 + player.getScoreForCurrentRound()*1000;
-            totalTime += player.getScoreForCurrentRound()*1000;
-            timer.start();
-        }
-
+        // set up timer
+        text_timer =  (TextView) findViewById(R.id.time_remaining);
+        timer = new Timer(totalTime, 1000);
+        timer.start();
 
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -187,6 +166,23 @@ public class PlayerActivity extends MainActivity {
         });
 
     }
+
+    public class Timer extends CountDownTimer {
+        public Timer(long startTime, long interval) {
+            super(startTime, interval);
+        }
+        @Override
+        public void onFinish() {
+            text_timer.setText("TIME'S UP!");
+        }
+        @Override
+        public void onTick(long millisUntilFinished) {
+            text_timer.setText(" " + millisUntilFinished / 1000);
+            //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
+
+        }
+    }
+
 
 
     @Override
