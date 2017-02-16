@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.mainscreen);
 
         final Button button_play_game = (Button) findViewById(R.id.button_play);
-        final Button button_high_scores = (Button) findViewById(R.id.button_scores);
+        final Button button_scores = (Button) findViewById(R.id.button_scores);
         final Button button_rules = (Button) findViewById(R.id.button_rules);
 
         button_play_game.setOnClickListener(new View.OnClickListener() {
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        button_high_scores.setOnClickListener(new View.OnClickListener() {
+        button_scores.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 // Start NewActivity.class
