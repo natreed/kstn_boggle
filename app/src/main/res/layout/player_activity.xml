@@ -23,6 +23,7 @@
             <!--android:textSize="18dp"/>-->
 
         <TextView
+            android:text="Timer: "
             android:layout_height="wrap_content"
             android:id="@+id/time_remaining"
             android:paddingLeft="20dp"
@@ -53,7 +54,7 @@
 
 
         <TextView
-            android:text="0"
+            android:text="Score: 0"
             android:layout_height="wrap_content"
             android:id="@+id/text_player_score"
             android:paddingLeft="10dp"
@@ -384,7 +385,11 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:text="FOUND"
+                            android:text="FOUND WORDS"
+                            android:textStyle="bold"
+                            android:textSize="18dp"
+                            android:textColor="@android:color/white"
+                            android:fontFamily="sans-serif-smallcaps"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/words_found"

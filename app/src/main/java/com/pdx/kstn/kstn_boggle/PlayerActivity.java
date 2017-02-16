@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by Sharmistha on 1/27/2017.
  */
 public class PlayerActivity extends MainActivity {
-    char[][] board;
+    String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
 
@@ -81,7 +81,6 @@ public class PlayerActivity extends MainActivity {
         // generate and solve board
         board = BoardGenerate.createNewBoard();
         allValidWords = BoggleSolver.solver(board, dictionary);
-        p1_score.setText("Score: 0");
 
         resetButtonStatus();
 
@@ -92,7 +91,7 @@ public class PlayerActivity extends MainActivity {
                 final int row = i;
                 final int col = j;
                 String str = String.valueOf(board[i][j]);
-                if (str.equals("q")) str = "qu";
+//                if (str.equals("q")) str = "qu";
 
                 BoardButton[ButtonNum].setTextColor(Color.WHITE);
                 BoardButton[ButtonNum].setText(str);
@@ -293,11 +292,11 @@ public class PlayerActivity extends MainActivity {
 
             buttonStatus[row][col] = true;
 
-            String str = Character.toString(board[row][col]);
-            if (str == "q")
-                str = "qu";
+//            String str = Character.toString(board[row][col]);
+//            if (str == "q")
+//                str = "qu";
 
-            inputWord = inputWord + str;
+            inputWord = inputWord + board[row][col];
 
             return true;
         }
@@ -324,11 +323,11 @@ public class PlayerActivity extends MainActivity {
             lastCol = col;
             buttonStatus[row][col] = true;
 
-            String str = Character.toString(board[row][col]);
-            if (str == "q")
-                str = "qu";
+//            String str = Character.toString(board[row][col]);
+//            if (str == "q")
+//                str = "qu";
 
-            inputWord = inputWord + str;
+            inputWord = inputWord + board[row][col];
 
             return true;
         } else {
