@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by Sharmistha on 1/27/2017.
  */
 public class PlayerActivity extends MainActivity {
-    char[][] board;
+    String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
 
@@ -81,7 +81,6 @@ public class PlayerActivity extends MainActivity {
         // generate and solve board
         board = BoardGenerate.createNewBoard();
         allValidWords = BoggleSolver.solver(board, dictionary);
-        p1_score.setText("Score: 0");
 
         resetButtonStatus();
 
@@ -92,7 +91,7 @@ public class PlayerActivity extends MainActivity {
                 final int row = i;
                 final int col = j;
                 String str = String.valueOf(board[i][j]);
-                if (str.equals("q")) str = "qu";
+//                if (str.equals("q")) str = "qu";
 
                 BoardButton[ButtonNum].setTextColor(Color.WHITE);
                 BoardButton[ButtonNum].setText(str);
@@ -128,12 +127,14 @@ public class PlayerActivity extends MainActivity {
                 System.out.println("Check submit button");
                 System.out.println(inputWord);
                 // check inputWord is in list
-                if (allValidWords.contains(inputWord)) {
-                    text_display.setText("Valid!");
+                int ret = player.updateInfor(inputWord, allValidWords);
 
-                    System.out.println("Found word: " + inputWord);
-
-                    player.updateInfor(inputWord);
+                if (ret == -1)
+                    text_display.setText("Invalid word!");
+                else if (ret == 0)
+                    text_display.setText("Invalid, \"" +inputWord + "\" found!");
+                else if (ret == 1) {
+                    text_display.setText("Valid Word!");
                     p1_score.setText("Score: " + Integer.toString(player.getScore()));
 
                     foundWords = player.getFoundWords().toArray(new String[0]);
@@ -141,14 +142,34 @@ public class PlayerActivity extends MainActivity {
                     ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                     ListView wordList = (ListView) findViewById(R.id.list_foundWords);
                     wordList.setAdapter(wordAdapter);
-
-                    resetBoardButtons(BoardButton);
-                    resetButtonStatus();
-                } else {
-                    text_display.setText("Invalid word!");
-                    resetBoardButtons(BoardButton);
-                    resetButtonStatus();
                 }
+
+                resetBoardButtons(BoardButton);
+                resetButtonStatus();
+
+
+
+//                if (allValidWords.contains(inputWord)) {
+//                    text_display.setText("Valid!");
+//
+//                    System.out.println("Found word: " + inputWord);
+//
+//                    player.updateInfor(inputWord);
+//                    p1_score.setText("Score: " + Integer.toString(player.getScore()));
+//
+//                    foundWords = player.getFoundWords().toArray(new String[0]);
+//
+//                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+//                    ListView wordList = (ListView) findViewById(R.id.list_foundWords);
+//                    wordList.setAdapter(wordAdapter);
+//
+//                    resetBoardButtons(BoardButton);
+//                    resetButtonStatus();
+//                } else {
+//                    text_display.setText("Invalid word!");
+//                    resetBoardButtons(BoardButton);
+//                    resetButtonStatus();
+//                }
             }
         });
 
@@ -293,11 +314,11 @@ public class PlayerActivity extends MainActivity {
 
             buttonStatus[row][col] = true;
 
-            String str = Character.toString(board[row][col]);
-            if (str == "q")
-                str = "qu";
+//            String str = Character.toString(board[row][col]);
+//            if (str == "q")
+//                str = "qu";
 
-            inputWord = inputWord + str;
+            inputWord = inputWord + board[row][col];
 
             return true;
         }
@@ -324,11 +345,11 @@ public class PlayerActivity extends MainActivity {
             lastCol = col;
             buttonStatus[row][col] = true;
 
-            String str = Character.toString(board[row][col]);
-            if (str == "q")
-                str = "qu";
+//            String str = Character.toString(board[row][col]);
+//            if (str == "q")
+//                str = "qu";
 
-            inputWord = inputWord + str;
+            inputWord = inputWord + board[row][col];
 
             return true;
         } else {
