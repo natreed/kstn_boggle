@@ -14,20 +14,23 @@
         android:layout_height="wrap_content"
         android:id="@+id/message_prompt" >
 
-        <TextView
-            android:text="TIMER:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/timer"
-            android:paddingLeft="20dp"
-            android:textSize="18dp"/>
+        <!--<TextView-->
+            <!--android:text="TIMER:"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/timer"-->
+            <!--android:paddingLeft="20dp"-->
+            <!--android:textSize="18dp"/>-->
 
         <TextView
             android:layout_height="wrap_content"
             android:id="@+id/time_remaining"
-            android:paddingLeft="10dp"
-            android:layout_width="100dp"
+            android:paddingLeft="20dp"
+            android:layout_width="140dp"
             android:textSize="18dp"/>
+
+
+
 
         <!--<TextView-->
             <!--android:layout_width="wrap_content"-->
@@ -39,32 +42,26 @@
             <!--android:paddingLeft="70dp"-->
             <!--android:layout_weight="1" />-->
 
-        <!--<TextView-->
-            <!--android:text="1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/roundCount"-->
-            <!--android:paddingLeft="10dp"-->
-            <!--android:paddingRight="10dp"-->
-            <!--android:layout_weight="1" />-->
-
-
         <TextView
-            android:text="Score:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text_score"
-            android:paddingLeft="90dp"
-            android:textSize="18dp"/>
+            android:id="@+id/roundCount"
+            android:gravity="center_horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:width="120dp" />
+
 
         <TextView
             android:text="0"
             android:layout_height="wrap_content"
-            android:id="@+id/text_player1_score"
+            android:id="@+id/text_player_score"
             android:paddingLeft="10dp"
             android:paddingBottom="5dp"
+            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:textSize="18dp"/>
+            android:textSize="18dp"
+            android:width="140dp"/>
 
 
 
@@ -333,6 +330,8 @@
             android:fontFamily="monospace"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
             android:id="@+id/text_display_screen" />
     </TableRow>
 

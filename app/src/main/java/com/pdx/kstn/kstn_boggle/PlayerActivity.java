@@ -35,7 +35,7 @@ public class PlayerActivity extends MainActivity {
     boolean[][] buttonStatus = new boolean[4][4];
     String inputWord = "";
     String[] foundWords = {};
-    public long totalTime = 18000;
+    public long totalTime = 180000;
 
     public TextView text_timer;
 
@@ -65,7 +65,7 @@ public class PlayerActivity extends MainActivity {
 
         final Button btt_cancel = (Button) findViewById(R.id.button_cancel);
         final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
-        final TextView p1_score = (TextView) findViewById(R.id.text_player1_score);
+        final TextView p1_score = (TextView) findViewById(R.id.text_player_score);
         final TextView text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
@@ -81,6 +81,7 @@ public class PlayerActivity extends MainActivity {
         // generate and solve board
         board = BoardGenerate.createNewBoard();
         allValidWords = BoggleSolver.solver(board, dictionary);
+        p1_score.setText("Score: 0");
 
         resetButtonStatus();
 
@@ -133,7 +134,7 @@ public class PlayerActivity extends MainActivity {
                     System.out.println("Found word: " + inputWord);
 
                     player.updateInfor(inputWord);
-                    p1_score.setText(Integer.toString(player.getScore()));
+                    p1_score.setText("Score: " + Integer.toString(player.getScore()));
 
                     foundWords = player.getFoundWords().toArray(new String[0]);
 
@@ -177,7 +178,7 @@ public class PlayerActivity extends MainActivity {
         }
         @Override
         public void onTick(long millisUntilFinished) {
-            text_timer.setText(" " + millisUntilFinished / 1000);
+            text_timer.setText("Timer: " + millisUntilFinished / 1000);
             //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
 
         }
