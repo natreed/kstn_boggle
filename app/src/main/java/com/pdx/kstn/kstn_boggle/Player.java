@@ -46,10 +46,8 @@ public class Player {
         this.foundWordsCurrentRound = new ArrayList<String>();
     }
 
-    /**
-     * Update scores and word lists when found a new word
-     * @param word
-     */
+
+
     public boolean updateInfor(String word) {
         if (foundWordsCurrentRound.contains(word) == true)
             return false;
@@ -75,18 +73,60 @@ public class Player {
                 this.scoreForCurrentRound += 3;
                 break;
             case 7:
-                this.score += 4;
-                this.scoreForCurrentRound += 4;
+                this.score += 5;
+                this.scoreForCurrentRound += 5;
                 break;
             default:
-                this.score += 11;
-                this.scoreForCurrentRound += 11;
+                this.score += 10;
+                this.scoreForCurrentRound += 10;
                 break;
         }
 
         return true;
     }
 
+    // -1 :     invalid word
+    // 0  :     input word is in found list already
+    // 1  :     valid word, added to found words list and update score
+    public int updateInfor(String word, ArrayList<String> validList) {
+        if (validList.contains(word) == false)
+            return -1;
+
+        if (foundWordsCurrentRound.contains(word))
+            return 0;
+
+        foundWordsCurrentRound.add(word);
+        foundWords.add(word);
+
+        switch (word.length()) {
+            case 3:
+                this.score += 1;
+                this.scoreForCurrentRound += 1;
+                break;
+            case 4:
+                this.score += 1;
+                this.scoreForCurrentRound += 1;
+                break;
+            case 5:
+                this.score += 2;
+                this.scoreForCurrentRound += 2;
+                break;
+            case 6:
+                this.score += 3;
+                this.scoreForCurrentRound += 3;
+                break;
+            case 7:
+                this.score += 5;
+                this.scoreForCurrentRound += 5;
+                break;
+            default:
+                this.score += 10;
+                this.scoreForCurrentRound += 10;
+                break;
+        }
+
+        return 1;
+    }
 
 
 }

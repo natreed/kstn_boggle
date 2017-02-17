@@ -2,34 +2,26 @@ package com.pdx.kstn.kstn_boggle;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AlertDialogLayout;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.graphics.Color;
-import android.util.Log;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-import static com.pdx.kstn.kstn_boggle.ChooseModeMainActivity.selectedDifficultyLevel;
 
 /**
  * Created by Sharmistha on 1/27/2017.
  */
 public class PlayerActivity extends MainActivity {
-    char[][] board;
+    String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
 
@@ -43,48 +35,15 @@ public class PlayerActivity extends MainActivity {
     boolean[][] buttonStatus = new boolean[4][4];
     String inputWord = "";
     String[] foundWords = {};
-    long minute = 0;
-    long second = 0;
-    long totalTime = 180000;
+    public long totalTime = 180000;
 
-    // get difficulty level
+    public TextView text_timer;
 
-
-
-    public void setDifficulty(int getDifficulty) {
-
-        switch(getDifficulty) {
-            case 0:
-                passingwords = 2;
-                break;
-            case 1:
-                passingwords = 5;
-                break;
-            case 2:
-                passingwords =7;
-                break;
-        }
-    }
-
-
-
-
-
-
-
-
-
-    int passingwords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
-        System.out.println(selectedDifficultyLevel);
-
-        setDifficulty(selectedDifficultyLevel);
-
-
 
         final Button BoardButton[] = new Button[16];
         BoardButton[0] = (Button) findViewById(R.id.button0);
@@ -104,11 +63,10 @@ public class PlayerActivity extends MainActivity {
         BoardButton[14] = (Button) findViewById(R.id.button14);
         BoardButton[15] = (Button) findViewById(R.id.button15);
 
-        final Button button_next_round = (Button) findViewById(R.id.button_nextRound);
+        final Button btt_cancel = (Button) findViewById(R.id.button_cancel);
         final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
-        final TextView p1_score = (TextView) findViewById(R.id.text_player1_score);
-        final TextView text_round_count = (TextView) findViewById(R.id.roundCount);
-        final TextView timer_text = (TextView) findViewById(R.id.time_remaining);
+        final TextView p1_score = (TextView) findViewById(R.id.text_player_score);
+        final TextView text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
         ListView wordList = (ListView) findViewById(R.id.list_foundWords);
@@ -126,13 +84,17 @@ public class PlayerActivity extends MainActivity {
 
         resetButtonStatus();
 
+        // board init and handler
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 final int ButtonNum = i*4 + j;
                 final int row = i;
                 final int col = j;
+                String str = String.valueOf(board[i][j]);
+//                if (str.equals("q")) str = "qu";
+
                 BoardButton[ButtonNum].setTextColor(Color.WHITE);
-                BoardButton[ButtonNum].setText(String.valueOf(board[i][j]));
+                BoardButton[ButtonNum].setText(str);
                 BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -144,6 +106,7 @@ public class PlayerActivity extends MainActivity {
                         }
                         else {
                             BoardButton[ButtonNum].setBackgroundColor(Color.RED);
+                            text_display.setText(inputWord);
                             //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
 
                         }
@@ -164,79 +127,84 @@ public class PlayerActivity extends MainActivity {
                 System.out.println("Check submit button");
                 System.out.println(inputWord);
                 // check inputWord is in list
-                if (allValidWords.contains(inputWord)) {
-                    System.out.println("Found word: " + inputWord);
+                int ret = player.updateInfor(inputWord, allValidWords);
 
-                    player.updateInfor(inputWord);
-                    p1_score.setText(Integer.toString(player.getScore()));
+                if (ret == -1)
+                    text_display.setText("Invalid word!");
+                else if (ret == 0)
+                    text_display.setText("Invalid, \"" +inputWord + "\" found!");
+                else if (ret == 1) {
+                    text_display.setText("Valid Word!");
+                    p1_score.setText("Score: " + Integer.toString(player.getScore()));
 
-                    foundWords = player.getFoundWordsCurrentRound().toArray(new String[0]);
+                    foundWords = player.getFoundWords().toArray(new String[0]);
 
                     ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                     ListView wordList = (ListView) findViewById(R.id.list_foundWords);
                     wordList.setAdapter(wordAdapter);
-
-                    resetBoardButtons(BoardButton);
-                    resetButtonStatus();
-
                 }
+
+                resetBoardButtons(BoardButton);
+                resetButtonStatus();
+
+
+
+//                if (allValidWords.contains(inputWord)) {
+//                    text_display.setText("Valid!");
+//
+//                    System.out.println("Found word: " + inputWord);
+//
+//                    player.updateInfor(inputWord);
+//                    p1_score.setText("Score: " + Integer.toString(player.getScore()));
+//
+//                    foundWords = player.getFoundWords().toArray(new String[0]);
+//
+//                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+//                    ListView wordList = (ListView) findViewById(R.id.list_foundWords);
+//                    wordList.setAdapter(wordAdapter);
+//
+//                    resetBoardButtons(BoardButton);
+//                    resetButtonStatus();
+//                } else {
+//                    text_display.setText("Invalid word!");
+//                    resetBoardButtons(BoardButton);
+//                    resetButtonStatus();
+//                }
             }
         });
 
-        // timer
-        timer = new CountDownTimer(totalTime, 1000) {
 
-            @Override
-            public void onTick(long millisUntilFinished) {
-                minute = millisUntilFinished/60000;
-                second = millisUntilFinished/1000 % (millisUntilFinished/60000*60);
-                totalTime = minute*60000 + second*1000;
-                timer_text.setText(minute + ":" + second);
-            }
+        // set up timer
+        text_timer =  (TextView) findViewById(R.id.time_remaining);
+        timer = new Timer(totalTime, 1000);
+        timer.start();
 
-            @Override
-            public void onFinish() {
-                isCounterRunning = false;
-            }
-        };
-
-        if (!isCounterRunning) {
-            isCounterRunning = true;
-            timer.start();
-        }
-        else {
-            //timer.cancel();
-            //totalTime = minute*60000 + second*1000 + player.getScoreForCurrentRound()*1000;
-            totalTime += player.getScoreForCurrentRound()*1000;
-            timer.start();
-        }
-
-
-        button_next_round.setOnClickListener(new View.OnClickListener() {
+        btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
-                // BoggleBoard();
-                if (player.getNumWordLastRound() < passingwords)
-                    return;
-
-                newRound(BoardButton, dictionary);
-                player.moveToNextRound();
-                text_round_count.setText(String.valueOf(player.getRound()));
-
-                foundWords = new String[0];
-
-                ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
-                ListView wordList = (ListView) findViewById(R.id.list_foundWords);
-                wordList.setAdapter(wordAdapter);
-
-                // reset timer
-
+                resetBoardButtons(BoardButton);
+                resetButtonStatus();
+                text_display.setText(inputWord);
             }
         });
-
-
 
     }
+
+    public class Timer extends CountDownTimer {
+        public Timer(long startTime, long interval) {
+            super(startTime, interval);
+        }
+        @Override
+        public void onFinish() {
+            text_timer.setText("TIME'S UP!");
+        }
+        @Override
+        public void onTick(long millisUntilFinished) {
+            text_timer.setText("Timer: " + millisUntilFinished / 1000);
+            //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
+
+        }
+    }
+
 
 
     @Override
@@ -319,17 +287,18 @@ public class PlayerActivity extends MainActivity {
         }
     }
 
-    public void newRound(Button[] boardButton, Dictionary dictionary) {
-        board = BoardGenerate.createNewBoard();
-        allValidWords = BoggleSolver.solver(board, dictionary);
-
-        resetButtonStatus();
-        resetBoardButtons(boardButton);
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++)
-                boardButton[4*i+j].setText(String.valueOf(board[i][j]));
-        }
-    }
+//    public void newRound(Button[] boardButton, Dictionary dictionary) {
+//        board = BoardGenerate.createNewBoard();
+//        allValidWords = BoggleSolver.solver(board, dictionary);
+//
+//        resetButtonStatus();
+//        resetBoardButtons(boardButton);
+//        for (int i = 0; i < 4; i++) {
+//            for (int j = 0; j < 4; j++)
+//                boardButton[4*i+j].setText(String.valueOf(board[i][j]));
+//        }
+//
+//    }
 
 
     public boolean checkOnClick(int row, int col) {
@@ -345,11 +314,11 @@ public class PlayerActivity extends MainActivity {
 
             buttonStatus[row][col] = true;
 
-            String str = Character.toString(board[row][col]);
-            if (str == "q")
-                str = "qu";
+//            String str = Character.toString(board[row][col]);
+//            if (str == "q")
+//                str = "qu";
 
-            inputWord = inputWord + str;
+            inputWord = inputWord + board[row][col];
 
             return true;
         }
@@ -376,11 +345,11 @@ public class PlayerActivity extends MainActivity {
             lastCol = col;
             buttonStatus[row][col] = true;
 
-            String str = Character.toString(board[row][col]);
-            if (str == "q")
-                str = "qu";
+//            String str = Character.toString(board[row][col]);
+//            if (str == "q")
+//                str = "qu";
 
-            inputWord = inputWord + str;
+            inputWord = inputWord + board[row][col];
 
             return true;
         } else {
