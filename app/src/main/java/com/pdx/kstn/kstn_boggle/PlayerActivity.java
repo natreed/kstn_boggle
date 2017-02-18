@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Created by Sharmistha on 1/27/2017.
  */
-public class PlayerActivity extends MainActivity implements SensorEventListener  {
+public class PlayerActivity extends AppCompatActivity implements SensorEventListener  {
     String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
@@ -42,7 +43,7 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
     boolean[][] buttonStatus = new boolean[4][4];
     String inputWord = "";
     String[] foundWords = {};
-    public long totalTime = 180000;
+    public long totalTime = 30000;
 
     public TextView text_timer;
 
@@ -53,17 +54,12 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
     private static final float ERROR = (float) 7.0;
     private boolean isGameOn;
     final  Button BoardButton[] = new Button[16];
-     TextView text_display;
+    TextView text_display;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
-
-
-
-
-
-
 
         BoardButton[0] = (Button) findViewById(R.id.button0);
         BoardButton[1] = (Button) findViewById(R.id.button1);
@@ -91,27 +87,6 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
         ListView wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        isGameOn =false;
-        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-
-            Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
-
-
-            init = false;
-
-            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-
-        } else {
-
-            Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
-        }
-
-
-
 
         // load dictionary file
         try {
@@ -126,8 +101,7 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
         allValidWords = BoggleSolver.solver(board, dictionary);
 
         resetButtonStatus();
-
-
+        initBoard();
 
 
         for (String word: allValidWords)
@@ -160,29 +134,6 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
                 resetBoardButtons(BoardButton);
                 resetButtonStatus();
 
-
-
-//                if (allValidWords.contains(inputWord)) {
-//                    text_display.setText("Valid!");
-//
-//                    System.out.println("Found word: " + inputWord);
-//
-//                    player.updateInfor(inputWord);
-//                    p1_score.setText("Score: " + Integer.toString(player.getScore()));
-//
-//                    foundWords = player.getFoundWords().toArray(new String[0]);
-//
-//                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
-//                    ListView wordList = (ListView) findViewById(R.id.list_foundWords);
-//                    wordList.setAdapter(wordAdapter);
-//
-//                    resetBoardButtons(BoardButton);
-//                    resetButtonStatus();
-//                } else {
-//                    text_display.setText("Invalid word!");
-//                    resetBoardButtons(BoardButton);
-//                    resetButtonStatus();
-//                }
             }
         });
 
@@ -199,6 +150,28 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
                 text_display.setText(inputWord);
             }
         });
+
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        isGameOn =false;
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+
+            Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
+
+
+            init = false;
+
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        } else {
+
+            Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
+        }
+
+
 
     }
     @Override
@@ -253,7 +226,6 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
             }
         }
 
-
     }
 
 
@@ -268,6 +240,7 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
         @Override
         public void onFinish() {
             text_timer.setText("TIME'S UP!");
+            gameOver();
         }
         @Override
         public void onTick(long millisUntilFinished) {
@@ -277,6 +250,16 @@ public class PlayerActivity extends MainActivity implements SensorEventListener 
         }
     }
 
+    private void gameOver() {
+        Intent intend = new Intent(getApplicationContext(), GameOver.class);
+        intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
+        intend.putExtra("FOUND_WORDS", player.getFoundWords());
+        intend.putExtra("POSSIBLE_WORDS", allValidWords);
+
+        System.out.println("reach 1");
+        startActivity(intend);
+        System.out.println("reach 2");
+    }
 
 
     @Override

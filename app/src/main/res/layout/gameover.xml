@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="470dp"
+        android:id="@+id/resultView" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:text="Replay"
+            android:id="@+id/button_replay"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:text="Home"
+            android:id="@+id/button_home"
+            android:layout_height="45dp" />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
