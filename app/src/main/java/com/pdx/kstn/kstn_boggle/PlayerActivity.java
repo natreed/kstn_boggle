@@ -1,10 +1,16 @@
 package com.pdx.kstn.kstn_boggle;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +19,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.graphics.Color;
+import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by Sharmistha on 1/27/2017.
  */
-public class PlayerActivity extends MainActivity {
+public class PlayerActivity extends MainActivity implements SensorEventListener  {
     String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
@@ -39,13 +46,25 @@ public class PlayerActivity extends MainActivity {
 
     public TextView text_timer;
 
-
+    private boolean init;
+    private Sensor mAccelerometer;
+    private SensorManager mSensorManager;
+    private float x1, x2, x3;
+    private static final float ERROR = (float) 7.0;
+    private boolean isGameOn;
+    final  Button BoardButton[] = new Button[16];
+     TextView text_display;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
 
-        final Button BoardButton[] = new Button[16];
+
+
+
+
+
+
         BoardButton[0] = (Button) findViewById(R.id.button0);
         BoardButton[1] = (Button) findViewById(R.id.button1);
         BoardButton[2] = (Button) findViewById(R.id.button2);
@@ -66,11 +85,33 @@ public class PlayerActivity extends MainActivity {
         final Button btt_cancel = (Button) findViewById(R.id.button_cancel);
         final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
         final TextView p1_score = (TextView) findViewById(R.id.text_player_score);
-        final TextView text_display = (TextView) findViewById(R.id.text_display_screen);
+         text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
         ListView wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        isGameOn =false;
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+
+            Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
+
+
+            init = false;
+
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        } else {
+
+            Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
+        }
+
+
+
 
         // load dictionary file
         try {
@@ -78,43 +119,15 @@ public class PlayerActivity extends MainActivity {
             dictionary.createDictionary(in);
         } catch (Exception e) { }
 
+        // not working hence commented the method here
+       // detectShake();
         // generate and solve board
         board = BoardGenerate.createNewBoard();
         allValidWords = BoggleSolver.solver(board, dictionary);
 
         resetButtonStatus();
 
-        // board init and handler
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                final int ButtonNum = i*4 + j;
-                final int row = i;
-                final int col = j;
-                String str = String.valueOf(board[i][j]);
-//                if (str.equals("q")) str = "qu";
 
-                BoardButton[ButtonNum].setTextColor(Color.WHITE);
-                BoardButton[ButtonNum].setText(str);
-                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        boolean validClick = checkOnClick(row, col);
-
-                        if (validClick == false) {
-                            resetBoardButtons(BoardButton);
-                        }
-                        else {
-                            BoardButton[ButtonNum].setBackgroundColor(Color.RED);
-                            text_display.setText(inputWord);
-                            //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
-
-                        }
-                    }
-
-                });
-            }
-        }
 
 
         for (String word: allValidWords)
@@ -187,6 +200,65 @@ public class PlayerActivity extends MainActivity {
             }
         });
 
+    }
+    @Override
+    public void onSensorChanged(SensorEvent e) {
+
+
+        //Get x,y and z values
+        float x,y,z;
+        x = e.values[0];
+        y = e.values[1];
+        z = e.values[2];
+
+
+        if (!init) {
+            x1 = x;
+            x2 = y;
+            x3 = z;
+            init = true;
+        } else {
+
+            float diffX = Math.abs(x1 - x);
+            float diffY = Math.abs(x2 - y);
+            float diffZ = Math.abs(x3 - z);
+
+            //Handling ACCELEROMETER Noise
+            if (diffX < ERROR) {
+
+                diffX = (float) 0.0;
+            }
+            if (diffY < ERROR) {
+                diffY = (float) 0.0;
+            }
+            if (diffZ < ERROR) {
+
+                diffZ = (float) 0.0;
+            }
+
+
+            x1 = x;
+            x2 = y;
+            x3 = z;
+
+
+            //Horizontal Shake Detected!
+            if (diffX > diffY) {
+
+
+                Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
+                initBoard();
+
+
+            }
+        }
+
+
+    }
+
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //Noting to do!!
     }
 
     public class Timer extends CountDownTimer {
@@ -278,7 +350,39 @@ public class PlayerActivity extends MainActivity {
             }
         }
     }
+    public void initBoard(){
+        // board init and handler
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                final int ButtonNum = i * 4 + j;
+                final int row = i;
+                final int col = j;
+                String str = String.valueOf(board[i][j]);
+//                if (str.equals("q")) str = "qu";
 
+                BoardButton[ButtonNum].setTextColor(Color.WHITE);
+                BoardButton[ButtonNum].setText(str);
+                //BoardButton[ButtonNum].setText("");
+                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        boolean validClick = checkOnClick(row, col);
+
+                        if (validClick == false) {
+                            resetBoardButtons(BoardButton);
+                        } else {
+                            BoardButton[ButtonNum].setBackgroundColor(Color.RED);
+                            text_display.setText(inputWord);
+                            //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
+
+                        }
+                    }
+
+                });
+            }
+        }
+    }
     public void resetBoardButtons(Button[] buttons) {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setTextColor(Color.WHITE);
@@ -358,4 +462,5 @@ public class PlayerActivity extends MainActivity {
         }
 
     }
+
 }
