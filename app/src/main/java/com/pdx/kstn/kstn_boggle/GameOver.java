@@ -15,13 +15,13 @@ import java.util.ArrayList;
  * Created by thanhhoang on 2/18/17.
  */
 
-public class GameOver extends AppCompatActivity {
+public class GameOver extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gameover);
-        // adapter = new CustomAdapter(this);
+
         // setListAdapter(adapter);
 
         Intent intent = getIntent();
@@ -29,9 +29,11 @@ public class GameOver extends AppCompatActivity {
         ArrayList<String> foundWords = intent.getStringArrayListExtra("FOUND_WORDS");
         ArrayList<String> possibleWords = intent.getStringArrayListExtra("POSSIBLE_WORDS");
 
-        ListView listView = (ListView) findViewById(R.id.resultView);
+       // ListView listView = (ListView) findViewById(R.id.list);
         ResultAdapter adapter = new ResultAdapter(this, score, possibleWords, foundWords);
-        listView.setAdapter(adapter);
+        setListAdapter(adapter);
+
+        System.out.println("Total possible words: " + possibleWords.size());
 
         final Button bttReplay = (Button) findViewById(R.id.button_replay);
         final Button bttHome = (Button) findViewById(R.id.button_home);
