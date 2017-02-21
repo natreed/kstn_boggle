@@ -56,12 +56,10 @@ public class ResultAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         LayoutInflater inflater = activity.getLayoutInflater();
 
-        if (view == null) {
-            view = inflater.inflate(R.layout.items1, null);
-            txtFirst = (TextView) view.findViewById(R.id.items_item1);
-            txtSecond = (TextView) view.findViewById(R.id.items_item2);
-            txtThird = (TextView) view.findViewById(R.id.items_item3);
-        }
+        view = inflater.inflate(R.layout.items1, null);
+        txtFirst = (TextView) view.findViewById(R.id.items_item1);
+        txtSecond = (TextView) view.findViewById(R.id.items_item2);
+        txtThird = (TextView) view.findViewById(R.id.items_item3);
 
         HashSet<String> temp = possible.get(i);
 
@@ -89,6 +87,12 @@ public class ResultAdapter extends BaseAdapter {
                     break;
             }
 
+        }
+
+        if (count < 3) {
+            if (count < 2)
+                txtSecond.setText(" ");
+            txtThird.setText(" ");
         }
 
 
@@ -131,7 +135,7 @@ public class ResultAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return possible.get(i);
     }
 
 }
