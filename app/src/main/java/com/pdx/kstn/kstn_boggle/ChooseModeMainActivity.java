@@ -12,7 +12,7 @@ import android.widget.Button;
 // implemented via using dialog boxes
 public class ChooseModeMainActivity extends AppCompatActivity {
     //I am replacing the previous comment now.
-    public int selectedDifficultyLevel=0; //global variable to store state
+    public static int selectedDifficultyLevel=0; //global variable to store state
     public int selectedDifficultyLevelDoublePlayer=0;
     public int selectedDoublePlayerMode=0;
     @Override
@@ -58,6 +58,7 @@ public class ChooseModeMainActivity extends AppCompatActivity {
                                                 // or return them to the component that opened the dialog
                                                 Intent myIntent = new Intent(getApplicationContext(),
                                                 PlayerActivity.class);
+//                                                myIntent.putExtra("difficultylevel", String.valueOf(selectedDifficultyLevel));
                                                 startActivity(myIntent);
                                             }
                                         })

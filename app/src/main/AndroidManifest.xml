@@ -33,6 +33,9 @@
             android:name=".ScoresActivity"
             android:noHistory="true"
             />
+        <activity android:name=".GameOver"
+            android:noHistory="true" />
+
     </application>
 
 </manifest>
