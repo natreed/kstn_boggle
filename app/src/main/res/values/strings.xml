@@ -21,8 +21,7 @@
     <string name="button_exit">EXIT</string>
     <string name="ok">OK</string>
     <string name="cancel">cancel</string>
-    <string name="dialog_title">Choose your difficulty</string>
-
+    <string name="dialog_title"></string>
     <string name="text_rules_paragraph">
 
 \n\nBoggle is a popular word game for any number of players. In our version of Boggle you may choose single player or play against a friend.￼
@@ -50,8 +49,4 @@
 \n\nYou will not be penalised for submitting the same word twice, but doing so will not increase your score. This may be helpful if you do not remember if you have already found a particular word; it is probably faster to type it again than to check your list.
 \n\nA good knowledge of anagrams will help. If you notice the letters S, T, O, and P arranged in a 2x2 square, you will be able to write not only stop but also opts, tops, spot, post, and pots, scoring a total of 6 points.
 </string>
-    <string name="item_choose_new_game">Choose New Game</string>
-    <string name="item_about_us">About Us</string>
-    <string name="item_instruction">Instruction</string>
-    <string name="item_high_scores">High Scores</string>
 </resources>
