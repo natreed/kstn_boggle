@@ -25,6 +25,7 @@ import android.widget.Toast;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+
 /**
  * Created by Sharmistha on 1/27/2017.
  */
@@ -34,8 +35,10 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
     public CountDownTimer timer = null;
 
     public Player player = new Player();
-    public Dictionary dictionary = new Dictionary();
+    public Dictionary dictionary = null;
     public ArrayList<String> allValidWords = new ArrayList<String>();
+    // load dictionary file
+
 
     public int pressCount = 0;
     public int lastRow = 0;
@@ -51,7 +54,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
     private Sensor mAccelerometer;
     private SensorManager mSensorManager;
     private float x1, x2, x3;
-    private static final float ERROR = (float) 7.0;
+    private static final float ERROR = (float) 2.0;
     private boolean isGameOn;
     final  Button BoardButton[] = new Button[16];
     TextView text_display;
@@ -88,11 +91,15 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         wordList.setAdapter(wordAdapter);
 
 
-        // load dictionary file
-        try {
-            InputStream in = getResources().openRawResource(R.raw.dictionary);
-            dictionary.createDictionary(in);
-        } catch (Exception e) { }
+            System.out.println("DICTIONARY LOADED");
+            dictionary = null;
+            try {
+                InputStream in = getResources().openRawResource(R.raw.dictionary);
+                dictionary = new Dictionary();
+                dictionary.createDictionary(in);
+            } catch (Exception e) { }
+
+
 
         // not working hence commented the method here
        // detectShake();
@@ -141,6 +148,9 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         // set up timer
         text_timer =  (TextView) findViewById(R.id.time_remaining);
         timer = new Timer(totalTime, 1000);
+
+        System.out.println("TIMER STARTS HERE");
+
         timer.start();
 
         btt_cancel.setOnClickListener(new View.OnClickListener() {
@@ -158,9 +168,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         isGameOn =false;
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
 
-            Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
-
-
+            //Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
             init = false;
 
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -174,10 +182,9 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
 
 
     }
+
     @Override
     public void onSensorChanged(SensorEvent e) {
-
-
         //Get x,y and z values
         float x,y,z;
         x = e.values[0];
@@ -198,17 +205,14 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
 
             //Handling ACCELEROMETER Noise
             if (diffX < ERROR) {
-
                 diffX = (float) 0.0;
             }
             if (diffY < ERROR) {
                 diffY = (float) 0.0;
             }
             if (diffZ < ERROR) {
-
                 diffZ = (float) 0.0;
             }
-
 
             x1 = x;
             x2 = y;
@@ -216,17 +220,17 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
 
 
             //Horizontal Shake Detected!
-            if (diffX > diffY) {
-
-
+//            if (diffX > diffY || diffY>diffX) {
                 Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
                 initBoard();
+                //timer.start();
 
-
-            }
+            //}
         }
 
     }
+
+
 
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -358,7 +362,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
                             BoardButton[ButtonNum].setBackgroundColor(Color.RED);
                             text_display.setText(inputWord);
                             //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
-
                         }
                     }
 
