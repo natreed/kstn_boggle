@@ -29,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by Sharmistha on 1/27/2017.
  */
-public class PlayerActivity extends AppCompatActivity implements SensorEventListener  {
+public class PlayerActivity extends AppCompatActivity implements SensorEventListener {
     String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
@@ -54,7 +54,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
     private Sensor mAccelerometer;
     private SensorManager mSensorManager;
     private float x1, x2, x3;
-    private static final float ERROR = (float) 2.0;
+    private static final float ERROR = (float) 7.0;
     private boolean isGameOn;
     final  Button BoardButton[] = new Button[16];
     TextView text_display;
@@ -144,24 +144,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             }
         });
 
-
-        // set up timer
-        text_timer =  (TextView) findViewById(R.id.time_remaining);
-        timer = new Timer(totalTime, 1000);
-
-        System.out.println("TIMER STARTS HERE");
-
-        timer.start();
-
-        btt_cancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                resetBoardButtons(BoardButton);
-                resetButtonStatus();
-                text_display.setText(inputWord);
-            }
-        });
-
-
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -180,6 +162,21 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         }
 
 
+        // set up timer
+        text_timer =  (TextView) findViewById(R.id.time_remaining);
+        timer = new Timer(totalTime, 1000);
+
+        System.out.println("TIMER STARTS HERE");
+
+        //timer.start();
+
+        btt_cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                resetBoardButtons(BoardButton);
+                resetButtonStatus();
+                text_display.setText(inputWord);
+            }
+        });
 
     }
 
@@ -218,20 +215,28 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             x2 = y;
             x3 = z;
 
-
-            //Horizontal Shake Detected!
-//            if (diffX > diffY || diffY>diffX) {
+            if (diffX > diffY) {
                 Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
-                initBoard();
-                //timer.start();
+                board = BoardGenerate.createNewBoard();
+                resetButtonStatus();
+                resetBoardButtons(BoardButton);
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        final int ButtonNum = i * 4 + j;
+                        final int row = i;
+                        final int col = j;
+                        String str = String.valueOf(board[i][j]);
 
-            //}
+                        BoardButton[ButtonNum].setTextColor(Color.WHITE);
+                        BoardButton[ButtonNum].setText(str);
+                    }
+                }
+                timer.cancel();
+                timer.start();
+            }
         }
 
     }
-
-
-
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //Noting to do!!
