@@ -84,25 +84,20 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         final Button btt_cancel = (Button) findViewById(R.id.button_cancel);
         final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
         final TextView p1_score = (TextView) findViewById(R.id.text_player_score);
-         text_display = (TextView) findViewById(R.id.text_display_screen);
+        text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
         ListView wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
+        System.out.println("DICTIONARY LOADED");
+        dictionary = null;
+        try {
+            InputStream in = getResources().openRawResource(R.raw.dictionary);
+            dictionary = new Dictionary();
+            dictionary.createDictionary(in);
+        } catch (Exception e) { }
 
-            System.out.println("DICTIONARY LOADED");
-            dictionary = null;
-            try {
-                InputStream in = getResources().openRawResource(R.raw.dictionary);
-                dictionary = new Dictionary();
-                dictionary.createDictionary(in);
-            } catch (Exception e) { }
-
-
-
-        // not working hence commented the method here
-       // detectShake();
         // generate and solve board
         board = BoardGenerate.createNewBoard();
         allValidWords = BoggleSolver.solver(board, dictionary);
@@ -113,7 +108,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
 
         for (String word: allValidWords)
             System.out.println(word);
-
 
         button_submit_word.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,10 +134,11 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
 
                 resetBoardButtons(BoardButton);
                 resetButtonStatus();
-
             }
         });
 
+
+        //Sensor manager for shaking
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -157,10 +152,8 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
         } else {
-
             Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
         }
-
 
         // set up timer
         text_timer =  (TextView) findViewById(R.id.time_remaining);
@@ -168,7 +161,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
 
         System.out.println("TIMER STARTS HERE");
 
-        //timer.start();
+        timer.start();
 
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -187,7 +180,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         x = e.values[0];
         y = e.values[1];
         z = e.values[2];
-
 
         if (!init) {
             x1 = x;
@@ -218,6 +210,12 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             if (diffX > diffY) {
                 Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
                 board = BoardGenerate.createNewBoard();
+                allValidWords = BoggleSolver.solver(board, dictionary);
+                foundWords = new String[] {};
+                ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                ListView wordList = (ListView) findViewById(R.id.list_foundWords);
+                wordList.setAdapter(wordAdapter);
+                player.setScore(0);
                 resetButtonStatus();
                 resetBoardButtons(BoardButton);
                 for (int i = 0; i < 4; i++) {

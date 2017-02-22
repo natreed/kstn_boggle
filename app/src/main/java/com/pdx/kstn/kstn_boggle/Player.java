@@ -24,6 +24,7 @@ public class Player {
     }
 
     public int getScore() { return this.score; }
+    public void setScore(int s) {this.score = s;}
 
     public int getScoreForCurrentRound() { return this.scoreForCurrentRound; }
 
