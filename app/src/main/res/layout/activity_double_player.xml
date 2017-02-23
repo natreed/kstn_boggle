@@ -21,7 +21,7 @@
 
 
         <Button
-            android:id="@+id/button_server"
+            android:id="@+id/serverBTN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -33,7 +33,7 @@
             />
 
         <Button
-            android:id="@+id/button_client"
+            android:id="@+id/clientBTN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
