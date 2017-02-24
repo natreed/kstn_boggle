@@ -1,8 +1,8 @@
 package com.pdx.kstn.kstn_boggle;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,7 +10,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
-
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,23 +18,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.graphics.Color;
 import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 
-
 /**
- * Created by Sharmistha on 1/27/2017.
+ * Created by nathanreed on 2/23/17.
  */
-public class PlayerActivity extends AppCompatActivity implements SensorEventListener {
+
+public class TwoPlayerActivity extends AppCompatActivity implements SensorEventListener {
     String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
     public Dictionary dictionary = null;
     public ArrayList<String> allValidWords = new ArrayList<String>();
-
 
     public int pressCount = 0;
     public int lastRow = 0;
@@ -53,7 +50,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
     private float x1, x2, x3;
     private static final float ERROR = (float) 7.0;
     private boolean isGameOn;
-    final  Button BoardButton[] = new Button[16];
+    final Button BoardButton[] = new Button[16];
     TextView text_display;
 
     public Player player;
@@ -88,20 +85,20 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         final Button btt_cancel = (Button) findViewById(R.id.button_cancel);
         final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
         final TextView p1_score = (TextView) findViewById(R.id.text_player_score);
-         text_display = (TextView) findViewById(R.id.text_display_screen);
+        text_display = (TextView) findViewById(R.id.text_display_screen);
 
-        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(TwoPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
         ListView wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
 
-            System.out.println("DICTIONARY LOADED");
-            dictionary = null;
-            try {
-                InputStream in = getResources().openRawResource(R.raw.dictionary);
-                dictionary = new Dictionary();
-                dictionary.createDictionary(in);
-            } catch (Exception e) { }
+        System.out.println("DICTIONARY LOADED");
+        dictionary = null;
+        try {
+            InputStream in = getResources().openRawResource(R.raw.dictionary);
+            dictionary = new Dictionary();
+            dictionary.createDictionary(in);
+        } catch (Exception e) { }
 
         // generate and solve board
         board = BoardGenerate.createNewBoard();
@@ -133,7 +130,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
 
                     foundWords = player.getFoundWords().toArray(new String[0]);
 
-                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(TwoPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                     ListView wordList = (ListView) findViewById(R.id.list_foundWords);
                     wordList.setAdapter(wordAdapter);
                 }
@@ -208,7 +205,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             x3 = z;
 
             if (diffX > diffY) {
-                Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TwoPlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
                 board = BoardGenerate.createNewBoard();
                 resetButtonStatus();
                 resetBoardButtons(BoardButton);

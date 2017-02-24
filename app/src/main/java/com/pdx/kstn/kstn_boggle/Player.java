@@ -1,5 +1,11 @@
 package com.pdx.kstn.kstn_boggle;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.CountDownTimer;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -14,13 +20,23 @@ public class Player {
     private int round;
     private ArrayList<String> foundWords;
     private ArrayList<String> foundWordsCurrentRound;
+    public CountDownTimer timer = null;
+    public TextView text_timer;
+    public Context activity_context;
+    final long START_TIME = 30000;
+    public long totalTime = START_TIME;
 
-    Player() {
+    public ArrayList<String> allValidWords = new ArrayList<String>();
+
+    Player(TextView timerText, Context context) {
         this.score = 0;
         this.scoreForCurrentRound = 0;
         this.round = 1;
         this.foundWords = new ArrayList<String>();
         this.foundWordsCurrentRound = new ArrayList<String>();
+        this.text_timer = timerText;
+        this.activity_context = context;
+        timer = new PlayerTimer(totalTime, 1000);
     }
 
     public int getScore() { return this.score; }
@@ -33,6 +49,14 @@ public class Player {
     public ArrayList<String> getFoundWords() { return this.foundWords; }
 
     public ArrayList<String> getFoundWordsCurrentRound() { return foundWordsCurrentRound; }
+
+    public void setAllVallidWords (ArrayList<String> vallidWords) {
+        this.allValidWords = vallidWords;
+    }
+
+    public ArrayList<String> getAllValidWords () {
+        return this.allValidWords;
+    }
 
 
 //    static public int getNewTimer(int timeLeft, int score) {
@@ -130,5 +154,49 @@ public class Player {
         return 1;
     }
 
+    public class PlayerTimer extends CountDownTimer {
+        public PlayerTimer(long startTime, long interval) {
+            super(startTime, interval);
+        }
+        @Override
+        public void onFinish() {
+            text_timer.setText("TIME'S UP!");
+            gameOver(activity_context);
+        }
+        @Override
+        public void onTick(long millisUntilFinished) {
+            text_timer.setText("Timer: " + millisUntilFinished / 1000);
+            totalTime = millisUntilFinished;
+            //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
+        }
+    }
 
+
+    public void initiateTimer () {
+        this.timer = new PlayerTimer(START_TIME, 1000);
+        timer.start();
+    }
+
+    public void updateTimer (int millisToAdd) {
+        this.totalTime = this.totalTime + millisToAdd*1000;
+        timer.cancel();
+        timer.start();
+    }
+
+    public void resetTimer () {
+        this.totalTime = this.START_TIME;
+        timer.cancel();
+        timer.start();
+    }
+
+    public void gameOver(Context context) {
+        Intent intend = new Intent(context, GameOver.class);
+        intend.putExtra("PLAYER_SCORE", Integer.toString(getScore()));
+        intend.putExtra("FOUND_WORDS", getFoundWords());
+        intend.putExtra("POSSIBLE_WORDS", allValidWords);
+        intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        System.out.println("reach 1");
+        context.startActivity(intend);
+        System.out.println("reach 2");
+    }
 }
