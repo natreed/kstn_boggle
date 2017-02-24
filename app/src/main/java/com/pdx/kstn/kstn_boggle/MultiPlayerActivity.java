@@ -3,6 +3,8 @@ package com.pdx.kstn.kstn_boggle;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
-
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -24,37 +25,26 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.graphics.Color;
 import android.widget.Toast;
-import android.graphics.Point;
-
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Timer;
-
 
 /**
- * Created by Sharmistha on 1/27/2017.
+ * Created by thanhhoang on 2/24/17.
  */
-public class PlayerActivity extends AppCompatActivity implements View.OnTouchListener, SensorEventListener {
+
+public class MultiPlayerActivity extends AppCompatActivity implements View.OnTouchListener, SensorEventListener {
 
     // variables for innit game
     public String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
-    public Player player;
+    public Player player = new Player();
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
     // load dictionary file
 
-
-    // variables for on-going game
-//    public int pressCount = 0;
-//    public int lastRow = 0;
-//    public int lastCol = 0;
-//    boolean[][] buttonStatus = new boolean[4][4];
-//    String inputWord = "";
 
     String[] foundWords = {};
     public long totalTime = 180000;
@@ -85,7 +75,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     public TextView p1_score;
 
     public ListView wordList;
-    public  RelativeLayout mainLayout;
+    public RelativeLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +86,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         try {
             InputStream in = getResources().openRawResource(R.raw.dictionary);
             dictionary.createDictionary(in);
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
 
         // call init layout
 
@@ -111,8 +102,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                         // Layout has happened here.
                         setLayoutLocation();
                         // Don't forget to remove your listener when you are done with it.
-                        if (Build.VERSION.SDK_INT<16) {
-                            removeLayoutListenerPre16(mainLayout.getViewTreeObserver(),this);
+                        if (Build.VERSION.SDK_INT < 16) {
+                            removeLayoutListenerPre16(mainLayout.getViewTreeObserver(), this);
                         } else {
                             removeLayoutListenerPost16(mainLayout.getViewTreeObserver(), this);
                         }
@@ -128,12 +119,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         });
 
 
-
-
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        isGameOn =false;
+        isGameOn = false;
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
 
             Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
@@ -153,12 +142,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
     @SuppressWarnings("deprecation")
-    private void removeLayoutListenerPre16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener){
+    private void removeLayoutListenerPre16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener) {
         observer.removeGlobalOnLayoutListener(listener);
     }
 
     @TargetApi(16)
-    private void removeLayoutListenerPost16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener){
+    private void removeLayoutListenerPost16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener) {
         observer.removeOnGlobalLayoutListener(listener);
 
     }
@@ -179,11 +168,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
         System.out.println("height " + bttHeight + ", width = " + bttWidth);
 
-        offset = bttWidth/4;
+        offset = bttWidth / 4;
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                BoardButton[4*i+j].getLocationInWindow(location);
+                BoardButton[4 * i + j].getLocationInWindow(location);
                 locationMatrix[i][j] = new Point(location[0], location[1]);
                 System.out.println("(" + i + ", " + j + ")  =  " + "(" + locationMatrix[i][j].x + ", " + locationMatrix[i][j].y + ")");
             }
@@ -224,11 +213,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         p1_score = (TextView) findViewById(R.id.text_player_score);
         text_display = (TextView) findViewById(R.id.text_display_screen);
 
-        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
         wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
-        text_timer =  (TextView) findViewById(R.id.time_remaining);
+        text_timer = (TextView) findViewById(R.id.time_remaining);
 
     }
 
@@ -246,15 +235,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         // generate and solve board
 
         board = BoardGenerate.createNewBoard();
-        player = new Player(text_timer, getApplicationContext());
         allValidWords = BoggleSolver.solver(board, dictionary);
-        player.setAllVallidWords(allValidWords);
 
         resetPressedStatus();
         initBoard();
+
+        // init or reset player, score, time
+        player = new Player();
         p1_score.setText("Score: 0");
 
-        player.initiateTimer();
+        setupTimer();
     }
 
     private void setupTimer() {
@@ -270,12 +260,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
             public void onClick(View view) {
 
                 // check inputWord is in list
-                int ret = player.updateInfor(tInputWord, player.allValidWords);
+                int ret = player.updateInfor(tInputWord, allValidWords);
 
                 if (ret == -1)
                     text_display.setText("Invalid word!");
                 else if (ret == 0)
-                    text_display.setText("Invalid, \"" +tInputWord + "\" found!");
+                    text_display.setText("Invalid, \"" + tInputWord + "\" found!");
                 else if (ret == 1) {
                     text_display.setText("Valid Word!");
 
@@ -283,7 +273,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
                     foundWords = player.getFoundWords().toArray(new String[0]);
 
-                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                     wordList.setAdapter(wordAdapter);
                 }
 
@@ -297,7 +287,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     @Override
     public void onSensorChanged(SensorEvent e) {
         //Get x,y and z values
-        float x,y,z;
+        float x, y, z;
         x = e.values[0];
         y = e.values[1];
         z = e.values[2];
@@ -329,15 +319,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
             x3 = z;
 
             if (diffX > diffY) {
-                Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MultiPlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
                 board = BoardGenerate.createNewBoard();
-                player.resetPlayer();
                 allValidWords = BoggleSolver.solver(board, dictionary);
-                player.setAllVallidWords(allValidWords);
-                ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                foundWords = new String[]{};
+                ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                 ListView wordList = (ListView) findViewById(R.id.list_foundWords);
                 wordList.setAdapter(wordAdapter);
 
+                player = new Player();
+                //player.setScore(0);
                 resetPressedStatus();
                 resetBoardButtons();
                 for (int i = 0; i < 4; i++) {
@@ -351,7 +342,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                         BoardButton[ButtonNum].setText(str);
                     }
                 }
-                player.resetTimer();
+                timer.cancel();
+                timer.start();
             }
         }
 
@@ -365,11 +357,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         public Timer(long startTime, long interval) {
             super(startTime, interval);
         }
+
         @Override
         public void onFinish() {
             text_timer.setText("TIME'S UP!");
             gameOver();
         }
+
         @Override
         public void onTick(long millisUntilFinished) {
             text_timer.setText("Timer: " + millisUntilFinished / 1000);
@@ -461,7 +455,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         }
     }
 
-    public void initBoard(){
+    public void initBoard() {
         // board init and handler
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -472,23 +466,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                 BoardButton[ButtonNum].setTextColor(Color.BLACK);
                 BoardButton[ButtonNum].setText(str);
 
-//                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        boolean validClick = checkOnClick(row, col);
-//
-//                        if (validClick == false) {
-//                            resetBoardButtons(BoardButton);
-//                        } else {
-//                            BoardButton[ButtonNum].setBackgroundColor(Color.RED);
-//                            text_display.setText(inputWord);
-//                            //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
-//
-//                        }
-//                    }
-//
-//                });
             }
         }
     }
@@ -560,7 +537,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-
     // ======================= HANDLING SLIDING =================================
 
     /**
@@ -604,21 +580,20 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                index = 4*i + j;
+                index = 4 * i + j;
 
                 bttX = locationMatrix[i][j].x;
                 bttY = locationMatrix[i][j].y;
 
                 // check if x,y location of finger touch is in boundary of
                 // button
-                if ( (bttX + offset) < x &&  x < (bttX + 3*offset)) {
-                    if ( (bttY + offset) < y && y < (bttY + 3*offset) ) {
+                if ((bttX + offset) < x && x < (bttX + 3 * offset)) {
+                    if ((bttY + offset) < y && y < (bttY + 3 * offset)) {
 
                         // handling if touch inside a button
                         boolean ret = checkOnTouch(i, j);
 
                         if (ret) {
-//                            BoardButton[index].setBackgroundColor(Color.RED);
                             BoardButton[index].setBackgroundResource(R.drawable.background3);
                             BoardButton[index].setTextColor(Color.BLACK);
                             text_display.setText(tInputWord);
@@ -634,60 +609,9 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
     }
 
-
 }
 
 
 
-// ============================= comment out stuffs
-//    private boolean checkOnClick(int row, int col) {
-//        if (buttonStatus[row][col] == true) {
-//            resetPressedStatus();
-//            return false;
-//        }
-//
-//        if (pressCount == 0) {
-//            pressCount += 1;
-//            lastRow = row;
-//            lastCol = col;
-//
-//            buttonStatus[row][col] = true;
-//
-//            inputWord = inputWord + board[row][col];
-//
-//            return true;
-//        }
-//
-//        boolean isNextToLastButton = false;
-//        int[] rowIdx = {0, 0, 1, 1, 1, -1, -1, -1};
-//        int[] colIdx = {1, -1, 0, 1, -1, 0, 1, -1};
-//        int tempRow, tempCol;
-//
-//        for (int i = 0; i < 8; i++) {
-//            tempRow = lastRow + rowIdx[i];
-//            tempCol = lastCol + colIdx[i];
-//            if (tempRow < 0 || tempCol < 0 || tempRow > 3 || tempCol > 3)
-//                continue;
-//            if ((tempRow == row) && (tempCol == col)) {
-//                isNextToLastButton = true;
-//                break;
-//            }
-//        }
-//
-//        if (isNextToLastButton == true) {
-//            pressCount += 1;
-//            lastRow = row;
-//            lastCol = col;
-//            buttonStatus[row][col] = true;
-//
-//            inputWord = inputWord + board[row][col];
-//
-//            return true;
-//        } else {
-//            resetPressedStatus();
-//            return false;
-//        }
-//
-//    }
 
 
