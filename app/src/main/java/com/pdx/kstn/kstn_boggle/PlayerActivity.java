@@ -33,11 +33,8 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
     String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
-
-    public Player player = new Player();
     public Dictionary dictionary = null;
     public ArrayList<String> allValidWords = new ArrayList<String>();
-    // load dictionary file
 
 
     public int pressCount = 0;
@@ -59,10 +56,17 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
     final  Button BoardButton[] = new Button[16];
     TextView text_display;
 
+    public Player player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
+
+        // set up timer
+        text_timer =  (TextView) findViewById(R.id.time_remaining);
+        //timer = new Timer(totalTime, 1000);
+        player = new Player(text_timer, getApplicationContext());
 
         BoardButton[0] = (Button) findViewById(R.id.button0);
         BoardButton[1] = (Button) findViewById(R.id.button1);
@@ -99,21 +103,17 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
                 dictionary.createDictionary(in);
             } catch (Exception e) { }
 
-
-
-        // not working hence commented the method here
-       // detectShake();
         // generate and solve board
         board = BoardGenerate.createNewBoard();
-        allValidWords = BoggleSolver.solver(board, dictionary);
+        //allValidWords = BoggleSolver.solver(board, dictionary);
+
+        player.setAllVallidWords(BoggleSolver.solver(board, dictionary));
 
         resetButtonStatus();
         initBoard();
 
-
-        for (String word: allValidWords)
+        for (String word: player.allValidWords)
             System.out.println(word);
-
 
         button_submit_word.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +121,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
                 System.out.println("Check submit button");
                 System.out.println(inputWord);
                 // check inputWord is in list
-                int ret = player.updateInfor(inputWord, allValidWords);
+                int ret = player.updateInfor(inputWord, player.allValidWords);
 
                 if (ret == -1)
                     text_display.setText("Invalid word!");
@@ -161,14 +161,8 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
         }
 
-
-        // set up timer
-        text_timer =  (TextView) findViewById(R.id.time_remaining);
-        timer = new Timer(totalTime, 1000);
-
         System.out.println("TIMER STARTS HERE");
-
-        //timer.start();
+        player.initiateTimer();
 
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -177,7 +171,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
                 text_display.setText(inputWord);
             }
         });
-
     }
 
     @Override
@@ -187,7 +180,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         x = e.values[0];
         y = e.values[1];
         z = e.values[2];
-
 
         if (!init) {
             x1 = x;
@@ -231,45 +223,29 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
                         BoardButton[ButtonNum].setText(str);
                     }
                 }
-                timer.cancel();
-                timer.start();
+//                timer.cancel();
+//                timer.start();
+                player.resetTimer();
             }
         }
-
     }
+
+
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //Noting to do!!
     }
 
-    public class Timer extends CountDownTimer {
-        public Timer(long startTime, long interval) {
-            super(startTime, interval);
-        }
-        @Override
-        public void onFinish() {
-            text_timer.setText("TIME'S UP!");
-            gameOver();
-        }
-        @Override
-        public void onTick(long millisUntilFinished) {
-            text_timer.setText("Timer: " + millisUntilFinished / 1000);
-            //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
-
-        }
-    }
-
-    private void gameOver() {
+    public void gameOver() {
         Intent intend = new Intent(getApplicationContext(), GameOver.class);
         intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
         intend.putExtra("FOUND_WORDS", player.getFoundWords());
-        intend.putExtra("POSSIBLE_WORDS", allValidWords);
+        intend.putExtra("POSSIBLE_WORDS", player.allValidWords);
 
         System.out.println("reach 1");
         startActivity(intend);
         System.out.println("reach 2");
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -342,6 +318,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             }
         }
     }
+
     public void initBoard(){
         // board init and handler
         for (int i = 0; i < 4; i++) {
@@ -374,6 +351,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             }
         }
     }
+
     public void resetBoardButtons(Button[] buttons) {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setTextColor(Color.WHITE);
@@ -392,9 +370,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
 //            for (int j = 0; j < 4; j++)
 //                boardButton[4*i+j].setText(String.valueOf(board[i][j]));
 //        }
-//
 //    }
-
 
     public boolean checkOnClick(int row, int col) {
         if (buttonStatus[row][col] == true) {
@@ -408,10 +384,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             lastCol = col;
 
             buttonStatus[row][col] = true;
-
-//            String str = Character.toString(board[row][col]);
-//            if (str == "q")
-//                str = "qu";
 
             inputWord = inputWord + board[row][col];
 
@@ -439,10 +411,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             lastRow = row;
             lastCol = col;
             buttonStatus[row][col] = true;
-
-//            String str = Character.toString(board[row][col]);
-//            if (str == "q")
-//                str = "qu";
 
             inputWord = inputWord + board[row][col];
 
