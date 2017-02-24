@@ -43,8 +43,8 @@
         android:textStyle="bold"
         android:textSize="30dp"
         android:layout_marginTop="30dp"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginLeft="60dp"
         android:layout_marginStart="60dp"
         android:layout_alignParentTop="true"
@@ -55,8 +55,8 @@
 
     <Button
         android:id="@+id/button1"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="1"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -66,8 +66,8 @@
         />
     <Button
         android:id="@+id/button2"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="2"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -78,8 +78,8 @@
 
     <Button
         android:id="@+id/button3"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="3"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -90,8 +90,8 @@
     <!--Row 2-->
     <Button
         android:id="@+id/button4"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="4"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -101,8 +101,8 @@
 
     <Button
         android:id="@+id/button5"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="5"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -112,8 +112,8 @@
 
     <Button
         android:id="@+id/button6"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="6"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -123,8 +123,8 @@
 
     <Button
         android:id="@+id/button7"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="7"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -136,8 +136,8 @@
 
     <Button
         android:id="@+id/button8"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="8"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -147,8 +147,8 @@
 
     <Button
         android:id="@+id/button9"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="9"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -158,8 +158,8 @@
 
     <Button
         android:id="@+id/button10"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="10"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -169,8 +169,8 @@
 
     <Button
         android:id="@+id/button11"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="11"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -183,8 +183,8 @@
     <!--Row 4-->
     <Button
         android:id="@+id/button12"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="12"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -194,8 +194,8 @@
 
     <Button
         android:id="@+id/button13"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="13"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -205,8 +205,8 @@
 
     <Button
         android:id="@+id/button14"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="14"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -216,8 +216,8 @@
 
     <Button
         android:id="@+id/button15"
-        android:layout_height="65dp"
-        android:layout_width="65dp"
+        android:layout_height="70dp"
+        android:layout_width="70dp"
         android:text="15"
         android:textStyle="bold"
         android:textSize="30dp"
@@ -242,15 +242,7 @@
         />
 
 
-    <!--<ListView-->
-        <!--android:layout_width="200dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/list_foundWords"-->
-        <!--android:layout_below="@id/list_foundWords"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginRight="5dp"-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--android:layout_marginBottom="5dp"/>-->
+
 
    <ListView
        android:layout_width="210dp"
@@ -267,7 +259,7 @@
         android:layout_height="50dp"
         android:layout_toRightOf="@id/list_foundWords"
         android:layout_below="@id/text_display_screen"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
         android:id="@+id/button_submitWord"
@@ -281,7 +273,7 @@
         android:layout_height="50dp"
         android:layout_toRightOf="@id/list_foundWords"
         android:layout_below="@id/button_submitWord"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
         android:text="CANCEL"

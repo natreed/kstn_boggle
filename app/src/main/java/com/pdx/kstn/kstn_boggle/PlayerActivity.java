@@ -464,7 +464,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                 final int row = i;
                 final int col = j;
                 String str = String.valueOf(board[i][j]);
-                BoardButton[ButtonNum].setTextColor(Color.WHITE);
+                BoardButton[ButtonNum].setTextColor(Color.BLACK);
                 BoardButton[ButtonNum].setText(str);
 
 //                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
@@ -491,7 +491,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     // reset text color and background of grid to unpressed
     private void resetBoardButtons() {
         for (int i = 0; i < BoardButton.length; i++) {
-            BoardButton[i].setTextColor(Color.RED);
+            BoardButton[i].setTextColor(Color.BLACK);
             BoardButton[i].setBackgroundResource(R.drawable.background1);
         }
     }
@@ -670,7 +670,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                         boolean ret = checkOnTouch(i, j);
 
                         if (ret) {
-                            BoardButton[index].setBackgroundColor(Color.RED);
+//                            BoardButton[index].setBackgroundColor(Color.RED);
+                            BoardButton[index].setBackgroundResource(R.drawable.background3);
                             BoardButton[index].setTextColor(Color.BLACK);
                             text_display.setText(tInputWord);
                         } else {
