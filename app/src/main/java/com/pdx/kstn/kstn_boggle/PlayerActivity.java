@@ -1,26 +1,33 @@
 package com.pdx.kstn.kstn_boggle;
 
-import android.content.Context;
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.graphics.Color;
 import android.widget.Toast;
+import android.graphics.Point;
+
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,7 +36,14 @@ import java.util.ArrayList;
 /**
  * Created by Sharmistha on 1/27/2017.
  */
-public class PlayerActivity extends AppCompatActivity implements SensorEventListener {
+public class PlayerActivity extends AppCompatActivity implements View.OnTouchListener, SensorEventListener {
+
+    // variables for innit game
+    String[][] board;
+    boolean isCounterRunning = false;
+    public CountDownTimer timer = null;
+    public Player player;
+    public Dictionary dictionary = new Dictionary();
     String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
@@ -40,30 +54,156 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
     // load dictionary file
 
 
+    // variables for on-going game
     public int pressCount = 0;
     public int lastRow = 0;
     public int lastCol = 0;
     boolean[][] buttonStatus = new boolean[4][4];
     String inputWord = "";
     String[] foundWords = {};
-    public long totalTime = 30000;
+    public long totalTime = 180000;
 
-    public TextView text_timer;
 
+    // variables for sensor
     private boolean init;
     private Sensor mAccelerometer;
     private SensorManager mSensorManager;
     private float x1, x2, x3;
     private static final float ERROR = (float) 7.0;
     private boolean isGameOn;
-    final  Button BoardButton[] = new Button[16];
-    TextView text_display;
+
+    // variables for handling sliding + locations
+    Point[][] locationMatrix = new Point[4][4];  //new Coordinate[4][4];
+    int bttHeight, bttWidth, offset;         // offset should be 1/4 of width or height
+    public boolean[][] touchVisited = new boolean[4][4];
+    public int tlRow = 0, tlCol = 0, tPressCount = 0;
+    public String tInputWord = "";
+
+
+    // layout variables
+    public Button BoardButton[] = new Button[16];
+    public Button btt_cancel;
+    public Button button_submit_word;
+
+    public TextView text_timer;
+    public TextView text_display;       // display system messages, word
+    public TextView p1_score;
+
+    public ListView wordList;
+    public  RelativeLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.player_activity);
 
+        setContentView(R.layout.game_activity);
+
+
+//        setContentView(R.layout.game_activity);
+
+        // load dictionary file
+        try {
+            InputStream in = getResources().openRawResource(R.raw.dictionary);
+            dictionary.createDictionary(in);
+        } catch (Exception e) { }
+
+        // call init layout
+
+        initLayoutVariables();
+        setupNewGame();
+
+        mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
+        mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        // Layout has happened here.
+                        setLayoutLocation();
+                        // Don't forget to remove your listener when you are done with it.
+                        if (Build.VERSION.SDK_INT<16) {
+                            removeLayoutListenerPre16(mainLayout.getViewTreeObserver(),this);
+                        } else {
+                            removeLayoutListenerPost16(mainLayout.getViewTreeObserver(), this);
+                        }
+                    }
+                });
+
+
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        isGameOn =false;
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+
+            Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
+
+
+            init = false;
+
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        } else {
+
+            Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    }
+
+    @SuppressWarnings("deprecation")
+    private void removeLayoutListenerPre16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener){
+        observer.removeGlobalOnLayoutListener(listener);
+    }
+
+    @TargetApi(16)
+    private void removeLayoutListenerPost16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener){
+        observer.removeOnGlobalLayoutListener(listener);
+
+    }
+
+
+
+
+    // get location of layout, init variables for handling
+    // sliding/grad to select,
+    // this functions has to be called on create activity
+    private void setLayoutLocation() {
+        // sliding
+        int[] location = new int[2];
+
+        System.out.println("Reach 12");
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        System.out.println("Reach 13");
+
+
+
+        bttHeight = BoardButton[0].getHeight();
+        bttWidth = BoardButton[0].getWidth();
+
+        System.out.println("height " + bttHeight + ", width = " + bttWidth);
+
+        offset = bttWidth/4;
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                BoardButton[4*i+j].getLocationInWindow(location);
+                locationMatrix[i][j] = new Point(location[0], location[1]);
+                System.out.println("(" + i + ", " + j + ")  =  " + "(" + locationMatrix[i][j].x + ", " + locationMatrix[i][j].y + ")");
+            }
+        }
+
+    }
+
+
+    private void initLayoutVariables() {
+
+        // init board buttons
         BoardButton[0] = (Button) findViewById(R.id.button0);
         BoardButton[1] = (Button) findViewById(R.id.button1);
         BoardButton[2] = (Button) findViewById(R.id.button2);
@@ -81,15 +221,29 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         BoardButton[14] = (Button) findViewById(R.id.button14);
         BoardButton[15] = (Button) findViewById(R.id.button15);
 
-        final Button btt_cancel = (Button) findViewById(R.id.button_cancel);
-        final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
-        final TextView p1_score = (TextView) findViewById(R.id.text_player_score);
+        for (int i = 0; i < 16; i++)
+            BoardButton[i].setOnTouchListener(this);
+
+
+        btt_cancel = (Button) findViewById(R.id.button_cancel);
+        button_submit_word = (Button) findViewById(R.id.button_submitWord);
+        p1_score = (TextView) findViewById(R.id.text_player_score);
+
+        btt_cancel = (Button) findViewById(R.id.button_cancel);
+        button_submit_word = (Button) findViewById(R.id.button_submitWord);
+        p1_score = (TextView) findViewById(R.id.text_player_score);
         text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
-        ListView wordList = (ListView) findViewById(R.id.list_foundWords);
+        wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
+        text_timer =  (TextView) findViewById(R.id.time_remaining);
+
+    }
+
+    private void setupNewGame() {
+    
         System.out.println("DICTIONARY LOADED");
         dictionary = null;
         try {
@@ -99,38 +253,64 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         } catch (Exception e) { }
 
         // generate and solve board
+        
         board = BoardGenerate.createNewBoard();
         allValidWords = BoggleSolver.solver(board, dictionary);
 
-        resetButtonStatus();
+        resetPressedStatus();
         initBoard();
 
+        // init or reset player, score, time
+        player = new Player();
+        p1_score.setText("Score: 0");
 
-        for (String word: allValidWords)
-            System.out.println(word);
+        setupTimer();
 
+    }
+
+    private void setupTimer() {
+        // set up timer
+        timer = new Timer(totalTime, 1000);
+        timer.start();
+
+        btt_cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                resetBoardButtons();
+                resetPressedStatus();
+                text_display.setText(inputWord);
+            }
+        });
+    }
+
+    private void submitAction() {
         button_submit_word.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Check submit button");
-                System.out.println(inputWord);
+
                 // check inputWord is in list
-                int ret = player.updateInfor(inputWord, allValidWords);
+                int ret = player.updateInfor(tInputWord, allValidWords);
 
                 if (ret == -1)
                     text_display.setText("Invalid word!");
                 else if (ret == 0)
-                    text_display.setText("Invalid, \"" +inputWord + "\" found!");
+                    text_display.setText("Invalid, \"" + tInputWord + "\" found!");
                 else if (ret == 1) {
                     text_display.setText("Valid Word!");
+
                     p1_score.setText("Score: " + Integer.toString(player.getScore()));
 
                     foundWords = player.getFoundWords().toArray(new String[0]);
 
                     ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
-                    ListView wordList = (ListView) findViewById(R.id.list_foundWords);
                     wordList.setAdapter(wordAdapter);
                 }
+
+                resetBoardButtons();
+                resetPressedStatus();
+
+            }
+        });
+    }
 
                 resetBoardButtons(BoardButton);
                 resetButtonStatus();
@@ -263,9 +443,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         intend.putExtra("FOUND_WORDS", player.getFoundWords());
         intend.putExtra("POSSIBLE_WORDS", allValidWords);
 
-        System.out.println("reach 1");
         startActivity(intend);
-        System.out.println("reach 2");
     }
 
 
@@ -329,17 +507,27 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
         return 2;
     }
 
-    public void resetButtonStatus() {
+    public void resetPressedStatus() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
+
+                // for click
                 buttonStatus[i][j] = false;
                 inputWord = "";
                 lastCol = 0;
                 lastRow = 0;
                 pressCount = 0;
+
+                // for touch
+                touchVisited[i][j] = false;
+                tInputWord = "";
+                tlRow = 0;
+                tlCol = 0;
+                tPressCount = 0;
             }
         }
     }
+
     public void initBoard(){
         // board init and handler
         for (int i = 0; i < 4; i++) {
@@ -348,55 +536,42 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
                 final int row = i;
                 final int col = j;
                 String str = String.valueOf(board[i][j]);
-//                if (str.equals("q")) str = "qu";
-
-                BoardButton[ButtonNum].setTextColor(Color.WHITE);
+                BoardButton[ButtonNum].setTextColor(Color.BLACK);
                 BoardButton[ButtonNum].setText(str);
-                //BoardButton[ButtonNum].setText("");
-                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                        boolean validClick = checkOnClick(row, col);
-
-                        if (validClick == false) {
-                            resetBoardButtons(BoardButton);
-                        } else {
-                            BoardButton[ButtonNum].setBackgroundColor(Color.RED);
-                            text_display.setText(inputWord);
-                            //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
-                        }
-                    }
-
-                });
+//                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        boolean validClick = checkOnClick(row, col);
+//
+//                        if (validClick == false) {
+//                            resetBoardButtons(BoardButton);
+//                        } else {
+//                            BoardButton[ButtonNum].setBackgroundColor(Color.RED);
+//                            text_display.setText(inputWord);
+//                            //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
+//
+//                        }
+//                    }
+//
+//                });
             }
         }
     }
-    public void resetBoardButtons(Button[] buttons) {
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setTextColor(Color.WHITE);
-            //buttons[i].setBackgroundColor(Color.BLUE);
-            buttons[i].setBackgroundResource(R.drawable.background_neural);
+
+    // reset text color and background of grid to unpressed
+    private void resetBoardButtons() {
+        for (int i = 0; i < BoardButton.length; i++) {
+            BoardButton[i].setTextColor(Color.BLACK);
+            BoardButton[i].setBackgroundResource(R.drawable.background1);
         }
     }
 
-//    public void newRound(Button[] boardButton, Dictionary dictionary) {
-//        board = BoardGenerate.createNewBoard();
-//        allValidWords = BoggleSolver.solver(board, dictionary);
-//
-//        resetButtonStatus();
-//        resetBoardButtons(boardButton);
-//        for (int i = 0; i < 4; i++) {
-//            for (int j = 0; j < 4; j++)
-//                boardButton[4*i+j].setText(String.valueOf(board[i][j]));
-//        }
-//
-//    }
 
-
-    public boolean checkOnClick(int row, int col) {
+    private boolean checkOnClick(int row, int col) {
         if (buttonStatus[row][col] == true) {
-            resetButtonStatus();
+            resetPressedStatus();
             return false;
         }
 
@@ -406,10 +581,6 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             lastCol = col;
 
             buttonStatus[row][col] = true;
-
-//            String str = Character.toString(board[row][col]);
-//            if (str == "q")
-//                str = "qu";
 
             inputWord = inputWord + board[row][col];
 
@@ -438,18 +609,156 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
             lastCol = col;
             buttonStatus[row][col] = true;
 
-//            String str = Character.toString(board[row][col]);
-//            if (str == "q")
-//                str = "qu";
-
             inputWord = inputWord + board[row][col];
 
             return true;
         } else {
-            resetButtonStatus();
+            resetPressedStatus();
             return false;
         }
 
     }
 
+    // check and update inputWord
+    private boolean checkOnTouch(int tRol, int tCol) {
+
+//        boolean[][] touchVisited = new boolean[4][4];
+//        public int tlRow = 0, tlCol = 0, tPressCount = 0;
+//        public String tInputWord = "";
+        if (tPressCount == 0) {
+            tPressCount++;
+            tlRow = tRol;
+            tlCol = tCol;
+            touchVisited[tRol][tCol] = true;
+            tInputWord = tInputWord + board[tRol][tCol];
+            return true;
+        }
+
+        // in case if touch button that is the same as previous one
+        // dont update or change anything, return true, so caller change
+        // the color of button to pressed
+        if (tlRow == tRol && tlCol == tCol)
+            return true;
+
+        if (touchVisited[tRol][tCol] == true) {
+            resetPressedStatus();
+            return false;
+        }
+
+
+        // check if touch button is next to previous one or not
+        boolean isNextToLastButton = false;
+        int[] rowIdx = {0, 0, 1, 1, 1, -1, -1, -1};
+        int[] colIdx = {1, -1, 0, 1, -1, 0, 1, -1};
+        int tempRow, tempCol;
+
+        for (int i = 0; i < 8; i++) {
+            tempRow = tlRow + rowIdx[i];
+            tempCol = tlCol + colIdx[i];
+            if (tempRow < 0 || tempCol < 0 || tempRow > 3 || tempCol > 3)
+                continue;
+            if ((tempRow == tRol) && (tempCol == tCol)) {
+                isNextToLastButton = true;
+                break;
+            }
+        }
+
+
+        if (isNextToLastButton == true) {
+            tPressCount++;
+            tlRow = tRol;
+            tlCol = tCol;
+            touchVisited[tRol][tCol] = true;
+            tInputWord = tInputWord + board[tRol][tCol];
+
+            return true;
+
+        } else {
+            resetPressedStatus();
+            return false;
+        }
+
+    }
+
+
+
+
+
+    // ======================= HANDLING SLIDING =================================
+
+    /**
+     * Listen to finger touch and get the path
+     */
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        // get coord
+        int X = (int) motionEvent.getRawX();
+        int Y = (int) motionEvent.getRawY();
+
+        int eventAction = motionEvent.getAction();
+        switch (eventAction) {
+
+            case MotionEvent.ACTION_DOWN:
+                trackCoordinate(X, Y);
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                trackCoordinate(X, Y);
+                break;
+
+            case MotionEvent.ACTION_UP:
+                submitAction();
+                break;
+
+        }
+
+
+        return true;
+
+    }
+
+    /**
+     * take X, Y positions from touch event and check if location is
+     * inside grid or not, and adds letter to inputWord
+     */
+    private void trackCoordinate(int x, int y) {
+
+        int bttX, bttY, index;
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                index = 4*i + j;
+
+                bttX = locationMatrix[i][j].x;
+                bttY = locationMatrix[i][j].y;
+
+                // check if x,y location of finger touch is in boundary of
+                // button
+                if ( (bttX + offset) < x &&  x < (bttX + 3*offset)) {
+                    if ( (bttY + offset) < y && y < (bttY + 3*offset) ) {
+
+                        // handling if touch inside a button
+                        boolean ret = checkOnTouch(i, j);
+
+                        if (ret) {
+//                            BoardButton[index].setBackgroundColor(Color.RED);
+                            BoardButton[index].setBackgroundResource(R.drawable.background3);
+                            BoardButton[index].setTextColor(Color.BLACK);
+                            text_display.setText(tInputWord);
+                        } else {
+                            resetBoardButtons();
+                            text_display.setText(tInputWord);
+                        }
+
+                    }
+                }
+            }
+        }
+
+    }
+
+
 }
+
+
