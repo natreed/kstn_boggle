@@ -7,31 +7,59 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="470dp"
-        android:id="@+id/resultView" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:id="@+id/list" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:text="Replay"
-            android:id="@+id/button_replay"
-            android:layout_height="wrap_content" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:text="Home"
-            android:id="@+id/button_home"
-            android:layout_height="45dp" />
 
-    </LinearLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal" >-->
 
+
+        <!--<Button-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Replay"-->
+            <!--android:id="@+id/button_replay"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<Button-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="Home"-->
+            <!--android:id="@+id/button_home"-->
+            <!--android:layout_height="45dp" />-->
+
+    <!--</LinearLayout>-->
 
 
 
 </LinearLayout>
+
+<!--<LinearLayout-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:orientation="horizontal" >-->
+
+<!--<ListView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="470dp"-->
+    <!--android:id="@+id/resultView" />-->
+
+<!--<Button-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="Replay"-->
+    <!--android:id="@+id/button_replay"-->
+    <!--android:layout_height="wrap_content" />-->
+
+<!--<Button-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="Home"-->
+    <!--android:id="@+id/button_home"-->
+    <!--android:layout_height="45dp" />-->
+
+<!--</LinearLayout>-->
