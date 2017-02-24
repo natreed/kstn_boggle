@@ -35,13 +35,4 @@
     </ScrollView>
 
 
-    <Button
-        android:text="@string/button_exit"
-        android:background="@drawable/button_blue_bordered"
-        android:layout_width="@android:dimen/thumbnail_width"
-        android:layout_height="@android:dimen/notification_large_icon_width"
-        android:id="@+id/button_return"
-        android:layout_gravity="center_horizontal"
-        android:textSize="@android:dimen/app_icon_size" />
-
 </LinearLayout>

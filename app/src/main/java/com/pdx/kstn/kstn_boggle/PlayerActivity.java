@@ -32,6 +32,7 @@ import android.graphics.Point;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+
 /**
  * Created by Sharmistha on 1/27/2017.
  */
@@ -43,7 +44,15 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     public CountDownTimer timer = null;
     public Player player;
     public Dictionary dictionary = new Dictionary();
+    String[][] board;
+    boolean isCounterRunning = false;
+    public CountDownTimer timer = null;
+
+    public Player player = new Player();
+    public Dictionary dictionary = null;
     public ArrayList<String> allValidWords = new ArrayList<String>();
+    // load dictionary file
+
 
     // variables for on-going game
     public int pressCount = 0;
@@ -219,6 +228,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         btt_cancel = (Button) findViewById(R.id.button_cancel);
         button_submit_word = (Button) findViewById(R.id.button_submitWord);
         p1_score = (TextView) findViewById(R.id.text_player_score);
+
+        btt_cancel = (Button) findViewById(R.id.button_cancel);
+        button_submit_word = (Button) findViewById(R.id.button_submitWord);
+        p1_score = (TextView) findViewById(R.id.text_player_score);
         text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
@@ -230,6 +243,17 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
     private void setupNewGame() {
+    
+        System.out.println("DICTIONARY LOADED");
+        dictionary = null;
+        try {
+            InputStream in = getResources().openRawResource(R.raw.dictionary);
+            dictionary = new Dictionary();
+            dictionary.createDictionary(in);
+        } catch (Exception e) { }
+
+        // generate and solve board
+        
         board = BoardGenerate.createNewBoard();
         allValidWords = BoggleSolver.solver(board, dictionary);
 
@@ -269,7 +293,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                 if (ret == -1)
                     text_display.setText("Invalid word!");
                 else if (ret == 0)
-                    text_display.setText("Invalid, \"" +inputWord + "\" found!");
+                    text_display.setText("Invalid, \"" + tInputWord + "\" found!");
                 else if (ret == 1) {
                     text_display.setText("Valid Word!");
 
@@ -288,17 +312,54 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         });
     }
 
+                resetBoardButtons(BoardButton);
+                resetButtonStatus();
+            }
+        });
+
+
+        //Sensor manager for shaking
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        isGameOn =false;
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+
+            //Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
+            init = false;
+
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        } else {
+            Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
+        }
+
+        // set up timer
+        text_timer =  (TextView) findViewById(R.id.time_remaining);
+        timer = new Timer(totalTime, 1000);
+
+        System.out.println("TIMER STARTS HERE");
+
+        timer.start();
+
+        btt_cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                resetBoardButtons(BoardButton);
+                resetButtonStatus();
+                text_display.setText(inputWord);
+            }
+        });
+
+    }
 
     @Override
     public void onSensorChanged(SensorEvent e) {
-
-
         //Get x,y and z values
         float x,y,z;
         x = e.values[0];
         y = e.values[1];
         z = e.values[2];
-
 
         if (!init) {
             x1 = x;
@@ -313,36 +374,47 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
             //Handling ACCELEROMETER Noise
             if (diffX < ERROR) {
-
                 diffX = (float) 0.0;
             }
             if (diffY < ERROR) {
                 diffY = (float) 0.0;
             }
             if (diffZ < ERROR) {
-
                 diffZ = (float) 0.0;
             }
-
 
             x1 = x;
             x2 = y;
             x3 = z;
 
-
-            //Horizontal Shake Detected!
             if (diffX > diffY) {
-
-
                 Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
-                initBoard();
+                board = BoardGenerate.createNewBoard();
+                allValidWords = BoggleSolver.solver(board, dictionary);
+                foundWords = new String[] {};
+                ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                ListView wordList = (ListView) findViewById(R.id.list_foundWords);
+                wordList.setAdapter(wordAdapter);
+                player.setScore(0);
+                resetButtonStatus();
+                resetBoardButtons(BoardButton);
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        final int ButtonNum = i * 4 + j;
+                        final int row = i;
+                        final int col = j;
+                        String str = String.valueOf(board[i][j]);
 
-
+                        BoardButton[ButtonNum].setTextColor(Color.WHITE);
+                        BoardButton[ButtonNum].setText(str);
+                    }
+                }
+                timer.cancel();
+                timer.start();
             }
         }
 
     }
-
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         //Noting to do!!

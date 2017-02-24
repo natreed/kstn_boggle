@@ -1,5 +1,6 @@
 package com.pdx.kstn.kstn_boggle;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -23,6 +24,7 @@ public class Player {
     }
 
     public int getScore() { return this.score; }
+    public void setScore(int s) {this.score = s;}
 
     public int getScoreForCurrentRound() { return this.scoreForCurrentRound; }
 

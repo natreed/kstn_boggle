@@ -120,6 +120,10 @@ public class ChooseModeMainActivity extends AppCompatActivity {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 // User clicked OK, so save the mSelectedItems results somewhere
                                                 // or return them to the component that opened the dialog
+                                                Intent myDoubleIntent = new Intent(getApplicationContext(),
+                                                        DoublePlayerActivity.class);
+//
+                                                startActivity(myDoubleIntent);
 
                                             }
                                         })
