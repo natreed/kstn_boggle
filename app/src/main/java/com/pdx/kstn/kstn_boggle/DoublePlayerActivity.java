@@ -1,8 +1,3 @@
-package com.pdx.kstn.kstn_boggle;
-
-import android.app.Activity;
-
-public class DoublePlayerActivity extends Activity {
 
 /*
  * Copyright (C) 2014 The Android Open Source Project
