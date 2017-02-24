@@ -212,6 +212,7 @@ public class PlayerActivity extends AppCompatActivity implements SensorEventList
                 board = BoardGenerate.createNewBoard();
                 resetButtonStatus();
                 resetBoardButtons(BoardButton);
+                player.resetPlayer();
                 for (int i = 0; i < 4; i++) {
                     for (int j = 0; j < 4; j++) {
                         final int ButtonNum = i * 4 + j;

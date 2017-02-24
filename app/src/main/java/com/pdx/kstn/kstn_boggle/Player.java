@@ -58,7 +58,13 @@ public class Player {
         return this.allValidWords;
     }
 
-
+    public void resetPlayer () {
+        this.score = 0;
+        this.scoreForCurrentRound = 0;
+        this.round = 1;
+        this.foundWords = new ArrayList<String>();
+        this.foundWordsCurrentRound = new ArrayList<String>();
+    }
 //    static public int getNewTimer(int timeLeft, int score) {
 //        return timeLeft + score;
 //    }
