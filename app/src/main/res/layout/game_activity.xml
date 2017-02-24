@@ -35,7 +35,6 @@
         android:layout_marginTop="5dp"
         />
 
-
     <!--Row 1-->
     <Button
         android:id="@+id/button0"
@@ -45,8 +44,8 @@
         android:layout_marginTop="30dp"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginStart="50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -258,7 +257,7 @@
         android:layout_height="50dp"
         android:layout_toRightOf="@id/list_foundWords"
         android:layout_below="@id/text_display_screen"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
         android:id="@+id/button_submitWord"
