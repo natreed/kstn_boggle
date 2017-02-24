@@ -243,16 +243,15 @@
 
 
 
-
-   <ListView
-       android:layout_width="210dp"
-       android:layout_height="fill_parent"
-       android:layout_below="@id/text_display_screen"
-       android:id="@+id/list_foundWords"
-       android:layout_marginLeft="10dp"
-       android:layout_marginTop="8dp"
-       android:layout_marginBottom="5dp"
-       android:layout_marginRight="5dp"></ListView>
+    <ListView
+        android:layout_width="210dp"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/text_display_screen"
+        android:id="@+id/list_foundWords"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"></ListView>
 
     <Button
         android:layout_width="fill_parent"
@@ -285,5 +284,4 @@
 
 
 </RelativeLayout>
-
 
