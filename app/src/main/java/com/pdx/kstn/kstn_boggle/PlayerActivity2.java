@@ -25,6 +25,7 @@ import java.util.Iterator;
 
 import static android.R.attr.fingerprintAuthDrawable;
 import static android.R.attr.startX;
+import static android.R.attr.text;
 
 /**
  * Created by Sharmistha on 1/27/2017.
@@ -34,7 +35,7 @@ public class PlayerActivity2 extends MainActivity {
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
 
-    public Player player = new Player();
+
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
 
@@ -47,7 +48,7 @@ public class PlayerActivity2 extends MainActivity {
     public long totalTime = 180000;
 
     public TextView text_timer;
-
+    public Player player = new Player(text_timer, getApplicationContext());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
