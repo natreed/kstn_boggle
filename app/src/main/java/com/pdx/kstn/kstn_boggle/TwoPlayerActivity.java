@@ -2,41 +2,36 @@ package com.pdx.kstn.kstn_boggle;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Rect;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TableLayout;
 import android.widget.TextView;
-import android.graphics.Color;
+import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import static android.R.attr.fingerprintAuthDrawable;
-import static android.R.attr.startX;
-import static android.R.attr.text;
 
 /**
- * Created by Sharmistha on 1/27/2017.
+ * Created by nathanreed on 2/23/17.
  */
-public class PlayerActivity2 extends MainActivity {
+
+public class TwoPlayerActivity extends AppCompatActivity implements SensorEventListener {
     String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
-
-
-    public Dictionary dictionary = new Dictionary();
+    public Dictionary dictionary = null;
     public ArrayList<String> allValidWords = new ArrayList<String>();
 
     public int pressCount = 0;
@@ -45,17 +40,31 @@ public class PlayerActivity2 extends MainActivity {
     boolean[][] buttonStatus = new boolean[4][4];
     String inputWord = "";
     String[] foundWords = {};
-    public long totalTime = 180000;
+    public long totalTime = 30000;
 
     public TextView text_timer;
-    public Player player = new Player(text_timer, getApplicationContext());
+
+    private boolean init;
+    private Sensor mAccelerometer;
+    private SensorManager mSensorManager;
+    private float x1, x2, x3;
+    private static final float ERROR = (float) 7.0;
+    private boolean isGameOn;
+    final Button BoardButton[] = new Button[16];
+    TextView text_display;
+
+    public Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
 
-        final Button BoardButton[] = new Button[16];
+        // set up timer
+        text_timer =  (TextView) findViewById(R.id.time_remaining);
+        //timer = new Timer(totalTime, 1000);
+        player = new Player(text_timer, getApplicationContext());
+
         BoardButton[0] = (Button) findViewById(R.id.button0);
         BoardButton[1] = (Button) findViewById(R.id.button1);
         BoardButton[2] = (Button) findViewById(R.id.button2);
@@ -76,107 +85,32 @@ public class PlayerActivity2 extends MainActivity {
         final Button btt_cancel = (Button) findViewById(R.id.button_cancel);
         final Button button_submit_word = (Button) findViewById(R.id.button_submitWord);
         final TextView p1_score = (TextView) findViewById(R.id.text_player_score);
-        final TextView text_display = (TextView) findViewById(R.id.text_display_screen);
-        //final TableLayout boardLayout = (TableLayout) findViewById(R.id.buttonBoard);
-        final LinearLayout boardLayout = (LinearLayout) findViewById(R.id.mainLayout);
+        text_display = (TextView) findViewById(R.id.text_display_screen);
 
-        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity2.this, android.R.layout.simple_list_item_1, foundWords);
+        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(TwoPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
         ListView wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
-        // load dictionary file
+
+        System.out.println("DICTIONARY LOADED");
+        dictionary = null;
         try {
             InputStream in = getResources().openRawResource(R.raw.dictionary);
+            dictionary = new Dictionary();
             dictionary.createDictionary(in);
         } catch (Exception e) { }
 
         // generate and solve board
         board = BoardGenerate.createNewBoard();
-        allValidWords = BoggleSolver.solver(board, dictionary);
+        //allValidWords = BoggleSolver.solver(board, dictionary);
+
+        player.setAllVallidWords(BoggleSolver.solver(board, dictionary));
 
         resetButtonStatus();
+        initBoard();
 
-        // board init and handler
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                final int ButtonNum = i*4 + j;
-                final int row = i;
-                final int col = j;
-                String str = String.valueOf(board[i][j]);
-//                if (str.equals("q")) str = "qu";
-
-                BoardButton[ButtonNum].setTextColor(Color.WHITE);
-                BoardButton[ButtonNum].setText(str);
-
-                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {}
-                });
-
-
-            }
-        }
-        Log.d("BUTTONFINDERTEST", "RUNNING buttonFinder");
-        boardLayout.setOnTouchListener(new View.OnTouchListener() {
-            private float startX;
-            private float startY;
-            SlideSelect slideSelect = new SlideSelect(boardLayout, BoardButton);
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-//                try {
-//                    Thread.sleep(50);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        startX = event.getRawX();
-                        startY = event.getRawY();
-
-                        Log.d("BUTTONFINDERTEST", "RUNNING buttonFinder");
-                        int isButton = slideSelect.buttonFinder(BoardButton, boardLayout, (int)startX, (int)startY);
-
-                        if (isButton == -1) {
-                            Log.d("NOT BUTTON", "NOT A BUTTON");
-                        }
-                        else {
-                            int row = isButton/4;
-                            int col = isButton%4;
-                            boolean vallidClick = checkOnClick(row, col);
-                            if (vallidClick == false) {
-                                resetBoardButtons(BoardButton);
-                            }
-                            else {
-                                BoardButton[isButton].setBackgroundColor(Color.RED);
-                                text_display.setText(inputWord);
-                            }
-                        }
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        startX = event.getX();
-                        startY = event.getY();
-
-                        break;
-                    }
-                    case MotionEvent.ACTION_MOVE: {
-                        startX = event.getX();
-                        startY = event.getY();
-
-                        break;
-                    }
-
-                }
-                return true;
-            }
-        });
-
-
-
-        for (String word: allValidWords)
+        for (String word: player.allValidWords)
             System.out.println(word);
-
 
         button_submit_word.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +118,7 @@ public class PlayerActivity2 extends MainActivity {
                 System.out.println("Check submit button");
                 System.out.println(inputWord);
                 // check inputWord is in list
-                int ret = player.updateInfor(inputWord, allValidWords);
+                int ret = player.updateInfor(inputWord, player.allValidWords);
 
                 if (ret == -1)
                     text_display.setText("Invalid word!");
@@ -196,7 +130,7 @@ public class PlayerActivity2 extends MainActivity {
 
                     foundWords = player.getFoundWords().toArray(new String[0]);
 
-                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity2.this, android.R.layout.simple_list_item_1, foundWords);
+                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(TwoPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                     ListView wordList = (ListView) findViewById(R.id.list_foundWords);
                     wordList.setAdapter(wordAdapter);
                 }
@@ -207,11 +141,25 @@ public class PlayerActivity2 extends MainActivity {
             }
         });
 
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        // set up timer
-        text_timer =  (TextView) findViewById(R.id.time_remaining);
-        timer = new Timer(totalTime, 1000);
-        timer.start();
+        isGameOn =false;
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+
+            //Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
+            init = false;
+
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        } else {
+
+            Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
+        }
+
+        System.out.println("TIMER STARTS HERE");
+        player.initiateTimer();
 
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -220,28 +168,81 @@ public class PlayerActivity2 extends MainActivity {
                 text_display.setText(inputWord);
             }
         });
+    }
 
+    @Override
+    public void onSensorChanged(SensorEvent e) {
+        //Get x,y and z values
+        float x,y,z;
+        x = e.values[0];
+        y = e.values[1];
+        z = e.values[2];
+
+        if (!init) {
+            x1 = x;
+            x2 = y;
+            x3 = z;
+            init = true;
+        } else {
+
+            float diffX = Math.abs(x1 - x);
+            float diffY = Math.abs(x2 - y);
+            float diffZ = Math.abs(x3 - z);
+
+            //Handling ACCELEROMETER Noise
+            if (diffX < ERROR) {
+                diffX = (float) 0.0;
+            }
+            if (diffY < ERROR) {
+                diffY = (float) 0.0;
+            }
+            if (diffZ < ERROR) {
+                diffZ = (float) 0.0;
+            }
+
+            x1 = x;
+            x2 = y;
+            x3 = z;
+
+            if (diffX > diffY) {
+                Toast.makeText(TwoPlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
+                board = BoardGenerate.createNewBoard();
+                resetButtonStatus();
+                resetBoardButtons(BoardButton);
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        final int ButtonNum = i * 4 + j;
+                        final int row = i;
+                        final int col = j;
+                        String str = String.valueOf(board[i][j]);
+
+                        BoardButton[ButtonNum].setTextColor(Color.WHITE);
+                        BoardButton[ButtonNum].setText(str);
+                    }
+                }
+//                timer.cancel();
+//                timer.start();
+                player.resetTimer();
+            }
+        }
     }
 
 
 
-    public class Timer extends CountDownTimer {
-        public Timer(long startTime, long interval) {
-            super(startTime, interval);
-        }
-        @Override
-        public void onFinish() {
-            text_timer.setText("TIME'S UP!");
-        }
-        @Override
-        public void onTick(long millisUntilFinished) {
-            text_timer.setText("Timer: " + millisUntilFinished / 1000);
-            //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
-
-        }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //Noting to do!!
     }
 
+    public void gameOver() {
+        Intent intend = new Intent(getApplicationContext(), GameOver.class);
+        intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
+        intend.putExtra("FOUND_WORDS", player.getFoundWords());
+        intend.putExtra("POSSIBLE_WORDS", player.allValidWords);
 
+        System.out.println("reach 1");
+        startActivity(intend);
+        System.out.println("reach 2");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -315,6 +316,39 @@ public class PlayerActivity2 extends MainActivity {
         }
     }
 
+    public void initBoard(){
+        // board init and handler
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                final int ButtonNum = i * 4 + j;
+                final int row = i;
+                final int col = j;
+                String str = String.valueOf(board[i][j]);
+//                if (str.equals("q")) str = "qu";
+
+                BoardButton[ButtonNum].setTextColor(Color.WHITE);
+                BoardButton[ButtonNum].setText(str);
+                //BoardButton[ButtonNum].setText("");
+                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        boolean validClick = checkOnClick(row, col);
+
+                        if (validClick == false) {
+                            resetBoardButtons(BoardButton);
+                        } else {
+                            BoardButton[ButtonNum].setBackgroundColor(Color.RED);
+                            text_display.setText(inputWord);
+                            //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
+                        }
+                    }
+
+                });
+            }
+        }
+    }
+
     public void resetBoardButtons(Button[] buttons) {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setTextColor(Color.WHITE);
@@ -323,6 +357,17 @@ public class PlayerActivity2 extends MainActivity {
         }
     }
 
+//    public void newRound(Button[] boardButton, Dictionary dictionary) {
+//        board = BoardGenerate.createNewBoard();
+//        allValidWords = BoggleSolver.solver(board, dictionary);
+//
+//        resetButtonStatus();
+//        resetBoardButtons(boardButton);
+//        for (int i = 0; i < 4; i++) {
+//            for (int j = 0; j < 4; j++)
+//                boardButton[4*i+j].setText(String.valueOf(board[i][j]));
+//        }
+//    }
 
     public boolean checkOnClick(int row, int col) {
         if (buttonStatus[row][col] == true) {
@@ -337,16 +382,10 @@ public class PlayerActivity2 extends MainActivity {
 
             buttonStatus[row][col] = true;
 
-//            String str = Character.toString(board[row][col]);
-//            if (str == "q")
-//                str = "qu";
-
             inputWord = inputWord + board[row][col];
 
             return true;
         }
-
-
 
         boolean isNextToLastButton = false;
         int[] rowIdx = {0, 0, 1, 1, 1, -1, -1, -1};
@@ -370,10 +409,6 @@ public class PlayerActivity2 extends MainActivity {
             lastCol = col;
             buttonStatus[row][col] = true;
 
-//            String str = Character.toString(board[row][col]);
-//            if (str == "q")
-//                str = "qu";
-
             inputWord = inputWord + board[row][col];
 
             return true;
@@ -383,4 +418,5 @@ public class PlayerActivity2 extends MainActivity {
         }
 
     }
+
 }

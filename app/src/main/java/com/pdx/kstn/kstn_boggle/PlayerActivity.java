@@ -43,7 +43,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     public String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
-    public Player player = new Player();
+    public Player player;
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
     // load dictionary file
@@ -246,16 +246,15 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         // generate and solve board
 
         board = BoardGenerate.createNewBoard();
+        player = new Player(text_timer, getApplicationContext());
         allValidWords = BoggleSolver.solver(board, dictionary);
+        player.setAllVallidWords(allValidWords);
 
         resetPressedStatus();
         initBoard();
-
-        // init or reset player, score, time
-        player = new Player();
         p1_score.setText("Score: 0");
 
-        setupTimer();
+        player.initiateTimer();
     }
 
     private void setupTimer() {
@@ -271,7 +270,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
             public void onClick(View view) {
 
                 // check inputWord is in list
-                int ret = player.updateInfor(tInputWord, allValidWords);
+                int ret = player.updateInfor(tInputWord, player.allValidWords);
 
                 if (ret == -1)
                     text_display.setText("Invalid word!");
@@ -332,14 +331,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
             if (diffX > diffY) {
                 Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
                 board = BoardGenerate.createNewBoard();
+                player.resetPlayer();
                 allValidWords = BoggleSolver.solver(board, dictionary);
-                foundWords = new String[] {};
+                player.setAllVallidWords(allValidWords);
                 ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                 ListView wordList = (ListView) findViewById(R.id.list_foundWords);
                 wordList.setAdapter(wordAdapter);
 
-                player = new Player();
-                //player.setScore(0);
                 resetPressedStatus();
                 resetBoardButtons();
                 for (int i = 0; i < 4; i++) {
@@ -353,8 +351,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                         BoardButton[ButtonNum].setText(str);
                     }
                 }
-                timer.cancel();
-                timer.start();
+                player.resetTimer();
             }
         }
 
