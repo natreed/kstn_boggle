@@ -90,7 +90,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_activity);
+        setContentView(R.layout.double_player_activity_layout);
 
         // load dictionary file
         try {
@@ -393,54 +393,54 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.item_choose_game:
-                new AlertDialog.Builder(this)
-                        .setTitle("")
-                        .setMessage("Do you want to quit current game?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(getBaseContext(), ChooseModeMainActivity.class));
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).show();
-
-                return true;
-
-            case R.id.item_high_score:
-                new AlertDialog.Builder(this)
-                        .setTitle("")
-                        .setMessage("Do you want to quit current game?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(getBaseContext(), ScoresActivity.class));
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).show();
-                return true;
-
-            case R.id.item_instruction:
-                new AlertDialog.Builder(this)
-                        .setTitle("")
-                        .setMessage("Do you want to quit current game?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(getBaseContext(), RulesActivity.class));
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).show();
-                return true;
-
-            case R.id.item_about_us:
-
-                return true;
-
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//        switch (id) {
+//            case R.id.item_choose_game:
+//                new AlertDialog.Builder(this)
+//                        .setTitle("")
+//                        .setMessage("Do you want to quit current game?")
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                startActivity(new Intent(getBaseContext(), ChooseModeMainActivity.class));
+//                            }
+//                        })
+//                        .setNegativeButton(android.R.string.no, null).show();
+//
+//                return true;
+//
+//            case R.id.item_high_score:
+//                new AlertDialog.Builder(this)
+//                        .setTitle("")
+//                        .setMessage("Do you want to quit current game?")
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                startActivity(new Intent(getBaseContext(), ScoresActivity.class));
+//                            }
+//                        })
+//                        .setNegativeButton(android.R.string.no, null).show();
+//                return true;
+//
+//            case R.id.item_instruction:
+//                new AlertDialog.Builder(this)
+//                        .setTitle("")
+//                        .setMessage("Do you want to quit current game?")
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                startActivity(new Intent(getBaseContext(), RulesActivity.class));
+//                            }
+//                        })
+//                        .setNegativeButton(android.R.string.no, null).show();
+//                return true;
+//
+//            case R.id.item_about_us:
+//
+//                return true;
+//
+//        }
+//        return true;
+//    }
 
     //just a prototype
     private int isWord(String word) {
