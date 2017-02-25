@@ -2,16 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pdx.kstn.kstn_boggle">
 
-    <uses-feature android:name="android.hardware.bluetooth" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
-
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -41,10 +32,7 @@
         <activity
             android:name=".GameOver"
             android:noHistory="true" />
-        <activity
-            android:name=".MultiPlayerActivity"
-            android:noHistory="true"></activity>
-
+        <activity android:name=".DoublePlayerActivity"></activity>
     </application>
 
 </manifest>
