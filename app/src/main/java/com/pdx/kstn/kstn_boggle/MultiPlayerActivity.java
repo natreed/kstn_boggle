@@ -185,7 +185,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     protected void onResume() {
         super.onResume();
         if (mBluetoothService != null) {
-            if (mBluetoothService.getState() == BluetoothService.STATE_NONE) {
+            if (mBluetoothService.getState() == BlueToothService.STATE_NONE) {
                 mBluetoothService.start();
             }
         }
@@ -213,7 +213,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     private void sendMessage(String message) {
 
         // Check that we're actually connected before trying anything
-        if (mBluetoothService.getState() != BluetoothService.STATE_CONNECTED) {
+        if (mBluetoothService.getState() != BlueToothService.STATE_CONNECTED) {
             Toast.makeText(this, "Not Connected", Toast.LENGTH_SHORT).show();
             return;
         }

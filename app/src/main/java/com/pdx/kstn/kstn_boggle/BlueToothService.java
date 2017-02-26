@@ -47,7 +47,7 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothService {
+public class BlueToothService {
 
     // Message types sent from the BluetoothService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
@@ -97,7 +97,7 @@ public class BluetoothService {
      * @param context The UI Activity Context
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothService(Context context, Handler handler) {
+    public BlueToothService(Context context, Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mNewState = mState;
@@ -290,7 +290,7 @@ public class BluetoothService {
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
-        BluetoothService.this.start();
+        BlueToothService.this.start();
     }
 
     /**
@@ -309,7 +309,7 @@ public class BluetoothService {
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
-        BluetoothService.this.start();
+        BlueToothService.this.start();
     }
 
     /**
@@ -359,7 +359,7 @@ public class BluetoothService {
 
                 // If a connection was accepted
                 if (socket != null) {
-                    synchronized (BluetoothService.this) {
+                    synchronized (BlueToothService.this) {
                         switch (mState) {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
@@ -444,7 +444,7 @@ public class BluetoothService {
             }
 
             // Reset the ConnectThread because we're done
-            synchronized (BluetoothService.this) {
+            synchronized (BlueToothService.this) {
                 mConnectThread = null;
             }
 

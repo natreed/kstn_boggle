@@ -239,7 +239,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 //        dictionary = null;
 //        try {
 //            InputStream in = getResources().openRawResource(R.raw.dictionary);
-//            dictionary = new Dictionary();
+//            dictionary = new dictionary();
 //            dictionary.createDictionary(in);
 //        } catch (Exception e) { }
 
