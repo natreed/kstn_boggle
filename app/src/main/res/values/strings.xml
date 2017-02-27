@@ -53,5 +53,7 @@
     <string name="item_about_us">About Us</string>
     <string name="item_instruction">Instruction</string>
     <string name="item_high_scores">High Scores</string>
+    <string name="item_connection">Connection</string>
+    <string name="item_make_discoverable">Make Discoverable</string>
 
 </resources>

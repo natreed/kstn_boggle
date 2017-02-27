@@ -1,24 +1,28 @@
 package com.pdx.kstn.kstn_boggle;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,6 +30,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewAnimator;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,28 +39,26 @@ import java.util.ArrayList;
  * Created by thanhhoang on 2/24/17.
  */
 
-public class MultiPlayerActivity extends AppCompatActivity implements View.OnTouchListener, SensorEventListener {
+public class MultiPlayerActivity extends AppCompatActivity implements View.OnTouchListener {
+
+    // double player variables
+    public Player player1 = null;
+    public Player player2 = null;
+    public Player player = null;
+    private boolean isMaster = false;
+
+
 
     // variables for innit game
     public String[][] board;
     boolean isCounterRunning = false;
     public CountDownTimer timer = null;
-    public Player player = new Player();
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
     // load dictionary file
 
-
     String[] foundWords = {};
     public long totalTime = 180000;
-
-    // variables for sensor
-    private boolean init;
-    private Sensor mAccelerometer;
-    private SensorManager mSensorManager;
-    private float x1, x2, x3;
-    private static final float ERROR = (float) 7.0;
-    private boolean isGameOn;
 
     // variables for handling sliding + locations
     Point[][] locationMatrix = new Point[4][4];  //new Coordinate[4][4];
@@ -63,24 +66,63 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     public boolean[][] touchVisited = new boolean[4][4];
     public int tlRow = 0, tlCol = 0, tPressCount = 0;
     public String tInputWord = "";
+    public boolean isTouchAble = false;
 
 
     // layout variables
     public Button BoardButton[] = new Button[16];
     public Button btt_cancel;
     public Button button_submit_word;
-
     public TextView text_timer;
     public TextView text_display;       // display system messages, word
     public TextView p1_score;
-
     public ListView wordList;
     public RelativeLayout mainLayout;
+
+    // Message types sent from the game Handler
+    public static final int MESSAGE_STATE_CHANGE = 1;
+    public static final int MESSAGE_READ = 2;
+    public static final int MESSAGE_WRITE = 3;
+    public static final int MESSAGE_DEVICE_NAME = 4;
+    public static final int MESSAGE_TOAST = 5;
+
+    // Key names received from the BluetoothChatService Handler
+    public static final String DEVICE_NAME = "device_name";
+    public static final String TOAST = "toast";
+
+    // Intent request codes
+    private static final int REQUEST_CONNECT_DEVICE = 1;
+
+    // Local Bluetooth adapter, service
+    public  BluetoothAdapter mBluetoothAdapter = null;
+    private BluetoothConnectionService mBluetoothService = null;
+
+    // Intent request codes
+    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    private static final int REQUEST_ENABLE_BT = 3;
+
+    /**
+     * Name of the connected device
+     */
+    private String mConnectedDeviceName = null;
+
+    /**
+     * Array adapter for the conversation thread
+     */
+    private ArrayAdapter<String> mConversationArrayAdapter;
+
+    /**
+     * String buffer for outgoing messages
+     */
+    private StringBuffer mOutStringBuffer;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_activity);
+        setContentView(R.layout.double_player_activity_layout);
 
         // load dictionary file
         try {
@@ -90,10 +132,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         }
 
         // call init layout
-
         initLayoutVariables();
-        setupNewGame();
 
+        // init location on screen for all components
         mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
         mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -110,36 +151,239 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     }
                 });
 
-        btt_cancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                resetBoardButtons();
-                resetPressedStatus();
-                text_display.setText(tInputWord);
-            }
-        });
+        // set up game to not playing state
+        setWaitingGame();
 
-
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        isGameOn = false;
-        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-
-            Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
-
-
-            init = false;
-
-            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-
-        } else {
-
-            Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
+        // bluetooth does not support when it null
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "BLUETOOTH is NOT AVAILABLE", Toast.LENGTH_LONG).show();
+            finish();
+            return;
         }
 
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        } else {
+            if (mBluetoothService == null)
+                // Initialize the BluetoothService to perform bluetooth connections
+                mBluetoothService = new BluetoothConnectionService(this, mHandler);
+
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mBluetoothService != null) {
+            if (mBluetoothService.getState() == BlueToothService.STATE_NONE) {
+                mBluetoothService.start();
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Stop the Bluetooth  services
+        if (mBluetoothService != null) mBluetoothService.stop();
+    }
+
+    // ======================== Send + Receive data from bluetooth
+
+    private void sendMessage(String message) {
+
+        // Check that we're actually connected before trying anything
+        if (mBluetoothService.getState() != BlueToothService.STATE_CONNECTED) {
+            Toast.makeText(this, "Not Connected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check that there's actually something to send
+        if (message.length() > 0) {
+            // Get the message bytes and tell the Bluetooth service  to write
+            byte[] send = message.getBytes();
+            mBluetoothService.write(send);
+
+            // may add something to show that some stuff is sending out
+        }
+    }
+
+
+
+    // The Handler that gets information back from the BluetoothService
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+//                    mBluetoothAdapter.notifyDataSetChanged();
+//                    messageList.add(new androidRecyclerView.Message(counter++, writeMessage, "Me"));
+                    break;
+                case MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+//                    mBluetoothAdapter.notifyDataSetChanged();
+//                    messageList.add(new androidRecyclerView.Message(counter++, readMessage, mConnectedDeviceName));
+                    break;
+                case MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+//                    mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+//                    Toast.makeText(getApplicationContext(), "Connected to "
+//                            + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+                    break;
+                case MESSAGE_TOAST:
+                    Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+    
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CONNECT_DEVICE:
+                // When DeviceListActivity returns with a device to connect
+                if (resultCode == Activity.RESULT_OK) {
+                    // Get the device MAC address
+                    String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                    // Get the BLuetoothDevice object
+                    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+                    // Attempt to connect to the device
+                    mBluetoothService.connect(device);
+                }
+                break;
+            case REQUEST_ENABLE_BT:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    // Bluetooth is now enabled, so set up a chat session
+                    mBluetoothService = new BluetoothConnectionService(this, mHandler);
+                    if (mBluetoothService.getState() == BluetoothConnectionService.STATE_CONNECTING) {
+                        text_display.setText("State connecting");
+                    }
+                    text_display.setText("im mad");
+
+                } else {
+                    // User did not enable Bluetooth or an error occured
+                   // Toast.makeText(this, R.string.bt_not_enabled_leaving, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+        }
+    }
+
+
+
+
+
+//    /**
+//     * Establish connection with other device
+//     *
+//     * @param data   An {@link Intent} with {@link DeviceListActivity#EXTRA_DEVICE_ADDRESS} extra.
+//     * @param secure Socket Security type - Secure (true) , Insecure (false)
+//     */
+//    private void connectDevice(Intent data, boolean secure) {
+//        // Get the device MAC address
+//        String address = data.getExtras()
+//                .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+//        // Get the BluetoothDevice object
+//        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+//        // Attempt to connect to the device
+//        mBluetoothService.connect(device, secure);
+//    }
+
+
+    public void connect(View v) {
+        Intent serverIntent = new Intent(this, DeviceListActivity.class);
+        startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
+    }
+
+
+
+
+    // ================================ Boggle game setup + game management
+
+    private void setWaitingGame() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                BoardButton[i*4+j].setText(" ");
+            }
+        }
+
+        text_display.setText("Waiting for Game to Start!");
+        p1_score.setText(" ");
+
+        isTouchAble = false;
+    }
+
+    private void setupNewGame() {
+
+        board = BoardGenerate.createNewBoard();
+        allValidWords = BoggleSolver.solver(board, dictionary);
+
+        resetPressedStatus();
+        initBoard();
+
+        // init or reset player, score, time
+        player = new Player(text_timer, getApplicationContext());
+        p1_score.setText("Score: 0");
+
+        setupTimer();
+    }
+
+    private void setupTimer() {
+        // set up timer
+        timer = new Timer(totalTime, 1000);
+        timer.start();
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //============================== stuff from single player activity ==========================
 
     @SuppressWarnings("deprecation")
     private void removeLayoutListenerPre16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener) {
@@ -219,40 +463,17 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         text_timer = (TextView) findViewById(R.id.time_remaining);
 
-    }
-
-
-    private void setupNewGame() {
-
-//        System.out.println("DICTIONARY LOADED");
-//        dictionary = null;
-//        try {
-//            InputStream in = getResources().openRawResource(R.raw.dictionary);
-//            dictionary = new Dictionary();
-//            dictionary.createDictionary(in);
-//        } catch (Exception e) { }
-
-        // generate and solve board
-
-        board = BoardGenerate.createNewBoard();
-        allValidWords = BoggleSolver.solver(board, dictionary);
-
-        resetPressedStatus();
-        initBoard();
-
-        // init or reset player, score, time
-        player = new Player();
-        p1_score.setText("Score: 0");
-
-        setupTimer();
-    }
-
-    private void setupTimer() {
-        // set up timer
-        timer = new Timer(totalTime, 1000);
-        timer.start();
+        // handling cancel button
+        btt_cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                resetBoardButtons();
+                resetPressedStatus();
+                text_display.setText(tInputWord);
+            }
+        });
 
     }
+
 
     private void submitAction() {
         button_submit_word.setOnClickListener(new View.OnClickListener() {
@@ -284,74 +505,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         });
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent e) {
-        //Get x,y and z values
-        float x, y, z;
-        x = e.values[0];
-        y = e.values[1];
-        z = e.values[2];
-
-        if (!init) {
-            x1 = x;
-            x2 = y;
-            x3 = z;
-            init = true;
-        } else {
-
-            float diffX = Math.abs(x1 - x);
-            float diffY = Math.abs(x2 - y);
-            float diffZ = Math.abs(x3 - z);
-
-            //Handling ACCELEROMETER Noise
-            if (diffX < ERROR) {
-                diffX = (float) 0.0;
-            }
-            if (diffY < ERROR) {
-                diffY = (float) 0.0;
-            }
-            if (diffZ < ERROR) {
-                diffZ = (float) 0.0;
-            }
-
-            x1 = x;
-            x2 = y;
-            x3 = z;
-
-            if (diffX > diffY) {
-                Toast.makeText(MultiPlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
-                board = BoardGenerate.createNewBoard();
-                allValidWords = BoggleSolver.solver(board, dictionary);
-                foundWords = new String[]{};
-                ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
-                ListView wordList = (ListView) findViewById(R.id.list_foundWords);
-                wordList.setAdapter(wordAdapter);
-
-                player = new Player();
-                //player.setScore(0);
-                resetPressedStatus();
-                resetBoardButtons();
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        final int ButtonNum = i * 4 + j;
-                        final int row = i;
-                        final int col = j;
-                        String str = String.valueOf(board[i][j]);
-
-                        BoardButton[ButtonNum].setTextColor(Color.WHITE);
-                        BoardButton[ButtonNum].setText(str);
-                    }
-                }
-                timer.cancel();
-                timer.start();
-            }
-        }
-
-    }
-
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        //Noting to do!!
-    }
 
     public class Timer extends CountDownTimer {
         public Timer(long startTime, long interval) {
@@ -372,6 +525,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         }
     }
 
+    // need to edit this for double player
     private void gameOver() {
         Intent intend = new Intent(getApplicationContext(), GameOver.class);
         intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
@@ -381,6 +535,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         startActivity(intend);
     }
 
+
+    // ============================= Menu handling ===========================
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -389,57 +546,64 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.item_choose_game:
-                new AlertDialog.Builder(this)
-                        .setTitle("")
-                        .setMessage("Do you want to quit current game?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(getBaseContext(), ChooseModeMainActivity.class));
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).show();
-
+        switch (item.getItemId()) {
+            case R.id.item_connection: {
+                // Launch the DeviceListActivity to see devices and do scan
+                Intent serverIntent = new Intent(this, DeviceListActivity.class);
+                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+                if (mBluetoothService.getState() == BluetoothConnectionService.STATE_LISTEN) {
+                    isMaster = true;
+                    text_display.setText("Listening!");
+                }
                 return true;
-
-            case R.id.item_high_score:
-                new AlertDialog.Builder(this)
-                        .setTitle("")
-                        .setMessage("Do you want to quit current game?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(getBaseContext(), ScoresActivity.class));
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).show();
+            }
+//            case R.id.insecure_connect_scan: {
+//                // Launch the DeviceListActivity to see devices and do scan
+//                Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
+//                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
+//                return true;
+//            }
+            case R.id.item_discoverable: {
+                // Ensure this device is discoverable by others
+                ensureDiscoverable();
                 return true;
-
-            case R.id.item_instruction:
-                new AlertDialog.Builder(this)
-                        .setTitle("")
-                        .setMessage("Do you want to quit current game?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(new Intent(getBaseContext(), RulesActivity.class));
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).show();
-                return true;
-
-            case R.id.item_about_us:
-
-                return true;
-
+            }
         }
-        return true;
+        return false;
     }
+
+
+
+
+    // ========================= Bluetooth handling
+
+    /**
+     * Makes this device discoverable for 300 seconds (5 minutes).
+     */
+    private void ensureDiscoverable() {
+        if (mBluetoothAdapter.getScanMode() !=
+                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
+        }
+    }
+
+    public void discoverable(View v) {
+        ensureDiscoverable();
+    }
+
+
+
 
     //just a prototype
     private int isWord(String word) {
         return 2;
     }
+
+
+    // ========================== Board handling ===============================
+
 
     public void resetPressedStatus() {
         for (int i = 0; i < 4; i++) {
@@ -460,8 +624,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 final int ButtonNum = i * 4 + j;
-                final int row = i;
-                final int col = j;
                 String str = String.valueOf(board[i][j]);
                 BoardButton[ButtonNum].setTextColor(Color.BLACK);
                 BoardButton[ButtonNum].setText(str);
@@ -544,6 +706,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
      */
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (isTouchAble == false)
+            return false;
+
 
         // get coord
         int X = (int) motionEvent.getRawX();
@@ -567,7 +732,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         }
 
         return true;
-
     }
 
     /**
