@@ -21,8 +21,7 @@
     <string name="button_exit">EXIT</string>
     <string name="ok">OK</string>
     <string name="cancel">cancel</string>
-    <string name="dialog_title">Choose your difficulty</string>
-
+    <string name="dialog_title"></string>
     <string name="text_rules_paragraph">
 
 \n\nBoggle is a popular word game for any number of players. In our version of Boggle you may choose single player or play against a friend.￼
@@ -54,4 +53,7 @@
     <string name="item_about_us">About Us</string>
     <string name="item_instruction">Instruction</string>
     <string name="item_high_scores">High Scores</string>
+    <string name="item_connection">Connection</string>
+    <string name="item_make_discoverable">Make Discoverable</string>
+
 </resources>

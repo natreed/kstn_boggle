@@ -18,7 +18,7 @@ public class BoggleSolver {
     };
 
 
-     static public ArrayList<String> solver(char[][] board, Dictionary dictionary) {
+     static public ArrayList<String> solver(String[][] board, Dictionary dictionary) {
          ArrayList<String> listWords = new ArrayList<String>();
          boolean flag = false;
          Node current = dictionary.getRootDictionary();
@@ -42,15 +42,18 @@ public class BoggleSolver {
         return listWords;
     }
 
-    private static void findWords(Dictionary dictionary, char[][] board, boolean[][] visited, int i, int j, String word, ArrayList<String> list) {
+    private static void findWords(Dictionary dictionary, String[][] board, boolean[][] visited, int i, int j, String word, ArrayList<String> list) {
         visited[i][j] = true;
-        word = word + Character.toString(board[i][j]);
+        String temp = word;
+
+        word = word + board[i][j];
+//        word = word + Character.toString(board[i][j]);
 
         if (dictionary.isWord(word))
             list.add(word);
 
         if (word.length() >= MAX_LENGTH) {
-            word.substring(0, word.length()-1) ;
+            word = temp;    // word.substring(0, word.length()-1) ;
             visited[i][j] = false;
             return;
         }
@@ -60,7 +63,7 @@ public class BoggleSolver {
                 if (row>=0 && col>=0 && !visited[row][col])
                     findWords(dictionary, board, visited, row, col, word, list);
 
-        word.substring(0, word.length()-1);
+        word = temp;        // word.substring(0, word.length()-1);
         visited[i][j] = false;
     }
 

@@ -2,20 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/item_choose_game"
-        android:title="@string/item_choose_new_game"
+    <item android:id="@+id/item_connection"
+        android:title="@string/item_connection"
         app:showAsAction="never"    />
 
-    <item android:id="@+id/item_high_score"
-        android:title="@string/item_high_scores"
+    <item android:id="@+id/item_discoverable"
+        android:title="@string/item_make_discoverable"
         app:showAsAction="never" />
 
-    <item android:id="@+id/item_instruction"
-        android:title="@string/item_instruction"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/item_about_us"
-        android:title="@string/item_about_us"
-        app:showAsAction="never" />
 
 </menu>

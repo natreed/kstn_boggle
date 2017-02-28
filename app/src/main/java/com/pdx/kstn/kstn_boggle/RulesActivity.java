@@ -19,17 +19,6 @@ public class RulesActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rules);
-
-        final Button button_return = (Button) findViewById(R.id.button_return);
-
-        button_return.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                finish();
-            }
-        });
-
     }
 }
 

@@ -7,20 +7,33 @@ package com.pdx.kstn.kstn_boggle;
 public class BoardGenerate {
     static public final String letterdist = "eeeeeeeeeeeeeeeeeeetttttttttttttaaaaaaaaaaaarrrrrrrrrrrriiiiiiiiiiinnnnnnnnnnnooooooooooosssssssssddddddccccchhhhhlllllffffmmmmppppuuuugggyyywwbjkvxzq";
 
-    static public char[][] createNewBoard() {
-        char[][] board = new char[4][4];
+//    static public char[][] createNewBoard() {
+//        char[][] board = new char[4][4];
+//
+//        for (int row = 0; row < board.length; row++) {
+//            for (int column = 0; column < board.length; column++) {
+//                board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
+//            }
+//        }
+//
+//        return board;
+//    }
+
+    // add qu case
+    static public String[][] createNewBoard() {
+        String[][] board = new String[4][4];
 
         for (int row = 0; row < board.length; row++) {
             for (int column = 0; column < board.length; column++) {
-                board[row][column] = letterdist.charAt((int)(Math.random()*letterdist.length()));
+                char  letter = letterdist.charAt((int)(Math.random()*letterdist.length()));
+                if (letter == 'q')
+                    board[row][column] = "qu";
+                else
+                    board[row][column] = Character.toString(letter);
             }
         }
 
         return board;
     }
-
-//    public String[] validWords() {
-//        return null;
-//    }
 
 }
