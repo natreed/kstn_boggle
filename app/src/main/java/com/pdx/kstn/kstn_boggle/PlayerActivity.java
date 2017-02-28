@@ -224,7 +224,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         p1_score = (TextView) findViewById(R.id.text_player_score);
         text_display = (TextView) findViewById(R.id.text_display_screen);
 
-        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, R.layout.mywhite_listview, foundWords);
         wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
@@ -283,7 +283,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
                     foundWords = player.getFoundWords().toArray(new String[0]);
 
-                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, R.layout.mywhite_listview, foundWords);
                     wordList.setAdapter(wordAdapter);
                 }
 
