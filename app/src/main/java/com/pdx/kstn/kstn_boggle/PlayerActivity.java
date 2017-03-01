@@ -92,6 +92,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.double_player_activity_layout);
 
+
         // load dictionary file
         try {
             InputStream in = getResources().openRawResource(R.raw.dictionary);
@@ -632,6 +633,17 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
             }
         }
 
+    }
+
+    // make start and end menu invisible
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem start = menu.findItem(R.id.item_start);
+        MenuItem end = menu.findItem(R.id.item_end);
+            start.setVisible(false);
+            end.setVisible(false);
+        return true;
     }
 
 
