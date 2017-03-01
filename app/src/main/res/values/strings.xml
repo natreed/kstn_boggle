@@ -55,5 +55,7 @@
     <string name="item_high_scores">High Scores</string>
     <string name="item_connection">Connection</string>
     <string name="item_make_discoverable">Make Discoverable</string>
+    <string name="item_start">Start</string>
+    <string name="item_end">end</string>
 
 </resources>

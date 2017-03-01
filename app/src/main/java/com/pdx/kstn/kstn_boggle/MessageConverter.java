@@ -29,7 +29,7 @@ public class MessageConverter {
         String[][] board = new String[4][4];
         char c;
 
-        if (message.length() == 16) {
+        if (message.length() >= 16) {
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
                     if ((c=message.charAt(i*4+j)) == 'q')
@@ -40,6 +40,8 @@ public class MessageConverter {
             }
         }
 
+        System.out.println("Extract board: " + message);
+
         return board;
     }
 
@@ -47,7 +49,7 @@ public class MessageConverter {
         String message = "";
 
         for (String item: list) {
-            message = item + ";";
+            message = item + " ";
         }
 
         return message;
@@ -55,7 +57,7 @@ public class MessageConverter {
 
     public static ArrayList<String> messageToList(String message) {
         ArrayList<String> list = new ArrayList<String>();
-        String[] temp = message.split(";");
+        String[] temp = message.split(" ");
 
         for (String word: temp) {
             list.add(word);

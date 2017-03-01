@@ -56,7 +56,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     public Button button_submit_word;
     public TextView text_timer;
     public TextView text_display;       // display system messages, word
-    public TextView p1_score;
+    public TextView player_score;
     public ListView wordList;
     public RelativeLayout mainLayout;
 
@@ -102,22 +102,17 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     // double player variables
     public Player player1 = null;
     public Player player2 = null;
-    public Player player = null;
     private boolean isMaster = false;
     private boolean isGameOn = false;
 
 
-
     // variables for innit game
-    public String[][] board;
-    boolean isCounterRunning = false;
-    public CountDownTimer timer = null;
+    public String[][] board = new String[4][4];
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
     // load dictionary file
 
     String[] foundWords = {};
-    public long totalTime = 180000;
 
     // type of message string
     public static final int MESSAGE_TYPE_BOGGLE_BOARD = 1;
@@ -133,15 +128,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.double_player_activity_layout);
 
-        // load dictionary file
-        try {
-            InputStream in = getResources().openRawResource(R.raw.dictionary);
-            dictionary.createDictionary(in);
-        } catch (Exception e) {
-        }
+        // call init layout, players variables, dictionary
+        initVariables();
 
-        // call init layout
-        initLayoutVariables();
 
         // init location on screen for all components
         mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
@@ -297,19 +286,15 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             switch (msg.what) {
                 case MESSAGE_STATE_CHANGE:
 
-//                    switch (msg.arg1) {
-//                        case .STATE_LISTEN:
-//
-//                            break;
-//                    }
+                        if (msg.arg1 == BluetoothConnectionService.STATE_CONNECTING) {
+                            isMaster = true;
+                        }
 
                     break;
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-//                    mBluetoothAdapter.notifyDataSetChanged();
-//                    messageList.add(new androidRecyclerView.Message(counter++, readMessage, mConnectedDeviceName));
 
                     // msg type =
                     // 1) = boggle board; set board for player 2, set initBoard
@@ -317,6 +302,45 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     // 3) = start game => start game for player 1, (msg from slave) (call setupnewgame)
                     // 4) = new game => msg from slave request new game
                     // 5) = end game =>
+
+//                    Toast.makeText(getApplicationContext(), readMessage, Toast.LENGTH_LONG).show();
+
+//                    String messgage = msg.getData().toString();
+                    String realMsg = readMessage.substring(1, readMessage.length());
+
+//                    System.out.println(readMessage);
+                    System.out.println(readMessage);
+                    System.out.println(realMsg);
+                    System.out.println(Character.getNumericValue(readMessage.charAt(0)));
+
+                    switch (Character.getNumericValue(readMessage.charAt(0))) {
+
+                        case MESSAGE_TYPE_BOGGLE_BOARD:
+                            board = MessageConverter.messageToBoard(realMsg);
+
+                            break;
+
+                        case MESSAGE_TYPE_POSSIBLE_WORDS:
+                            allValidWords = MessageConverter.messageToList(realMsg);
+                            // start game for player 2, signal player 1 to start
+                            player2StartGame();
+
+                            break;
+
+                        case MESSAGE_TYPE_START_GAME:
+                            // player 2 is ready (has board + possible words) -> start game
+                            // if player 1
+                            player1StartGame();
+
+                            break;
+
+                        case MESSAGE_TYPE_END_GAME:
+                            gameOver();  // gameOver(w
+
+                            break;
+
+                    }
+
 
 
                     break;
@@ -328,7 +352,14 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     break;
                 case MESSAGE_TOAST:
                     Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
+//
+//                    Toast.makeText(getApplicationContext(), "Receive boggle board", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), "Receive Msg Game Over", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), "Receive Msg Start Game from Player 2 ", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), "Receive Possible Words ", Toast.LENGTH_LONG).show();
+
+
                     break;
             }
         }
@@ -336,13 +367,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
 
     // ================================ Boggle game setup + game management
-
-    private void setupTimer() {
-        // set up timer
-        timer = new Timer(totalTime, 1000);
-        timer.start();
-
-    }
 
     private void setWaitingGame() {
         for (int i = 0; i < 4; i++) {
@@ -352,18 +376,13 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         }
 
         text_display.setText("Waiting for Game to Start!");
-        p1_score.setText(" ");
+        player_score.setText(" ");
 
         isTouchAble = false;
     }
 
-    // call when bluetooth is connected,
+    // call when bluetooth is connected, this is for master player to call only
     private void setupNewGame() {
-
-        // innit new players ??, nathan do this
-
-
-        isGameOn = true;
         resetPressedStatus();
 
         if (isMaster) {
@@ -375,16 +394,27 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
             // send board + valid words
             sendMessage(MessageConverter.boardToMessage(board), MESSAGE_TYPE_BOGGLE_BOARD );
-            sendMessage(MessageConverter.listToMessage(allValidWords), MESSAGE_TYPE_POSSIBLE_WORDS);
+//            sendMessage(MessageConverter.listToMessage(allValidWords), MESSAGE_TYPE_POSSIBLE_WORDS);
         }
+    }
 
+    // after receive signal start game from player 2, do start game
+    private void player1StartGame() {
+        isGameOn = true;
         initBoard();
         isTouchAble = true;
 
-        // start timer -_-
-
+        player1.initiateTimer();
     }
 
+    // start game for player2, and signel player 1 to start game
+    private void player2StartGame() {
+        sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
+        isGameOn = true;
+        initBoard();
+        isTouchAble = true;
+        player2.initiateTimer();
+    }
 
 
 
@@ -451,7 +481,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     }
 
-    private void initLayoutVariables() {
+    private void initVariables() {
 
         // init board buttons
         BoardButton[0] = (Button) findViewById(R.id.button0);
@@ -477,11 +507,11 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         btt_cancel = (Button) findViewById(R.id.button_cancel);
         button_submit_word = (Button) findViewById(R.id.button_submitWord);
-        p1_score = (TextView) findViewById(R.id.text_player_score);
+        player_score = (TextView) findViewById(R.id.text_player_score);
 
         btt_cancel = (Button) findViewById(R.id.button_cancel);
         button_submit_word = (Button) findViewById(R.id.button_submitWord);
-        p1_score = (TextView) findViewById(R.id.text_player_score);
+        player_score = (TextView) findViewById(R.id.text_player_score);
         text_display = (TextView) findViewById(R.id.text_display_screen);
 
         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
@@ -490,14 +520,36 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         text_timer = (TextView) findViewById(R.id.time_remaining);
 
-        // handling cancel button
+        // load dictionary file
+        try {
+            InputStream in = getResources().openRawResource(R.raw.dictionary);
+            dictionary.createDictionary(in);
+        } catch (Exception e) {
+        }
+
+        // init players' variables
+        player1 = new Player(text_timer, getApplicationContext());
+        player2 = new Player(text_timer, getApplicationContext());
+
+
+
+
+
+        // handling cancel button, need to move to somewhere else
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 resetBoardButtons();
                 resetPressedStatus();
-                text_display.setText(tInputWord);
+                //text_display.setText(tInputWord);
+                if (mBluetoothService.STATE_CONNECTED == BluetoothConnectionService.STATE_CONNECTED)
+                    text_display.setText("Connected");
+
+                sendMessage("Test Msg", 0);
+
+                setupNewGame();
             }
         });
+
 
     }
 
@@ -508,21 +560,45 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             public void onClick(View view) {
 
                 // check inputWord is in list
-                int ret = player.updateInfor(tInputWord, allValidWords);
+                if (isMaster) {
+                    // for player 1 
+                    int ret = player1.updateInfor(tInputWord, allValidWords);
 
-                if (ret == -1)
-                    text_display.setText("Invalid word!");
-                else if (ret == 0)
-                    text_display.setText("Invalid, \"" + tInputWord + "\" found!");
-                else if (ret == 1) {
-                    text_display.setText("Valid Word!");
+                    if (ret == -1)
+                        text_display.setText("Invalid word!");
+                    else if (ret == 0)
+                        text_display.setText("Invalid, \"" + tInputWord + "\" found!");
+                    else if (ret == 1) {
+                        text_display.setText("Valid Word!");
 
-                    p1_score.setText("Score: " + Integer.toString(player.getScore()));
+                        player_score.setText("Score: " + Integer.toString(player1.getScore()));
 
-                    foundWords = player.getFoundWords().toArray(new String[0]);
+                        foundWords = player1.getFoundWords().toArray(new String[0]);
 
-                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
-                    wordList.setAdapter(wordAdapter);
+                        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                        wordList.setAdapter(wordAdapter);
+                    }
+                    
+                } else {
+                    // for player 2 
+
+                    int ret = player2.updateInfor(tInputWord, allValidWords);
+
+                    if (ret == -1)
+                        text_display.setText("Invalid word!");
+                    else if (ret == 0)
+                        text_display.setText("Invalid, \"" + tInputWord + "\" found!");
+                    else if (ret == 1) {
+                        text_display.setText("Valid Word!");
+
+                        player_score.setText("Score: " + Integer.toString(player2.getScore()));
+
+                        foundWords = player2.getFoundWords().toArray(new String[0]);
+
+                        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                        wordList.setAdapter(wordAdapter);
+                    }
+                    
                 }
 
                 resetBoardButtons();
@@ -532,34 +608,14 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         });
     }
 
-
-    public class Timer extends CountDownTimer {
-        public Timer(long startTime, long interval) {
-            super(startTime, interval);
-        }
-
-        @Override
-        public void onFinish() {
-            text_timer.setText("TIME'S UP!");
-            gameOver();
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            text_timer.setText("Timer: " + millisUntilFinished / 1000);
-            //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
-
-        }
-    }
-
     // need to edit this for double player
     private void gameOver() {
-        Intent intend = new Intent(getApplicationContext(), GameOver.class);
-        intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
-        intend.putExtra("FOUND_WORDS", player.getFoundWords());
-        intend.putExtra("POSSIBLE_WORDS", allValidWords);
-
-        startActivity(intend);
+//        Intent intend = new Intent(getApplicationContext(), GameOver.class);
+//        intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
+//        intend.putExtra("FOUND_WORDS", player.getFoundWords());
+//        intend.putExtra("POSSIBLE_WORDS", allValidWords);
+//
+//        startActivity(intend);
     }
 
 
@@ -588,6 +644,22 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             case R.id.item_discoverable: {
                 // Ensure this device is discoverable by others
                 ensureDiscoverable();
+                return true;
+            }
+
+            case R.id.item_start: {
+                if (isMaster) {
+                    setupNewGame();
+                } else {
+                    sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
+                    player2StartGame();
+                }
+
+                return true;
+            }
+
+            case R.id.item_end: {
+
                 return true;
             }
         }
