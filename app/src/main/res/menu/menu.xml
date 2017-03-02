@@ -10,5 +10,12 @@
         android:title="@string/item_make_discoverable"
         app:showAsAction="never" />
 
+    <item android:id="@+id/item_start"
+        android:title="@string/item_start"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/item_end"
+        android:title="@string/item_end"
+        app:showAsAction="always" />
 
 </menu>
