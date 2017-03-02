@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -27,6 +28,13 @@ import android.widget.TextView;
 import android.graphics.Color;
 import android.widget.Toast;
 import android.graphics.Point;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.lang.Runnable;
 
 
 import java.io.InputStream;
@@ -85,7 +93,21 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     public TextView p1_score;
 
     public ListView wordList;
-    public  RelativeLayout mainLayout;
+    public RelativeLayout mainLayout;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
+    Thread thread_boardSolver = new Thread(new Runnable() {
+        public void run()
+        {
+            allValidWords = BoggleSolver.solver(board, dictionary);
+            player.setAllVallidWords(allValidWords);
+        }
+    });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +119,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         try {
             InputStream in = getResources().openRawResource(R.raw.dictionary);
             dictionary.createDictionary(in);
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
 
         // call init layout
 
@@ -112,8 +135,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                         // Layout has happened here.
                         setLayoutLocation();
                         // Don't forget to remove your listener when you are done with it.
-                        if (Build.VERSION.SDK_INT<16) {
-                            removeLayoutListenerPre16(mainLayout.getViewTreeObserver(),this);
+                        if (Build.VERSION.SDK_INT < 16) {
+                            removeLayoutListenerPre16(mainLayout.getViewTreeObserver(), this);
                         } else {
                             removeLayoutListenerPost16(mainLayout.getViewTreeObserver(), this);
                         }
@@ -129,12 +152,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         });
 
 
-
-
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        isGameOn =false;
+        isGameOn = false;
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
 
             Toast.makeText(this, "ACCELEROMETER sensor is available on device", Toast.LENGTH_SHORT).show();
@@ -151,15 +172,18 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         }
 
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @SuppressWarnings("deprecation")
-    private void removeLayoutListenerPre16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener){
+    private void removeLayoutListenerPre16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener) {
         observer.removeGlobalOnLayoutListener(listener);
     }
 
     @TargetApi(16)
-    private void removeLayoutListenerPost16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener){
+    private void removeLayoutListenerPost16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener) {
         observer.removeOnGlobalLayoutListener(listener);
 
     }
@@ -180,11 +204,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
         System.out.println("height " + bttHeight + ", width = " + bttWidth);
 
-        offset = bttWidth/4;
+        offset = bttWidth / 4;
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                BoardButton[4*i+j].getLocationInWindow(location);
+                BoardButton[4 * i + j].getLocationInWindow(location);
                 locationMatrix[i][j] = new Point(location[0], location[1]);
                 System.out.println("(" + i + ", " + j + ")  =  " + "(" + locationMatrix[i][j].x + ", " + locationMatrix[i][j].y + ")");
             }
@@ -229,7 +253,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
-        text_timer =  (TextView) findViewById(R.id.time_remaining);
+        text_timer = (TextView) findViewById(R.id.time_remaining);
 
     }
 
@@ -276,7 +300,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                 if (ret == -1)
                     text_display.setText("Invalid word!");
                 else if (ret == 0)
-                    text_display.setText("Invalid, \"" +tInputWord + "\" found!");
+                    text_display.setText("Invalid, \"" + tInputWord + "\" found!");
                 else if (ret == 1) {
                     text_display.setText("Valid Word!");
 
@@ -295,10 +319,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         });
     }
 
+
     @Override
     public void onSensorChanged(SensorEvent e) {
         //Get x,y and z values
-        float x,y,z;
+        float x, y, z;
         x = e.values[0];
         y = e.values[1];
         z = e.values[2];
@@ -333,8 +358,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                 Toast.makeText(PlayerActivity.this, "Shake Detected!", Toast.LENGTH_SHORT).show();
                 board = BoardGenerate.createNewBoard();
                 player.resetPlayer();
-                allValidWords = BoggleSolver.solver(board, dictionary);
-                player.setAllVallidWords(allValidWords);
+                Thread thread_boardSolver = new Thread(new Runnable() {
+                    public void run()
+                    {
+                        allValidWords = BoggleSolver.solver(board, dictionary);
+                        player.setAllVallidWords(allValidWords);
+                    }
+                });
+
+                thread_boardSolver.start();
+
                 ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                 ListView wordList = (ListView) findViewById(R.id.list_foundWords);
                 wordList.setAdapter(wordAdapter);
@@ -362,15 +395,53 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         //Noting to do!!
     }
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Player Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
+
     public class Timer extends CountDownTimer {
         public Timer(long startTime, long interval) {
             super(startTime, interval);
         }
+
         @Override
         public void onFinish() {
             text_timer.setText("TIME'S UP!");
             gameOver();
         }
+
         @Override
         public void onTick(long millisUntilFinished) {
             text_timer.setText("Timer: " + millisUntilFinished / 1000);
@@ -462,7 +533,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         }
     }
 
-    public void initBoard(){
+    public void initBoard() {
         // board init and handler
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -561,7 +632,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
-
     // ======================= HANDLING SLIDING =================================
 
     /**
@@ -605,15 +675,15 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                index = 4*i + j;
+                index = 4 * i + j;
 
                 bttX = locationMatrix[i][j].x;
                 bttY = locationMatrix[i][j].y;
 
                 // check if x,y location of finger touch is in boundary of
                 // button
-                if ( (bttX + offset) < x &&  x < (bttX + 3*offset)) {
-                    if ( (bttY + offset) < y && y < (bttY + 3*offset) ) {
+                if ((bttX + offset) < x && x < (bttX + 3 * offset)) {
+                    if ((bttY + offset) < y && y < (bttY + 3 * offset)) {
 
                         // handling if touch inside a button
                         boolean ret = checkOnTouch(i, j);
@@ -637,12 +707,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
     // make start and end menu invisible
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
+    public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem start = menu.findItem(R.id.item_start);
         MenuItem end = menu.findItem(R.id.item_end);
-            start.setVisible(false);
-            end.setVisible(false);
+        start.setVisible(false);
+        end.setVisible(false);
         return true;
     }
 

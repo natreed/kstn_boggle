@@ -160,6 +160,8 @@ public class Player {
         return 1;
     }
 
+
+    //NATE MOdifications
     public class PlayerTimer extends CountDownTimer {
         public PlayerTimer(long startTime, long interval) {
             super(startTime, interval);
@@ -194,6 +196,7 @@ public class Player {
         timer.cancel();
         timer.start();
     }
+
 
     public void gameOver(Context context) {
         Intent intend = new Intent(context, GameOver.class);
