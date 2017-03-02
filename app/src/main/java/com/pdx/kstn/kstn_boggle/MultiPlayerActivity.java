@@ -343,8 +343,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                     }
 
-
-
                     break;
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -396,7 +394,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
             // send board + valid words
             sendMessage(MessageConverter.boardToMessage(board), MESSAGE_TYPE_BOGGLE_BOARD );
-//            sendMessage(MessageConverter.listToMessage(allValidWords), MESSAGE_TYPE_POSSIBLE_WORDS);
+            sendMessage(MessageConverter.listToMessage(allValidWords), MESSAGE_TYPE_POSSIBLE_WORDS);
         }
     }
 
@@ -405,7 +403,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         isGameOn = true;
         initBoard();
         isTouchAble = true;
-
         player1.initiateTimer();
     }
 
@@ -533,10 +530,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         player1 = new Player(text_timer, getApplicationContext());
         player2 = new Player(text_timer, getApplicationContext());
 
-
-
-
-
         // handling cancel button, need to move to somewhere else
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -547,8 +540,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     text_display.setText("Connected");
 
                 sendMessage("Test Msg", 0);
+                if (isMaster) {
+                    setupNewGame();
+                }
 
-                setupNewGame();
             }
         });
 
