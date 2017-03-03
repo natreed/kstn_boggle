@@ -5,6 +5,7 @@ import android.content.Context;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +24,7 @@ public class HighScore {
     }
 
 
-    public void loadScores(FileInputStream fis) {
+    public void loadScores(InputStream fis) {
         // load scores from text file
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));

@@ -24,7 +24,7 @@ public class ScoresActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_scores);
-
+        System.out.println("I am here");
         // load and display high scores
         String[] scores = {};
 
@@ -33,7 +33,8 @@ public class ScoresActivity extends MainActivity {
             /*
             // Add this block of code at the end of the game.
              */
-            FileInputStream fis = openFileInput("scores.txt");
+            //FileInputStream fis = openFileInput("scores.txt");
+            InputStream fis = getResources().openRawResource(R.raw.scores);
             HighScore highScore = new HighScore();
             highScore.loadScores(fis);
             scores = highScore.getScores().toArray(new String[0]);
