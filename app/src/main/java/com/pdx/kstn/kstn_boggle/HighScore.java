@@ -64,6 +64,7 @@ public class HighScore {
              */
             if (score >= currentScore) {
                 StringBuilder newSb = new StringBuilder(name);
+                System.out.println("I reached update score");
                 newSb.append(": ");
                 newSb.append(score);
                 //it.remove();
