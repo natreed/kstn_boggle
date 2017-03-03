@@ -12,28 +12,24 @@
     tools:context="com.pdx.kstn.kstn_boggle.ChooseModeMainActivity">
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="85dp"
         android:layout_marginTop="30dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/choose_mode" />
+        android:src="@drawable/transpcm" />
 
     <!--android:text="1 Player"-->
     <Button
 
-        android:textColor="@android:color/white"
         android:textAllCaps="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-
         android:layout_centerInParent="true"
-        android:background="@drawable/onepbtn"
+        android:background="@drawable/onep"
         android:id="@+id/button_single_player_mode" />
 
     <!--android:text="2 Players"-->
     <Button
 
-        android:textColor="@android:color/white"
         android:textAllCaps="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,7 +37,7 @@
         android:layout_alignLeft="@+id/button_single_player_mode"
         android:layout_alignStart="@+id/button_single_player_mode"
         android:layout_marginTop="50dp"
-        android:background="@drawable/twopbtn"
+        android:background="@drawable/twop"
         android:id="@+id/button_double_player_mode" />
 
 </RelativeLayout>
