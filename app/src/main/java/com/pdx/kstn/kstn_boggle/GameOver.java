@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ public class GameOver extends Activity {
 
         Intent intent = getIntent();
         int score = Integer.parseInt(intent.getStringExtra("PLAYER_SCORE"));
+        Toast.makeText(this,"score is " +Integer.toString(score),Toast.LENGTH_LONG).show();
         ArrayList<String> foundWords = intent.getStringArrayListExtra("FOUND_WORDS");
         ArrayList<String> possibleWords = intent.getStringArrayListExtra("POSSIBLE_WORDS");
 
