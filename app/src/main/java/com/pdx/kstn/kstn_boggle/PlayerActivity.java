@@ -279,10 +279,17 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                 // check inputWord is in list
                 int ret = player.updateInfor(tInputWord, player.allValidWords);
 
-                if (ret == -1)
+                if (ret == -1) {
                     text_display.setText("Invalid word!");
-                else if (ret == 0)
+                    MediaPlayer mperr = MediaPlayer.create(getApplicationContext(), R.raw.error);
+                    mperr.start();
+                }
+                else if (ret == 0) {
                     text_display.setText("Invalid, \"" + tInputWord + "\" found!");
+                    MediaPlayer mpallreadyfound = MediaPlayer.create(getApplicationContext(), R.raw.bip);
+                    mpallreadyfound.start();
+
+                }
                 else if (ret == 1) {
                     text_display.setText("Valid Word!");
                     MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.game_sound_correct);
