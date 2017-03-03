@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -284,6 +285,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                     text_display.setText("Invalid, \"" + tInputWord + "\" found!");
                 else if (ret == 1) {
                     text_display.setText("Valid Word!");
+                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.game_sound_correct);
+                    mp.start();
 
                     p1_score.setText("Score: " + Integer.toString(player.getScore()));
 
