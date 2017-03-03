@@ -25,7 +25,7 @@ public class GameOver extends Activity {
         setContentView(R.layout.gameover);
 
         // setListAdapter(adapter);
-
+        // my branch
         Intent intent = getIntent();
         int score = Integer.parseInt(intent.getStringExtra("PLAYER_SCORE"));
         Toast.makeText(this,"score is " +Integer.toString(score),Toast.LENGTH_LONG).show();
