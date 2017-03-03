@@ -2,6 +2,7 @@ package com.pdx.kstn.kstn_boggle;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -176,6 +177,10 @@ public class Player {
             text_timer.setText("Timer: " + millisUntilFinished / 1000);
             totalTime = millisUntilFinished;
             //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
+            if (millisUntilFinished<5000){
+                MediaPlayer mp = MediaPlayer.create(activity_context, R.raw.timer_sound);
+                mp.start();
+            }
         }
     }
 
