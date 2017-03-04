@@ -104,6 +104,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     public Player player2 = null;
     private boolean isMaster = false;
     private boolean isGameOn = false;
+    private int roundNum = 0;
+    private int p1NumWordsFound = 0;
+    private int p2NumWordsFound = 0;
+    private boolean newGameFlag = false;
 
 
     // variables for innit game
@@ -116,7 +120,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     // type of message string
     public static final int MESSAGE_TYPE_BOGGLE_BOARD = 1;
-    public static final int MESSAGE_TYPE_POSSIBLE_WORDS = 2;
+    public static final int MESSAGE_TYPE_GET_READY = 2;
     public static final int MESSAGE_TYPE_PLAYER1_FOUND_WORDS = 3;
     public static final int MESSAGE_TYPE_PLAYER2_FOUND_WORDS = 4;
     public static final int MESSAGE_TYPE_GAME_MODE = 5;
@@ -247,7 +251,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     if (mBluetoothService.getState() == BluetoothConnectionService.STATE_CONNECTING) {
                         text_display.setText("State connecting");
                     }
-                    text_display.setText("im mad");
 
                 } else {
                     // User did not enable Bluetooth or an error occured
@@ -319,21 +322,28 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                         case MESSAGE_TYPE_BOGGLE_BOARD:
                             board = MessageConverter.messageToBoard(realMsg);
+                            Toast.makeText(getApplicationContext(), "Received a board", Toast.LENGTH_LONG).show();
+
+                            if (roundNum == 0) {
+                                isGameOn = true;
+                                roundNum = 1;
+                                Toast.makeText(getApplicationContext(), "Press Start to Ready", Toast.LENGTH_LONG).show();
+                            }
 
                             break;
 
-                        case MESSAGE_TYPE_POSSIBLE_WORDS:
-                            allValidWords = MessageConverter.messageToList(realMsg);
-                            // start game for player 2, signal player 1 to start
-                            player2StartGame();
-
-                            break;
+//                        case MESSAGE_TYPE_GET_READY:
+//                            // should update game state + round numer
+//                            isGameOn = true;
+//                            roundNum = 1;
+//                            Toast.makeText(getApplicationContext(), "Press Start to Ready", Toast.LENGTH_LONG).show();
+//                            break;
 
                         case MESSAGE_TYPE_START_GAME:
                             // player 2 is ready (has board + possible words) -> start game
                             // if player 1
                             player1StartGame();
-
+                            Toast.makeText(getApplicationContext(), "Game Start", Toast.LENGTH_LONG).show();
                             break;
 
                         case MESSAGE_TYPE_END_GAME:
@@ -353,12 +363,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 case MESSAGE_TOAST:
                     Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
                             Toast.LENGTH_LONG).show();
-//
-//                    Toast.makeText(getApplicationContext(), "Receive boggle board", Toast.LENGTH_LONG).show();
-//                    Toast.makeText(getApplicationContext(), "Receive Msg Game Over", Toast.LENGTH_LONG).show();
-//                    Toast.makeText(getApplicationContext(), "Receive Msg Start Game from Player 2 ", Toast.LENGTH_LONG).show();
-//                    Toast.makeText(getApplicationContext(), "Receive Possible Words ", Toast.LENGTH_LONG).show();
-
 
                     break;
             }
@@ -383,6 +387,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     // call when bluetooth is connected, this is for master player to call only
     private void setupNewGame() {
+        if (!checkBluetoothConnection()) return;
+
+
         resetPressedStatus();
 
         if (isMaster) {
@@ -394,26 +401,131 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
             // send board + valid words
             sendMessage(MessageConverter.boardToMessage(board), MESSAGE_TYPE_BOGGLE_BOARD );
-            sendMessage(MessageConverter.listToMessage(allValidWords), MESSAGE_TYPE_POSSIBLE_WORDS);
+            Toast.makeText(getApplicationContext(), "Sending a Board to 2nd Player", Toast.LENGTH_SHORT).show();
+
+            isGameOn = true;
+
+//            sendMessage("Press Ready", MESSAGE_TYPE_GET_READY);
         }
+
     }
 
     // after receive signal start game from player 2, do start game
     private void player1StartGame() {
-        isGameOn = true;
+        if (!checkBluetoothConnection()) return;
+
+        Thread thread_boardSolver = new Thread(new Runnable() {
+            public void run()
+            {
+                allValidWords = BoggleSolver.solver(board, dictionary);
+                player1.setAllVallidWords(allValidWords);
+            }
+        });
+        thread_boardSolver.start();
+
         initBoard();
+
         isTouchAble = true;
-        player1.initiateTimer();
+        if (roundNum == 1)
+            player1.initiateTimer();
+        else {
+            // add more time
+        }
     }
 
     // start game for player2, and signel player 1 to start game
     private void player2StartGame() {
+        if (!checkBluetoothConnection()) return;
+
+        Thread thread_boardSolver = new Thread(new Runnable() {
+            public void run()
+            {
+                allValidWords = BoggleSolver.solver(board, dictionary);
+                player2.setAllVallidWords(allValidWords);
+            }
+        });
+        thread_boardSolver.start();
+
         sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
-        isGameOn = true;
         initBoard();
+
         isTouchAble = true;
-        player2.initiateTimer();
+        if (roundNum == 1)
+            player2.initiateTimer();
+        else {
+            // add more time
+        }
     }
+
+    private boolean checkBluetoothConnection() {
+        if (mBluetoothService.getState() != BluetoothConnectionService.STATE_CONNECTED) {
+            Toast.makeText(getApplicationContext(), "Please Connect to other Device", Toast.LENGTH_SHORT).show();
+            return false ;
+        } else {
+            return true;
+        }
+    }
+
+    // ============================= Menu handling ===========================
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_connection: {
+                // Launch the DeviceListActivity to see devices and do scan
+                Intent serverIntent = new Intent(this, DeviceListActivity.class);
+                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+                if (mBluetoothService.getState() == BluetoothConnectionService.STATE_LISTEN) {
+                    isMaster = true;
+                    text_display.setText("Listening!");
+                }
+                return true;
+            }
+
+            case R.id.item_discoverable: {
+                // Ensure this device is discoverable by others
+                ensureDiscoverable();
+                return true;
+            }
+
+            case R.id.item_start: {
+                if (isMaster) {
+
+                    if (newGameFlag == false) {
+                        roundNum = 1;
+                        setupNewGame();
+//                        item.setVisible(false);
+                        newGameFlag = true;
+                    }
+
+                } else {
+
+                    if (isGameOn) {
+                        sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
+                        player2StartGame();
+//                        item.setVisible(false);
+                    }
+                }
+
+                return true;
+            }
+
+            case R.id.item_end: {
+
+
+
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
 
@@ -616,52 +728,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     }
 
 
-    // ============================= Menu handling ===========================
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_connection: {
-                // Launch the DeviceListActivity to see devices and do scan
-                Intent serverIntent = new Intent(this, DeviceListActivity.class);
-                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-                if (mBluetoothService.getState() == BluetoothConnectionService.STATE_LISTEN) {
-                    isMaster = true;
-                    text_display.setText("Listening!");
-                }
-                return true;
-            }
-
-            case R.id.item_discoverable: {
-                // Ensure this device is discoverable by others
-                ensureDiscoverable();
-                return true;
-            }
-
-            case R.id.item_start: {
-                if (isMaster) {
-                    setupNewGame();
-                } else {
-                    sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
-                    player2StartGame();
-                }
-
-                return true;
-            }
-
-            case R.id.item_end: {
-
-                return true;
-            }
-        }
-        return false;
-    }
 
 
 

@@ -170,6 +170,7 @@ public class Player {
         @Override
         public void onFinish() {
             text_timer.setText("TIME'S UP!");
+
             gameOver(activity_context);
         }
         @Override
@@ -177,10 +178,10 @@ public class Player {
             text_timer.setText("Timer: " + millisUntilFinished / 1000);
             totalTime = millisUntilFinished;
             //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
-            if (millisUntilFinished<5000){
-                MediaPlayer mp = MediaPlayer.create(activity_context, R.raw.timer_sound);
-                mp.start();
-            }
+//            if (millisUntilFinished<5000){
+//                MediaPlayer mp = MediaPlayer.create(activity_context, R.raw.timer_sound);
+//                mp.start();
+//            }
         }
     }
 
