@@ -57,5 +57,6 @@
     <string name="item_make_discoverable">Make Discoverable</string>
     <string name="item_start">Start</string>
     <string name="item_end">end</string>
+    <string name="item_stop">stop</string>
 
 </resources>

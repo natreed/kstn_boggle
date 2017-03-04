@@ -13,7 +13,11 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,25 +26,40 @@
         </activity>
         <activity
             android:name=".ChooseModeMainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
         <activity
             android:name=".RulesActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
         <activity
             android:name=".PlayerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
         <activity
             android:name=".ScoresActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
         <activity
             android:name=".GameOver"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
         <activity
             android:name=".MultiPlayerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:noHistory="true"
             ></activity>
 
         <activity
             android:name=".DeviceListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
