@@ -24,8 +24,10 @@ public class Player {
     public CountDownTimer timer = null;
     public TextView text_timer;
     public Context activity_context;
-    final long START_TIME = 30000;
+    final long START_TIME = 100000;
     public long totalTime = START_TIME;
+    private boolean isPaused = false;
+    private boolean isCanceled = false;
 
     public ArrayList<String> allValidWords = new ArrayList<String>();
 
@@ -74,6 +76,11 @@ public class Player {
     }
 
     public void moveToNextRound() {
+        // update timer
+        isPaused = false;
+        updateTimer(1000 * scoreForCurrentRound);
+        isCanceled = false;
+
         this.scoreForCurrentRound = 0;
         round += 1;
         this.foundWordsCurrentRound = new ArrayList<String>();
@@ -175,8 +182,12 @@ public class Player {
         }
         @Override
         public void onTick(long millisUntilFinished) {
-            text_timer.setText("Timer: " + millisUntilFinished / 1000);
-            totalTime = millisUntilFinished;
+            if (isPaused || isCanceled) {
+                cancel();
+            } else {
+                text_timer.setText("Timer: " + millisUntilFinished / 1000);
+                totalTime = millisUntilFinished;
+            }
             //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
 //            if (millisUntilFinished<5000){
 //                MediaPlayer mp = MediaPlayer.create(activity_context, R.raw.timer_sound);
@@ -193,8 +204,16 @@ public class Player {
 
     public void updateTimer (int millisToAdd) {
         this.totalTime = this.totalTime + millisToAdd*1000;
-        timer.cancel();
+//        timer.cancel();
+        isCanceled = true;
         timer.start();
+    }
+
+    public void pauseTimer() {
+        isPaused = true;
+//        timer.cancel();
+        text_timer.setText("Timer: " + totalTime / 1000);
+
     }
 
     public void resetTimer () {

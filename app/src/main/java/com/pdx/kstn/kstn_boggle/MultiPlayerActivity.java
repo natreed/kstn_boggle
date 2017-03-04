@@ -121,8 +121,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     // type of message string
     public static final int MESSAGE_TYPE_BOGGLE_BOARD = 1;
     public static final int MESSAGE_TYPE_GET_READY = 2;
-    public static final int MESSAGE_TYPE_PLAYER1_FOUND_WORDS = 3;
-    public static final int MESSAGE_TYPE_PLAYER2_FOUND_WORDS = 4;
+    public static final int MESSAGE_TYPE_PLAYER1_FOUND_WORD = 3;
+    public static final int MESSAGE_TYPE_PLAYER2_FOUND_WORD = 4;
     public static final int MESSAGE_TYPE_GAME_MODE = 5;
     public static final int MESSAGE_TYPE_START_GAME = 6;
     public static final int MESSAGE_TYPE_END_GAME = 7;
@@ -321,23 +321,25 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     switch (Character.getNumericValue(readMessage.charAt(0))) {
 
                         case MESSAGE_TYPE_BOGGLE_BOARD:
-                            board = MessageConverter.messageToBoard(realMsg);
-                            Toast.makeText(getApplicationContext(), "Received a board", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), "Received a board", Toast.LENGTH_SHORT).show();
 
                             if (roundNum == 0) {
                                 isGameOn = true;
                                 roundNum = 1;
+                                board = MessageConverter.messageToBoard(realMsg);
                                 Toast.makeText(getApplicationContext(), "Press Start to Ready", Toast.LENGTH_LONG).show();
+                            } else {
+                                // new round:
+                                if (p1NumWordsFound >= 2 && p2NumWordsFound >= 2) {
+                                    board = MessageConverter.messageToBoard(realMsg);
+                                    p1NumWordsFound = 0;
+                                    p2NumWordsFound = 0;
+                                    Toast.makeText(getApplicationContext(), "New Round Start!", Toast.LENGTH_LONG).show();
+                                    player2StartGame();
+                                }
                             }
 
                             break;
-
-//                        case MESSAGE_TYPE_GET_READY:
-//                            // should update game state + round numer
-//                            isGameOn = true;
-//                            roundNum = 1;
-//                            Toast.makeText(getApplicationContext(), "Press Start to Ready", Toast.LENGTH_LONG).show();
-//                            break;
 
                         case MESSAGE_TYPE_START_GAME:
                             // player 2 is ready (has board + possible words) -> start game
@@ -345,6 +347,24 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                             player1StartGame();
                             Toast.makeText(getApplicationContext(), "Game Start", Toast.LENGTH_LONG).show();
                             break;
+
+                        case MESSAGE_TYPE_PLAYER1_FOUND_WORD:
+                            if (!isMaster) {
+                                p1NumWordsFound++;
+                                Toast.makeText(getApplicationContext(), "Player 1 found 1 more word", Toast.LENGTH_LONG).show();
+                            }
+
+                            break;
+
+                        case MESSAGE_TYPE_PLAYER2_FOUND_WORD:
+                            if (isMaster) {
+                                p2NumWordsFound++;
+                                text_display.setText(Integer.toString(p2NumWordsFound));
+                                Toast.makeText(getApplicationContext(), "Player 2 found 1 more word", Toast.LENGTH_LONG).show();
+                            }
+
+                            break;
+
 
                         case MESSAGE_TYPE_END_GAME:
                             gameOver();  // gameOver(w
@@ -389,23 +409,16 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     private void setupNewGame() {
         if (!checkBluetoothConnection()) return;
 
-
-        resetPressedStatus();
-
         if (isMaster) {
             // generate board + valid words, then send to slave player
             Toast.makeText(this, "This is Master!", Toast.LENGTH_LONG).show();
-
             board = BoardGenerate.createNewBoard();
-            allValidWords = BoggleSolver.solver(board, dictionary);
 
             // send board + valid words
             sendMessage(MessageConverter.boardToMessage(board), MESSAGE_TYPE_BOGGLE_BOARD );
             Toast.makeText(getApplicationContext(), "Sending a Board to 2nd Player", Toast.LENGTH_SHORT).show();
 
             isGameOn = true;
-
-//            sendMessage("Press Ready", MESSAGE_TYPE_GET_READY);
         }
 
     }
@@ -424,12 +437,19 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         thread_boardSolver.start();
 
         initBoard();
+        resetPressedStatus();
+
 
         isTouchAble = true;
         if (roundNum == 1)
             player1.initiateTimer();
         else {
-            // add more time
+            // new round
+            p1NumWordsFound = 0;
+            p2NumWordsFound = 0;
+            roundNum++;
+            System.out.println("round: " + roundNum);
+            player1.moveToNextRound();
         }
     }
 
@@ -446,14 +466,17 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         });
         thread_boardSolver.start();
 
-        sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
         initBoard();
+        resetPressedStatus();
 
         isTouchAble = true;
         if (roundNum == 1)
             player2.initiateTimer();
         else {
-            // add more time
+            // move to new round
+            roundNum++;
+            System.out.println("round: " + roundNum);
+            player2.moveToNextRound();
         }
     }
 
@@ -500,7 +523,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     if (newGameFlag == false) {
                         roundNum = 1;
                         setupNewGame();
-//                        item.setVisible(false);
+                        item.setVisible(false);
                         newGameFlag = true;
                     }
 
@@ -509,7 +532,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     if (isGameOn) {
                         sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
                         player2StartGame();
-//                        item.setVisible(false);
+                        item.setVisible(false);
                     }
                 }
 
@@ -518,7 +541,11 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
             case R.id.item_end: {
 
+                System.out.println("player 1 # found: " + p1NumWordsFound);
+                System.out.println("player 2 # found: " + p2NumWordsFound);
 
+                if (isMaster) player1.pauseTimer();
+                else player2.pauseTimer();
 
                 return true;
             }
@@ -647,21 +674,24 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             public void onClick(View v) {
                 resetBoardButtons();
                 resetPressedStatus();
-                //text_display.setText(tInputWord);
-                if (mBluetoothService.STATE_CONNECTED == BluetoothConnectionService.STATE_CONNECTED)
-                    text_display.setText("Connected");
-
-                sendMessage("Test Msg", 0);
-                if (isMaster) {
-                    setupNewGame();
-                }
-
             }
         });
 
 
     }
 
+    private void newRound() {
+
+        if (p1NumWordsFound >= 2 && p2NumWordsFound >= 2) {
+
+            if (isMaster) {
+                setupNewGame();
+                player1StartGame();
+            } else {
+
+            }
+        }
+    }
 
     private void submitAction() {
         button_submit_word.setOnClickListener(new View.OnClickListener() {
@@ -686,6 +716,11 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                         wordList.setAdapter(wordAdapter);
+
+                        p1NumWordsFound++;
+                        sendMessage(tInputWord, MESSAGE_TYPE_PLAYER1_FOUND_WORD);
+
+                        newRound();
                     }
                     
                 } else {
@@ -706,6 +741,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                         wordList.setAdapter(wordAdapter);
+
+                        p2NumWordsFound++;
+                        sendMessage(tInputWord, MESSAGE_TYPE_PLAYER2_FOUND_WORD);
+
                     }
                     
                 }
