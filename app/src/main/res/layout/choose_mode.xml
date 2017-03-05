@@ -10,35 +10,80 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/background_iokanan"
     tools:context="com.pdx.kstn.kstn_boggle.ChooseModeMainActivity">
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:layout_marginTop="30dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/transpcm" />
+    <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="85dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@drawable/transpcm" />-->
 
     <!--android:text="1 Player"-->
-    <Button
 
-        android:textAllCaps="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/onep"
-        android:id="@+id/button_single_player_mode" />
+    <!--<Button-->
+        <!--android:text="scores"-->
+        <!--android:background="@drawable/background5"-->
+        <!--android:layout_width="325dp"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:id="@+id/button_scores"-->
+        <!--android:layout_weight="0.13"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_marginBottom="40dp"-->
+        <!--android:textSize="@android:dimen/app_icon_size" />-->
+
 
     <!--android:text="2 Players"-->
+
     <Button
 
+        android:text="double players"
+        android:background="@drawable/background5"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
         android:textAllCaps="false"
-        android:layout_width="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="@android:dimen/app_icon_size"
+
+        android:id="@+id/button_double_player_mode"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="85dp" />
+
+    <Button
+        android:text="single Player"
+        android:background="@drawable/background5"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:layout_weight="0.12"
+        android:textSize="@android:dimen/app_icon_size"
+        android:id="@+id/button_single_player_mode"
+        android:layout_above="@+id/button_double_player_mode"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="39dp" />
+
+    <TextView
+        android:text="Choose Mode"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_single_player_mode"
+        android:id="@+id/gameTitle"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColorLink="@android:color/black"
+        android:fadingEdge="horizontal"
+        android:textStyle="normal|bold"
+        android:typeface="serif"
+        android:textSize="50dp"
+        android:layout_above="@+id/button_single_player_mode"
         android:layout_alignLeft="@+id/button_single_player_mode"
         android:layout_alignStart="@+id/button_single_player_mode"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/twop"
-        android:id="@+id/button_double_player_mode" />
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="61dp" />
 
 </RelativeLayout>
 

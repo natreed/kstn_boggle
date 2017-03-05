@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/boggle_background"
+    android:background="@drawable/background_iokanan"
     android:weightSum="1"
     android:id="@+id/mainscreen_layout">
 
@@ -23,22 +23,29 @@
         android:textSize="80dp" />
 
     <Button
-        android:text="@string/button_play_game"
-        android:background="@drawable/button_green"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:text="play game"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:background="@drawable/background5"
+        android:layout_width="325dp"
+        android:layout_height="70dp"
         android:id="@+id/button_play"
         android:layout_weight="0.12"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="40dp"
         android:layout_marginTop="60dp"
+        android:paddingTop="0dp"
         android:textSize="@android:dimen/app_icon_size" />
 
+
+
     <Button
-        android:text="@string/button_scores"
-        android:background="@drawable/button_blue"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:text="scores"
+        android:background="@drawable/background5"
+        android:layout_width="325dp"
+        android:layout_height="70dp"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
         android:id="@+id/button_scores"
         android:layout_weight="0.13"
         android:layout_gravity="center_horizontal"
@@ -46,10 +53,12 @@
         android:textSize="@android:dimen/app_icon_size" />
 
     <Button
-        android:text="@string/button_rules"
-        android:background="@drawable/button_yellow"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:text="rules"
+        android:background="@drawable/background5"
+        android:layout_width="325dp"
+        android:layout_height="70dp"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
         android:id="@+id/button_rules"
         android:layout_weight="0.08"
         android:layout_gravity="center_horizontal"
