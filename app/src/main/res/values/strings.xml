@@ -22,6 +22,7 @@
     <string name="ok">OK</string>
     <string name="cancel">cancel</string>
     <string name="dialog_title"></string>
+    <string name="player_name"></string>
     <string name="text_rules_paragraph">
 
 \n\nBoggle is a popular word game for any number of players. In our version of Boggle you may choose single player or play against a friend.￼

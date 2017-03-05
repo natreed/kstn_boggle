@@ -9,8 +9,15 @@
         android:footerDividersEnabled="false"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/Score_List"
         android:textColor = "@android:color/white"
-        android:textSize = "50sp"/>
+        android:layout_weight="1"
+        android:textSize = "50sp" />
+
+    <Button
+        android:text="Reset Scores"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/reset_button" />
 </LinearLayout>
