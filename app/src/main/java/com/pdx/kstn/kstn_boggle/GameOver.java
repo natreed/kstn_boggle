@@ -2,15 +2,23 @@ package com.pdx.kstn.kstn_boggle;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.inputmethodservice.ExtractEditText;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -18,6 +26,9 @@ import java.util.ArrayList;
  */
 
 public class GameOver extends Activity {
+    private String name = "";
+    private HighScore highScore;
+    private int score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +36,11 @@ public class GameOver extends Activity {
         setContentView(R.layout.gameover);
 
         // setListAdapter(adapter);
-        // my branch
+
+        highScore = new HighScore(getApplicationContext());
+
         Intent intent = getIntent();
-        int score = Integer.parseInt(intent.getStringExtra("PLAYER_SCORE"));
+        score = Integer.parseInt(intent.getStringExtra("PLAYER_SCORE"));
         Toast.makeText(this,"score is " +Integer.toString(score),Toast.LENGTH_LONG).show();
         ArrayList<String> foundWords = intent.getStringArrayListExtra("FOUND_WORDS");
         ArrayList<String> possibleWords = intent.getStringArrayListExtra("POSSIBLE_WORDS");
@@ -38,6 +51,15 @@ public class GameOver extends Activity {
         listView.setAdapter(adapter);
 
         System.out.println("Total possible words: " + possibleWords.size());
+        //HighScore highScore = new HighScore(getApplicationContext());
+        if (score >= highScore.lowestScore() || highScore.scores.size() < 5) {
+            getName();
+            System.out.println("Name: " + name);
+            /*try {
+                highScore.updateScore(name, score);
+            } catch (Exception e) {e.printStackTrace();}*/
+
+        }
 
 //        final Button bttReplay = (Button) findViewById(R.id.button_replay);
 //        final Button bttHome = (Button) findViewById(R.id.button_home);
@@ -61,6 +83,38 @@ public class GameOver extends Activity {
 //                startActivity(myIntent);
 //            }
 //        });
+
+    }
+
+    private void getName() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New High Score! Enter Name:");
+
+
+        final EditText input = new EditText(this); //(EditText) promptView.findViewById(R.id.player_name);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Player name");
+        builder.setView(input);
+        //setup Buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                System.out.println("Hey, here is name");
+                name  = input.getText().toString();
+                try {
+                    highScore.updateScore(name, score);
+                } catch (Exception e) {e.printStackTrace();}
+                System.out.println(name);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
 
     }
 }
