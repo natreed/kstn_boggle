@@ -2,22 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray">
+    android:background="@drawable/background_iokanan">
 
     <ListView
         android:headerDividersEnabled="false"
         android:footerDividersEnabled="false"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal"
         android:id="@+id/Score_List"
         android:textColor = "@android:color/white"
-        android:layout_weight="1"
-        android:textSize = "50sp" />
+        android:textStyle="normal|bold"
+        android:typeface="serif"
+        android:textSize = "50dp" />
 
     <Button
-        android:text="Reset Scores"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:text="reset scores"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="@android:dimen/app_icon_size"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:paddingTop="0dp"
+        android:background="@drawable/background5"
         android:id="@+id/reset_button" />
 </LinearLayout>

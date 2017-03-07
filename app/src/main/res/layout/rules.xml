@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_iokanan">
 
     <TextView
         android:text="@string/text_rules"
@@ -11,11 +12,12 @@
         android:id="@+id/gameTitle"
         android:gravity="center_vertical|center_horizontal"
         android:textSize="40sp"
-        android:textColorLink="@android:color/background_dark"
         android:fadingEdge="horizontal"
         android:textStyle="normal|bold"
         android:textColor="@android:color/background_dark"
-        android:background="@android:color/holo_blue_light" />
+        android:textColorLink="@android:color/white"
+        android:typeface="serif"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,8 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView2"
-            android:textColor="@android:color/black"
-            android:background="@android:color/holo_blue_light" />
+            android:textColor="@android:color/white"
+            />
     </ScrollView>
 
 
