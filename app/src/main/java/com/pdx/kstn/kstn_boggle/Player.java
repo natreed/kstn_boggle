@@ -182,12 +182,12 @@ public class Player {
         }
         @Override
         public void onTick(long millisUntilFinished) {
-            if (isPaused || isCanceled) {
-                cancel();
-            } else {
+ //           if (isPaused || isCanceled) {
+ //               cancel();
+ //           } else {
                 text_timer.setText("Timer: " + millisUntilFinished / 1000);
                 totalTime = millisUntilFinished;
-            }
+ //           }
             //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
 //            if (millisUntilFinished<5000){
 //                MediaPlayer mp = MediaPlayer.create(activity_context, R.raw.timer_sound);
@@ -204,16 +204,27 @@ public class Player {
 
     public void updateTimer (int millisToAdd) {
         this.totalTime = this.totalTime + millisToAdd*1000;
-//        timer.cancel();
-        isCanceled = true;
+        timer.cancel();
+ //       isCanceled = true;
         timer.start();
     }
 
-    public void pauseTimer() {
-        isPaused = true;
-//        timer.cancel();
+    public int pauseTimer() {
+ //       isPaused = true;
+        long pauseTime = totalTime;
+        timer.cancel();
         text_timer.setText("Timer: " + totalTime / 1000);
+        return (int) pauseTime;
+    }
 
+    public void unPauseTimer (int pausedMillis) {
+        this.totalTime = 0;
+        updateTimer(pausedMillis);
+    }
+
+    public void unPauseNewRound (int pausedMillis) {
+        this.totalTime = pausedMillis;
+        updateTimer(scoreForCurrentRound);
     }
 
     public void resetTimer () {

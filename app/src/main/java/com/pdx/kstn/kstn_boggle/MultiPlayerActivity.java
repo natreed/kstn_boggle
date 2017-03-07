@@ -100,8 +100,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
 
     // double player variables
-    public Player player1 = null;
-    public Player player2 = null;
+//    public Player player1 = null;
+//    public Player player2 = null;
+    public Player player = null;
     private boolean isMaster = false;
     private boolean isGameOn = false;
     private int roundNum = 0;
@@ -365,7 +366,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                             break;
 
-
                         case MESSAGE_TYPE_END_GAME:
                             gameOver();  // gameOver(w
 
@@ -431,7 +431,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             public void run()
             {
                 allValidWords = BoggleSolver.solver(board, dictionary);
-                player1.setAllVallidWords(allValidWords);
+                //player1.setAllVallidWords(allValidWords);
+                player.setAllVallidWords(allValidWords);
             }
         });
         thread_boardSolver.start();
@@ -442,14 +443,16 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         isTouchAble = true;
         if (roundNum == 1)
-            player1.initiateTimer();
+            //  player1.initiateTimer();
+            player.initiateTimer();
         else {
             // new round
             p1NumWordsFound = 0;
             p2NumWordsFound = 0;
             roundNum++;
             System.out.println("round: " + roundNum);
-            player1.moveToNextRound();
+            //player1.moveToNextRound();
+            player.moveToNextRound();
         }
     }
 
@@ -461,7 +464,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             public void run()
             {
                 allValidWords = BoggleSolver.solver(board, dictionary);
-                player2.setAllVallidWords(allValidWords);
+                //player2.setAllVallidWords(allValidWords);
+                player.setAllVallidWords(allValidWords);
             }
         });
         thread_boardSolver.start();
@@ -471,12 +475,14 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         isTouchAble = true;
         if (roundNum == 1)
-            player2.initiateTimer();
+            //player2.initiateTimer();
+            player.initiateTimer();
         else {
             // move to new round
             roundNum++;
             System.out.println("round: " + roundNum);
-            player2.moveToNextRound();
+            //player2.moveToNextRound();
+            player.moveToNextRound();
         }
     }
 
@@ -544,8 +550,12 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 System.out.println("player 1 # found: " + p1NumWordsFound);
                 System.out.println("player 2 # found: " + p2NumWordsFound);
 
-                if (isMaster) player1.pauseTimer();
-                else player2.pauseTimer();
+                if (isMaster)
+                    //player1.pauseTimer();
+                    player.totalTime = player.pauseTimer();
+                else
+                    //player2.pauseTimer();
+                    player.totalTime = player.pauseTimer();
 
                 return true;
             }
@@ -666,9 +676,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         }
 
         // init players' variables
-        player1 = new Player(text_timer, getApplicationContext());
-        player2 = new Player(text_timer, getApplicationContext());
+//        player1 = new Player(text_timer, getApplicationContext());
+//        player2 = new Player(text_timer, getApplicationContext());
 
+        player = new Player(text_timer, getApplicationContext());
         // handling cancel button, need to move to somewhere else
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -701,7 +712,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 // check inputWord is in list
                 if (isMaster) {
                     // for player 1 
-                    int ret = player1.updateInfor(tInputWord, allValidWords);
+                    //int ret = player1.updateInfor(tInputWord, allValidWords);
+                    int ret = player.updateInfor(tInputWord, allValidWords);
 
                     if (ret == -1)
                         text_display.setText("Invalid word!");
@@ -710,9 +722,12 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     else if (ret == 1) {
                         text_display.setText("Valid Word!");
 
-                        player_score.setText("Score: " + Integer.toString(player1.getScore()));
+//                        player_score.setText("Score: " + Integer.toString(player1.getScore()));
+//                        foundWords = player1.getFoundWords().toArray(new String[0]);
+                        player_score.setText("Score: " + Integer.toString(player.getScore()));
+                        foundWords = player.getFoundWords().toArray(new String[0]);
 
-                        foundWords = player1.getFoundWords().toArray(new String[0]);
+                        //send found words in message to other player
 
                         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                         wordList.setAdapter(wordAdapter);
@@ -726,8 +741,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 } else {
                     // for player 2 
 
-                    int ret = player2.updateInfor(tInputWord, allValidWords);
-
+                    //int ret = player2.updateInfor(tInputWord, allValidWords);
+                    int ret = player.updateInfor(tInputWord, allValidWords);
                     if (ret == -1)
                         text_display.setText("Invalid word!");
                     else if (ret == 0)
@@ -735,9 +750,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     else if (ret == 1) {
                         text_display.setText("Valid Word!");
 
-                        player_score.setText("Score: " + Integer.toString(player2.getScore()));
-
-                        foundWords = player2.getFoundWords().toArray(new String[0]);
+//                        player_score.setText("Score: " + Integer.toString(player2.getScore()));
+//                        foundWords = player2.getFoundWords().toArray(new String[0]);
+                        player_score.setText("Score: " + Integer.toString(player.getScore()));
+                        foundWords = player.getFoundWords().toArray(new String[0]);
 
                         ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
                         wordList.setAdapter(wordAdapter);
