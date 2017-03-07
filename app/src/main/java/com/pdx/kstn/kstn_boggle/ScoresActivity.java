@@ -42,7 +42,7 @@ public class ScoresActivity extends MainActivity {
             scores = new ArrayList<String>(highScore.scores);
         } catch (Exception e) { e.printStackTrace();}
 
-        ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(ScoresActivity.this, android.R.layout.simple_list_item_1, scores);
+        ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(ScoresActivity.this, R.layout.mywhite_listview, scores);
         ListView scoreList = (ListView) findViewById(R.id.Score_List);
         scoreList.setAdapter(scoreAdapter);
 
