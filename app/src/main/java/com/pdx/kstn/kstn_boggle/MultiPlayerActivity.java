@@ -102,13 +102,17 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     // double player variables
 //    public Player player1 = null;
 //    public Player player2 = null;
+    public static final int NEW_ROUND_COND = 2;
     public Player player = null;
     private boolean isMaster = false;
     private boolean isGameOn = false;
     private int roundNum = 0;
-    private int p1NumWordsFound = 0;
-    private int p2NumWordsFound = 0;
     private boolean newGameFlag = false;
+    private boolean player1Stopped = false;
+    private boolean player2Stopped = false;
+    private boolean isCutthroat = true;
+    private int p1NumFound = 0, p2NumFound = 0;
+    private ArrayList<String> foundWordsList = new ArrayList<String>();
 
 
     // variables for innit game
@@ -121,12 +125,11 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     // type of message string
     public static final int MESSAGE_TYPE_BOGGLE_BOARD = 1;
-    public static final int MESSAGE_TYPE_GET_READY = 2;
-    public static final int MESSAGE_TYPE_PLAYER1_FOUND_WORD = 3;
-    public static final int MESSAGE_TYPE_PLAYER2_FOUND_WORD = 4;
-    public static final int MESSAGE_TYPE_GAME_MODE = 5;
-    public static final int MESSAGE_TYPE_START_GAME = 6;
-    public static final int MESSAGE_TYPE_END_GAME = 7;
+    public static final int MESSAGE_TYPE_PLAYER_FOUND_WORD = 2;
+    public static final int MESSAGE_TYPE_GAME_MODE = 3;
+    public static final int MESSAGE_TYPE_START_GAME = 4;
+    public static final int MESSAGE_TYPE_END_GAME = 5;
+    public static final int MESSAGE_TYPE_SIGNAL_NEW_ROUND = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,41 +303,27 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    String readMsg = new String(readBuf, 0, msg.arg1);
 
-                    // msg type =
-                    // 1) = boggle board; set board for player 2, set initBoard
-                    // 2) = possible word; => set possible words for player 2, start game
-                    // 3) = start game => start game for player 1, (msg from slave) (call setupnewgame)
-                    // 4) = new game => msg from slave request new game
-                    // 5) = end game =>
+                    String realMsg = readMsg.substring(1, readMsg.length());
 
-//                    Toast.makeText(getApplicationContext(), readMessage, Toast.LENGTH_LONG).show();
-
-//                    String messgage = msg.getData().toString();
-                    String realMsg = readMessage.substring(1, readMessage.length());
-
-//                    System.out.println(readMessage);
-                    System.out.println(readMessage);
+                    System.out.println(readMsg);
                     System.out.println(realMsg);
-                    System.out.println(Character.getNumericValue(readMessage.charAt(0)));
+                    System.out.println(Character.getNumericValue(readMsg.charAt(0)));
 
-                    switch (Character.getNumericValue(readMessage.charAt(0))) {
+                    switch (Character.getNumericValue(readMsg.charAt(0))) {
 
                         case MESSAGE_TYPE_BOGGLE_BOARD:
                             //Toast.makeText(getApplicationContext(), "Received a board", Toast.LENGTH_SHORT).show();
 
                             if (roundNum == 0) {
                                 isGameOn = true;
-                                roundNum = 1;
                                 board = MessageConverter.messageToBoard(realMsg);
                                 Toast.makeText(getApplicationContext(), "Press Start to Ready", Toast.LENGTH_LONG).show();
                             } else {
                                 // new round:
-                                if (p1NumWordsFound >= 2 && p2NumWordsFound >= 2) {
+                                if (p1NumFound >= 2 && p2NumFound >= 2) {
                                     board = MessageConverter.messageToBoard(realMsg);
-                                    p1NumWordsFound = 0;
-                                    p2NumWordsFound = 0;
                                     Toast.makeText(getApplicationContext(), "New Round Start!", Toast.LENGTH_LONG).show();
                                     player2StartGame();
                                 }
@@ -349,21 +338,43 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                             Toast.makeText(getApplicationContext(), "Game Start", Toast.LENGTH_LONG).show();
                             break;
 
-                        case MESSAGE_TYPE_PLAYER1_FOUND_WORD:
+                        case MESSAGE_TYPE_PLAYER_FOUND_WORD:
                             if (!isMaster) {
-                                p1NumWordsFound++;
+                                p1NumFound++;
+                                if (isCutthroat) {
+                                    foundWordsList.add(realMsg);
+
+                                    foundWords = foundWordsList.toArray(new String[0]);
+
+                                    //send found words in message to other player
+                                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                                    wordList.setAdapter(wordAdapter);
+                                }
                                 Toast.makeText(getApplicationContext(), "Player 1 found 1 more word", Toast.LENGTH_LONG).show();
+                            } else {
+                                p2NumFound++;
+                                if (isCutthroat) {
+                                    foundWordsList.add(realMsg);
+
+                                    foundWords = foundWordsList.toArray(new String[0]);
+
+                                    //send found words in message to other player
+                                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                                    wordList.setAdapter(wordAdapter);
+                                }
+                                Toast.makeText(getApplicationContext(), "Player 2 found 1 more word", Toast.LENGTH_LONG).show();
                             }
 
                             break;
 
-                        case MESSAGE_TYPE_PLAYER2_FOUND_WORD:
-                            if (isMaster) {
-                                p2NumWordsFound++;
-                                text_display.setText(Integer.toString(p2NumWordsFound));
-                                Toast.makeText(getApplicationContext(), "Player 2 found 1 more word", Toast.LENGTH_LONG).show();
-                            }
+                        case MESSAGE_TYPE_SIGNAL_NEW_ROUND:
+                            if (isMaster) player2Stopped = true;
+                            else player1Stopped = true;
 
+                            if (player1Stopped && player2Stopped && isMaster) {
+                                // master setup new round + send board
+                                newRound();
+                            }
                             break;
 
                         case MESSAGE_TYPE_END_GAME:
@@ -442,18 +453,20 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
 
         isTouchAble = true;
-        if (roundNum == 1)
+        if (roundNum == 0)
             //  player1.initiateTimer();
             player.initiateTimer();
         else {
             // new round
-            p1NumWordsFound = 0;
-            p2NumWordsFound = 0;
-            roundNum++;
+            p1NumFound = 0;
+            p2NumFound = 0;
+            player1Stopped = false;
+            player2Stopped = false;
             System.out.println("round: " + roundNum);
             //player1.moveToNextRound();
             player.moveToNextRound();
         }
+        roundNum++;
     }
 
     // start game for player2, and signel player 1 to start game
@@ -474,16 +487,19 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         resetPressedStatus();
 
         isTouchAble = true;
-        if (roundNum == 1)
+        if (roundNum == 0)
             //player2.initiateTimer();
             player.initiateTimer();
         else {
             // move to new round
-            roundNum++;
+            p1NumFound = 0;
+            p2NumFound = 0;
+            player1Stopped = false;
+            player2Stopped = false;
             System.out.println("round: " + roundNum);
-            //player2.moveToNextRound();
             player.moveToNextRound();
         }
+        roundNum++;
     }
 
     private boolean checkBluetoothConnection() {
@@ -527,7 +543,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 if (isMaster) {
 
                     if (newGameFlag == false) {
-                        roundNum = 1;
                         setupNewGame();
                         item.setVisible(false);
                         newGameFlag = true;
@@ -547,15 +562,25 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
             case R.id.item_end: {
 
-                System.out.println("player 1 # found: " + p1NumWordsFound);
-                System.out.println("player 2 # found: " + p2NumWordsFound);
+                if (isMaster) {
 
-                if (isMaster)
-                    //player1.pauseTimer();
-                    player.totalTime = player.pauseTimer();
-                else
-                    //player2.pauseTimer();
-                    player.totalTime = player.pauseTimer();
+                    if (p1NumFound >= NEW_ROUND_COND) {
+                        player.pauseTimer();
+                        player1Stopped = true;
+                        sendMessage("Player 1 stopped the timer!", MESSAGE_TYPE_SIGNAL_NEW_ROUND);
+                    }
+
+                    if (player1Stopped == true && player2Stopped == true)
+                        newRound();
+
+                }
+                else {
+                    if (p2NumFound >= NEW_ROUND_COND) {
+                        player.pauseTimer();
+                        player2Stopped = true;
+                        sendMessage("Player 2 stopped the timer!", MESSAGE_TYPE_SIGNAL_NEW_ROUND);
+                    }
+                }
 
                 return true;
             }
@@ -685,6 +710,20 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             public void onClick(View v) {
                 resetBoardButtons();
                 resetPressedStatus();
+
+                String str = "";
+                if (player1Stopped && player2Stopped)
+                    str = "true true";
+                else if (!player1Stopped && player2Stopped)
+                    str = "false true";
+                else if (player1Stopped && !player2Stopped)
+                    str = "true false";
+                else
+                    str = "false false";
+
+                str += "; round=" + roundNum + "; " + p1NumFound + " " + p2NumFound ;
+                text_display.setText(str);
+
             }
         });
 
@@ -693,13 +732,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     private void newRound() {
 
-        if (p1NumWordsFound >= 2 && p2NumWordsFound >= 2) {
-
+        if (p1NumFound >= NEW_ROUND_COND && p2NumFound >= NEW_ROUND_COND) {
             if (isMaster) {
                 setupNewGame();
                 player1StartGame();
-            } else {
-
             }
         }
     }
@@ -710,59 +746,40 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             public void onClick(View view) {
 
                 // check inputWord is in list
-                if (isMaster) {
-                    // for player 1 
-                    //int ret = player1.updateInfor(tInputWord, allValidWords);
-                    int ret = player.updateInfor(tInputWord, allValidWords);
-
-                    if (ret == -1)
-                        text_display.setText("Invalid word!");
-                    else if (ret == 0)
+                if (isCutthroat) {
+                    if (foundWordsList.contains(tInputWord) == true) {
                         text_display.setText("Invalid, \"" + tInputWord + "\" found!");
-                    else if (ret == 1) {
-                        text_display.setText("Valid Word!");
-
-//                        player_score.setText("Score: " + Integer.toString(player1.getScore()));
-//                        foundWords = player1.getFoundWords().toArray(new String[0]);
-                        player_score.setText("Score: " + Integer.toString(player.getScore()));
-                        foundWords = player.getFoundWords().toArray(new String[0]);
-
-                        //send found words in message to other player
-
-                        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
-                        wordList.setAdapter(wordAdapter);
-
-                        p1NumWordsFound++;
-                        sendMessage(tInputWord, MESSAGE_TYPE_PLAYER1_FOUND_WORD);
-
-                        newRound();
+                        resetBoardButtons();
+                        resetPressedStatus();
+                        return;
                     }
-                    
-                } else {
-                    // for player 2 
+                }
 
-                    //int ret = player2.updateInfor(tInputWord, allValidWords);
-                    int ret = player.updateInfor(tInputWord, allValidWords);
-                    if (ret == -1)
-                        text_display.setText("Invalid word!");
-                    else if (ret == 0)
-                        text_display.setText("Invalid, \"" + tInputWord + "\" found!");
-                    else if (ret == 1) {
-                        text_display.setText("Valid Word!");
+                int ret = player.updateInfor(tInputWord, allValidWords);
 
-//                        player_score.setText("Score: " + Integer.toString(player2.getScore()));
-//                        foundWords = player2.getFoundWords().toArray(new String[0]);
-                        player_score.setText("Score: " + Integer.toString(player.getScore()));
-                        foundWords = player.getFoundWords().toArray(new String[0]);
+                if (ret == -1)
+                    text_display.setText("Invalid word!");
+                else if (ret == 0)
+                    text_display.setText("Invalid, \"" + tInputWord + "\" found!");
+                else if (ret == 1) {
+                    text_display.setText("Valid Word!");
 
-                        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
-                        wordList.setAdapter(wordAdapter);
+                    player_score.setText("Score: " + Integer.toString(player.getScore()));
+                    foundWordsList.add(tInputWord);
 
-                        p2NumWordsFound++;
-                        sendMessage(tInputWord, MESSAGE_TYPE_PLAYER2_FOUND_WORD);
+                    foundWords = foundWordsList.toArray(new String[0]);
 
-                    }
-                    
+                    //send found words in message to other player
+                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                    wordList.setAdapter(wordAdapter);
+
+                    if (isMaster)
+                        p1NumFound++;
+                    else
+                        p2NumFound++;
+
+                    sendMessage(tInputWord, MESSAGE_TYPE_PLAYER_FOUND_WORD);
+
                 }
 
                 resetBoardButtons();
