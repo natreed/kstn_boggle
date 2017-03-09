@@ -110,7 +110,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     private boolean newGameFlag = false;
     private boolean player1Stopped = false;
     private boolean player2Stopped = false;
-    private boolean isCutthroat = true;
+    private boolean isCutthroat;
     private int p1NumFound = 0, p2NumFound = 0;
     private ArrayList<String> foundWordsList = new ArrayList<String>();
 
@@ -135,10 +135,15 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.double_player_activity_layout);
+		
+		Intent intent = getIntent();
+		int mode = Integer.parseInt(intent.getStringExtra("MODE"));
+		isCutthroat = mode ==1?true:false;
+        Toast.makeText(this,"cutthroat " +String.valueOf(isCutthroat),Toast.LENGTH_LONG).show();
 
         // call init layout, players variables, dictionary
         initVariables();
-
+		
 
         // init location on screen for all components
         mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);

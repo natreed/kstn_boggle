@@ -122,7 +122,7 @@ public class ChooseModeMainActivity extends AppCompatActivity {
                                                 // or return them to the component that opened the dialog
                                                 Intent myDoubleIntent = new Intent(getApplicationContext(),
                                                         MultiPlayerActivity.class);
-//
+												myDoubleIntent.putExtra("MODE", Integer.toString(selectedDoublePlayerMode));
                                                 startActivity(myDoubleIntent);
 
                                             }
