@@ -68,20 +68,46 @@ public class GameOverMultiplayer extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gameover);
+        setContentView(R.layout.gameover_multi);
 
         Intent intent = getIntent();
-        int p1score = intent.getIntExtra("MY_SCORE", 0);
-        int p2score = intent.getIntExtra("OP_SCORE", 0);
+        int myScore = intent.getIntExtra("MY_SCORE", 0);
+        int theirScore =  intent.getIntExtra("OP_SCORE", 0);
+        String p1score = Integer.toString(intent.getIntExtra("MY_SCORE", 0));
+        String p2score = Integer.toString(intent.getIntExtra("OP_SCORE", 0));
 
 
-        TextView p1 = (TextView) findViewById(R.id.textView3);
-        TextView p2 = (TextView) findViewById(R.id.textView4);
+        TextView p1 = (TextView) findViewById(R.id.Score1);
+        TextView p2 = (TextView) findViewById(R.id.Score2);
 
         p1.setText(p1score);
         p2.setText(p2score);
 
+        String msg = "";
 
+        if (myScore > theirScore) {
+            msg = "YOU WIN!!!" + "\nYour Score:" + myScore + "\nTheir Score: " + theirScore;
+        }
+        else if (myScore < theirScore){
+            msg = "YOU LOSE!!!" + "\nYour Score:" + myScore + "\nTheir Score: " + theirScore;
+        }
+        else {
+            msg = "ITS A TIE!!!" + "\nYour Score:" + myScore + "\nTheir Score: " + theirScore;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Title")
+
+                .setMessage(msg)
+
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                       Intent intent = new Intent(getApplicationContext(), ChooseModeMainActivity.class);
+                        startActivity(intent);
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
 
 
     }

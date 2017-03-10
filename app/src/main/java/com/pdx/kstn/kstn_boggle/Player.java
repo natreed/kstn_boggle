@@ -175,7 +175,6 @@ public class Player {
     }
 
 
-    //NATE MOdifications
     public class PlayerTimer extends CountDownTimer {
         public PlayerTimer(long startTime, long interval) {
             super(startTime, interval);
@@ -253,29 +252,11 @@ public class Player {
                 isWinner = true;
         }
 
-        new AlertDialog.Builder(context)
-                .setTitle("Title")
-                .setMessage("Do you really want to whatever?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(context, "Yaay", Toast.LENGTH_SHORT).show();
-                    }})
-                .setNegativeButton(android.R.string.no, null).show();
-
-
-
-
-
-
-
-
-//        Intent intend = new Intent(context, GameOverMultiplayer.class);
-//        intend.putExtra("WINNER", toString().valueOf(isWinner));
-//        intend.putExtra("MY_SCORE", this.score);
-//        intend.putExtra("OP_SCORE", opponentScore);
-//        intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(intend);
+        Intent intend = new Intent(context, GameOverMultiplayer.class);
+        intend.putExtra("WINNER", toString().valueOf(isWinner));
+        intend.putExtra("MY_SCORE", this.score);
+        intend.putExtra("OP_SCORE", opponentScore);
+        intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intend);
     }
 }
