@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,13 +29,13 @@ public class Player {
     public CountDownTimer timer = null;
     public TextView text_timer;
     public Context activity_context;
-    final long START_TIME = 100000;
+    final long START_TIME = 10000;
     public long totalTime = START_TIME;
     private boolean isPaused = false;
-    private boolean isCanceled = false;
+    public boolean isTimeUp = false;
     private boolean isMultiplay = false;
-    private boolean isWinner = false;
-    private int opponentScore = 0;
+
+
     public ArrayList<String> allValidWords = new ArrayList<String>();
 
     Player(TextView timerText, Context context) {
@@ -85,7 +86,6 @@ public class Player {
         // update timer
         isPaused = false;
         updateTimer(scoreForCurrentRound);
-        isCanceled = false;
 
         this.scoreForCurrentRound = 0;
         round += 1;
@@ -183,24 +183,20 @@ public class Player {
         @Override
         public void onFinish() {
             text_timer.setText("TIME'S UP!");
+            isTimeUp = true;
+
             if (!isMultiplay)
                 gameOver(activity_context);
-            gameOverMultiplayer (activity_context);
 
         }
         @Override
         public void onTick(long millisUntilFinished) {
-            if (isPaused || isCanceled) {
+            if (isPaused) {
                 cancel();
             } else {
                 text_timer.setText("Timer: " + millisUntilFinished / 1000);
                 totalTime = millisUntilFinished;
             }
-            //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
-//            if (millisUntilFinished<5000){
-//                MediaPlayer mp = MediaPlayer.create(activity_context, R.raw.timer_sound);
-//                mp.start();
-//            }
         }
     }
 
@@ -213,7 +209,7 @@ public class Player {
     public void updateTimer (int seconsToAdd) {
         this.totalTime = this.totalTime + seconsToAdd*1000;
         timer.cancel();
-        isCanceled = true;
+        new PlayerTimer(totalTime, 1000);
         timer.start();
     }
 
@@ -251,17 +247,35 @@ public class Player {
         System.out.println("reach 2");
     }
 
-    public void gameOverMultiplayer (Context context) {
-        if (isWinner) {
-            Intent intend = new Intent(context, GameOverMultipayer.class);
-            intend.putExtra("PLAYER_SCORE", Integer.toString(getScore()));
-            intend.putExtra("WINNER", toString().valueOf(isWinner));
-            intend.putExtra("MY_SCORE", score);
-            intend.putExtra("OP_SCORE", opponentScore);
-            intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            System.out.println("reach 1");
-            context.startActivity(intend);
-            System.out.println("reach 2");
+    public void gameOverMultiplayer (final Context context, boolean isWinner, boolean isCutthroat, int opponentScore) {
+        if (isCutthroat) {
+            if (this.score >= opponentScore)
+                isWinner = true;
         }
+
+        new AlertDialog.Builder(context)
+                .setTitle("Title")
+                .setMessage("Do you really want to whatever?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Toast.makeText(context, "Yaay", Toast.LENGTH_SHORT).show();
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+
+
+
+
+
+
+
+
+//        Intent intend = new Intent(context, GameOverMultiplayer.class);
+//        intend.putExtra("WINNER", toString().valueOf(isWinner));
+//        intend.putExtra("MY_SCORE", this.score);
+//        intend.putExtra("OP_SCORE", opponentScore);
+//        intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startActivity(intend);
     }
 }

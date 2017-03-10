@@ -112,6 +112,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     private boolean player1Stopped = false;
     private boolean player2Stopped = false;
     private boolean isCutthroat;
+    private boolean isGameOver = false;
+    private boolean isWinner = false;
+    private int opponentScore = 0;
     private int p1NumFound = 0, p2NumFound = 0;
     private ArrayList<String> foundWordsList = new ArrayList<String>();
 
@@ -131,6 +134,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     public static final int MESSAGE_TYPE_START_GAME = 4;
     public static final int MESSAGE_TYPE_END_GAME = 5;
     public static final int MESSAGE_TYPE_SIGNAL_NEW_ROUND = 6;
+    public boolean gameoverMsgSent = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +197,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         }
 
+        gameOver();
     }
 
     @Override
@@ -275,7 +280,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
     }
 
-    private void sendMessage(String message, int messageType) {
+    public void sendMessage(String message, int messageType) {
 
         // Check that we're actually connected before trying anything
         if (mBluetoothService.getState() != BluetoothConnectionService.STATE_CONNECTED) {
@@ -384,7 +389,15 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                             break;
 
                         case MESSAGE_TYPE_END_GAME:
-                            gameOver();  // gameOver(w
+
+                            if (gameoverMsgSent == false) {
+                                gameoverSignal(realMsg);  // send back game score;
+                                isWinner = true;
+                                gameoverMsgSent = true;
+                            }
+
+                            opponentScore  = Integer.parseInt(realMsg);
+                            isGameOver = true;
 
                             break;
 
@@ -791,17 +804,40 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         });
     }
 
-    // need to edit this for double player
-    private void gameOver() {
-//        Intent intend = new Intent(getApplicationContext(), GameOver.class);
-//        intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
-//        intend.putExtra("FOUND_WORDS", player.getFoundWords());
-//        intend.putExtra("POSSIBLE_WORDS", allValidWords);
-//
-//        startActivity(intend);
+    private void gameoverSignal(String msg) {
+        sendMessage("" + player.getScore(), MESSAGE_TYPE_END_GAME);
     }
 
 
+    // need to edit this for double player
+    private void gameOver() {
+
+        Thread thread_gameOver = new Thread(new Runnable() {
+            public void run()
+            {
+                boolean flag = false;
+                while (isGameOver == false) {
+
+                    if (player.isTimeUp && flag == false) {
+                        if (isCutthroat && isMaster) {
+                            sendMessage("" + player.getScore(), MESSAGE_TYPE_END_GAME);
+                            flag = true;
+                            gameoverMsgSent = true;
+                        } else if (!isCutthroat) {
+                            sendMessage("" + player.getScore(), MESSAGE_TYPE_END_GAME);
+                            flag = true;
+                            gameoverMsgSent = true;
+                        }
+                    }
+                }
+
+                player.gameOverMultiplayer(getApplicationContext(), isWinner, isCutthroat, opponentScore);
+//                player.gameOver(getApplicationContext());
+            }
+        });
+        thread_gameOver.start();
+
+    }
 
 
 
