@@ -99,7 +99,18 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.double_player_activity_layout);
-
+        Intent intent = getIntent();
+		int level = Integer.parseInt(intent.getStringExtra("LEVEL"));
+        String level_selected;
+        if(level ==0){
+            level_selected ="Easy";
+        }
+        else if (level==1)
+        {
+            level_slected ="Meidum";
+        }
+        else
+            level_slected ="Hard";
 
         // load dictionary file
         try {
