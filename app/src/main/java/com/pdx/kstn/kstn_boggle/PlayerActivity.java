@@ -107,10 +107,10 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
         }
         else if (level==1)
         {
-            level_slected ="Meidum";
+            level_selected ="Meidum";
         }
         else
-            level_slected ="Hard";
+            level_selected ="Hard";
 
         // load dictionary file
         try {
