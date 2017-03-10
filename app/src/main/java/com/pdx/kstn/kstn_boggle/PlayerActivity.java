@@ -435,6 +435,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
         intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
         intend.putExtra("FOUND_WORDS", player.getFoundWords());
         intend.putExtra("POSSIBLE_WORDS", allValidWords);
+	intend.putExtra("PLAYER_LEVEL", level_selected);    
 
         startActivity(intend);
     }
