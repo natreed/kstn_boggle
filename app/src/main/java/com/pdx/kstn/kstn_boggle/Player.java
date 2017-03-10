@@ -1,10 +1,14 @@
 package com.pdx.kstn.kstn_boggle;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -28,7 +32,9 @@ public class Player {
     public long totalTime = START_TIME;
     private boolean isPaused = false;
     private boolean isCanceled = false;
-
+    private boolean isMultiplay = false;
+    private boolean isWinner = false;
+    private int opponentScore = 0;
     public ArrayList<String> allValidWords = new ArrayList<String>();
 
     Player(TextView timerText, Context context) {
@@ -177,8 +183,10 @@ public class Player {
         @Override
         public void onFinish() {
             text_timer.setText("TIME'S UP!");
+            if (!isMultiplay)
+                gameOver(activity_context);
+            gameOverMultiplayer (activity_context);
 
-            gameOver(activity_context);
         }
         @Override
         public void onTick(long millisUntilFinished) {
@@ -241,5 +249,19 @@ public class Player {
         System.out.println("reach 1");
         context.startActivity(intend);
         System.out.println("reach 2");
+    }
+
+    public void gameOverMultiplayer (Context context) {
+        if (isWinner) {
+            Intent intend = new Intent(context, GameOverMultipayer.class);
+            intend.putExtra("PLAYER_SCORE", Integer.toString(getScore()));
+            intend.putExtra("WINNER", toString().valueOf(isWinner));
+            intend.putExtra("MY_SCORE", score);
+            intend.putExtra("OP_SCORE", opponentScore);
+            intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            System.out.println("reach 1");
+            context.startActivity(intend);
+            System.out.println("reach 2");
+        }
     }
 }
