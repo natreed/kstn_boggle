@@ -80,7 +80,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
     public boolean[][] touchVisited = new boolean[4][4];
     public int tlRow = 0, tlCol = 0, tPressCount = 0;
     public String tInputWord = "";
-
+    public  String level_selected ="";
 
     // layout variables
     public Button BoardButton[] = new Button[16];
@@ -101,7 +101,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
         setContentView(R.layout.double_player_activity_layout);
         Intent intent = getIntent();
 		int level = Integer.parseInt(intent.getStringExtra("LEVEL"));
-        String level_selected;
+       
         if(level ==0){
             level_selected ="Easy";
         }
