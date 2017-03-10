@@ -47,7 +47,6 @@ public class GameOver extends Activity {
 
         ListView listView = (ListView) findViewById(R.id.list);
         ResultAdapter adapter = new ResultAdapter(this, score, possibleWords, foundWords);
-//        setListAdapter(adapter);
         listView.setAdapter(adapter);
 
         System.out.println("Total possible words: " + possibleWords.size());

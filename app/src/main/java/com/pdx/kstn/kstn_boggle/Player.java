@@ -27,7 +27,6 @@ public class Player {
     final long START_TIME = 100000;
     public long totalTime = START_TIME;
     private boolean isPaused = false;
-    private boolean isCanceled = false;
 
     public ArrayList<String> allValidWords = new ArrayList<String>();
 
@@ -79,7 +78,6 @@ public class Player {
         // update timer
         isPaused = false;
         updateTimer(scoreForCurrentRound);
-        isCanceled = false;
 
         this.scoreForCurrentRound = 0;
         round += 1;
@@ -182,11 +180,11 @@ public class Player {
         }
         @Override
         public void onTick(long millisUntilFinished) {
-            if (isPaused || isCanceled) {
+            if (isPaused) {
                 cancel();
             } else {
                 text_timer.setText("Timer: " + millisUntilFinished / 1000);
-                totalTime = millisUntilFinished;
+                Player.this.totalTime = millisUntilFinished;
             }
             //text_timer.setText(millisUntilFinished/60000 + ":" + millisUntilFinished/1000 % (millisUntilFinished/60000*60));
 //            if (millisUntilFinished<5000){
@@ -198,14 +196,14 @@ public class Player {
 
 
     public void initiateTimer () {
-        this.timer = new PlayerTimer(START_TIME, 1000);
+        this.timer = new PlayerTimer(totalTime, 1000);
         timer.start();
     }
 
     public void updateTimer (int seconsToAdd) {
         this.totalTime = this.totalTime + seconsToAdd*1000;
         timer.cancel();
-        isCanceled = true;
+        timer = new PlayerTimer(this.totalTime, 1000);
         timer.start();
     }
 
