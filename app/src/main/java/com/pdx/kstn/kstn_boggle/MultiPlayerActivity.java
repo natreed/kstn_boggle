@@ -43,11 +43,12 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     // variables for handling sliding + locations
     Point[][] locationMatrix = new Point[4][4];  //new Coordinate[4][4];
-    int bttHeight, bttWidth, offset;         // offset should be 1/4 of width or height
+    int bttHeight, bttWidth, offset;         // offset should be 1/6 of width or height
     public boolean[][] touchVisited = new boolean[4][4];
     public int tlRow = 0, tlCol = 0, tPressCount = 0;
     public String tInputWord = "";
     public boolean isTouchAble = false;
+
 
 
     // layout variables
@@ -352,7 +353,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                                     foundWords = foundWordsList.toArray(new String[0]);
 
                                     //send found words in message to other player
-                                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, R.layout.mywhite_listview, foundWords);
                                     wordList.setAdapter(wordAdapter);
                                 }
                                 Toast.makeText(getApplicationContext(), "Player 1 found 1 more word", Toast.LENGTH_LONG).show();
@@ -364,7 +365,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                                     foundWords = foundWordsList.toArray(new String[0]);
 
                                     //send found words in message to other player
-                                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, R.layout.mywhite_listview, foundWords);
                                     wordList.setAdapter(wordAdapter);
                                 }
                                 Toast.makeText(getApplicationContext(), "Player 2 found 1 more word", Toast.LENGTH_LONG).show();
@@ -427,7 +428,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         if (isMaster) {
             // generate board + valid words, then send to slave player
-            Toast.makeText(this, "This is Master!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Waiting for other player to get ready.", Toast.LENGTH_LONG).show();
             board = BoardGenerate.createNewBoard();
 
             // send board + valid words
@@ -525,6 +526,15 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.item_end);
+        if (isCutthroat)
+            item.setVisible(false);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_connection: {
@@ -545,21 +555,25 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             }
 
             case R.id.item_start: {
-                if (isMaster) {
+                if (mBluetoothService.getState() == BluetoothConnectionService.STATE_CONNECTED) {
 
-                    if (newGameFlag == false) {
-                        setupNewGame();
-                        item.setVisible(false);
-                        newGameFlag = true;
+                    if (isMaster) {
+
+                        if (newGameFlag == false) {
+                            setupNewGame();
+                            item.setVisible(false);
+                            newGameFlag = true;
+                        }
+
+                    } else {
+
+                        if (isGameOn) {
+                            sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
+                            player2StartGame();
+                            item.setVisible(false);
+                        }
                     }
 
-                } else {
-
-                    if (isGameOn) {
-                        sendMessage("Start Game", MESSAGE_TYPE_START_GAME);
-                        player2StartGame();
-                        item.setVisible(false);
-                    }
                 }
 
                 return true;
@@ -590,6 +604,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 return true;
             }
         }
+
         return false;
     }
 
@@ -647,7 +662,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         System.out.println("height " + bttHeight + ", width = " + bttWidth);
 
-        offset = bttWidth / 4;
+        offset = bttWidth / 6;
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -692,7 +707,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         player_score = (TextView) findViewById(R.id.text_player_score);
         text_display = (TextView) findViewById(R.id.text_display_screen);
 
-        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+        ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, R.layout.mywhite_listview, foundWords);
         wordList = (ListView) findViewById(R.id.list_foundWords);
         wordList.setAdapter(wordAdapter);
 
@@ -705,30 +720,12 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         } catch (Exception e) {
         }
 
-        // init players' variables
-//        player1 = new Player(text_timer, getApplicationContext());
-//        player2 = new Player(text_timer, getApplicationContext());
-
         player = new Player(text_timer, getApplicationContext());
         // handling cancel button, need to move to somewhere else
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 resetBoardButtons();
                 resetPressedStatus();
-
-                String str = "";
-                if (player1Stopped && player2Stopped)
-                    str = "true true";
-                else if (!player1Stopped && player2Stopped)
-                    str = "false true";
-                else if (player1Stopped && !player2Stopped)
-                    str = "true false";
-                else
-                    str = "false false";
-
-                str += "; round=" + roundNum + "; " + p1NumFound + " " + p2NumFound ;
-                text_display.setText(str);
-
             }
         });
 
@@ -775,7 +772,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     foundWords = foundWordsList.toArray(new String[0]);
 
                     //send found words in message to other player
-                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, android.R.layout.simple_list_item_1, foundWords);
+                    ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, R.layout.mywhite_listview, foundWords);
                     wordList.setAdapter(wordAdapter);
 
                     if (isMaster)
@@ -964,8 +961,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                 // check if x,y location of finger touch is in boundary of
                 // button
-                if ((bttX + offset) < x && x < (bttX + 3 * offset)) {
-                    if ((bttY + offset) < y && y < (bttY + 3 * offset)) {
+                if ((bttX + offset) < x && x < (bttX + 5 * offset)) {
+                    if ((bttY + offset) < y && y < (bttY + 5 * offset)) {
 
                         // handling if touch inside a button
                         boolean ret = checkOnTouch(i, j);

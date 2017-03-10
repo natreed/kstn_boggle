@@ -23,7 +23,6 @@ public class ResultAdapter extends BaseAdapter {
 
     Activity activity;
     ArrayList<HashSet<String>> possible = new ArrayList<>();
-//    ArrayList<String> possible;
     ArrayList<String> found;
     int score;
 

@@ -1,6 +1,7 @@
 package com.pdx.kstn.kstn_boggle;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -43,7 +44,7 @@ import java.util.Timer;
 /**
  * Created by Sharmistha on 1/27/2017.
  */
-public class PlayerActivity extends AppCompatActivity implements View.OnTouchListener, SensorEventListener {
+public class PlayerActivity extends Activity implements View.OnTouchListener, SensorEventListener {
 
     // variables for innit game
     public String[][] board;
@@ -75,7 +76,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
     // variables for handling sliding + locations
     Point[][] locationMatrix = new Point[4][4];  //new Coordinate[4][4];
-    int bttHeight, bttWidth, offset;         // offset should be 1/4 of width or height
+    int bttHeight, bttWidth, offset;         // offset should be 1/6 of width or height
     public boolean[][] touchVisited = new boolean[4][4];
     public int tlRow = 0, tlCol = 0, tPressCount = 0;
     public String tInputWord = "";
@@ -186,7 +187,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
         System.out.println("height " + bttHeight + ", width = " + bttWidth);
 
-        offset = bttWidth / 4;
+        offset = bttWidth / 6;
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -271,7 +272,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
     }
 
-    private void submitAction() {
+    private void submitAction(final Activity activity) {
         button_submit_word.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -298,7 +299,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                     p1_score.setText("Score: " + Integer.toString(player.getScore()));
 
                     foundWords = player.getFoundWords().toArray(new String[0]);
-
                     ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(PlayerActivity.this, R.layout.mywhite_listview, foundWords);
                     wordList.setAdapter(wordAdapter);
                 }
@@ -434,55 +434,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        switch (id) {
-//            case R.id.item_choose_game:
-//                new AlertDialog.Builder(this)
-//                        .setTitle("")
-//                        .setMessage("Do you want to quit current game?")
-//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                startActivity(new Intent(getBaseContext(), ChooseModeMainActivity.class));
-//                            }
-//                        })
-//                        .setNegativeButton(android.R.string.no, null).show();
-//
-//                return true;
-//
-//            case R.id.item_high_score:
-//                new AlertDialog.Builder(this)
-//                        .setTitle("")
-//                        .setMessage("Do you want to quit current game?")
-//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                startActivity(new Intent(getBaseContext(), ScoresActivity.class));
-//                            }
-//                        })
-//                        .setNegativeButton(android.R.string.no, null).show();
-//                return true;
-//
-//            case R.id.item_instruction:
-//                new AlertDialog.Builder(this)
-//                        .setTitle("")
-//                        .setMessage("Do you want to quit current game?")
-//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                startActivity(new Intent(getBaseContext(), RulesActivity.class));
-//                            }
-//                        })
-//                        .setNegativeButton(android.R.string.no, null).show();
-//                return true;
-//
-//            case R.id.item_about_us:
-//
-//                return true;
-//
-//        }
-//        return true;
-//    }
-
     //just a prototype
     private int isWord(String word) {
         return 2;
@@ -512,24 +463,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                 String str = String.valueOf(board[i][j]);
                 BoardButton[ButtonNum].setTextColor(Color.BLACK);
                 BoardButton[ButtonNum].setText(str);
-
-//                BoardButton[ButtonNum].setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        boolean validClick = checkOnClick(row, col);
-//
-//                        if (validClick == false) {
-//                            resetBoardButtons(BoardButton);
-//                        } else {
-//                            BoardButton[ButtonNum].setBackgroundColor(Color.RED);
-//                            text_display.setText(inputWord);
-//                            //PlayerActivity.this.inputWord += Log.v("EditText", BoardButton[ButtonNum].getText().toString());
-//
-//                        }
-//                    }
-//
-//                });
             }
         }
     }
@@ -625,7 +558,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
                 break;
 
             case MotionEvent.ACTION_UP:
-                submitAction();
+                submitAction(this);
                 break;
 
         }
@@ -651,8 +584,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnTouchLis
 
                 // check if x,y location of finger touch is in boundary of
                 // button
-                if ((bttX + offset) < x && x < (bttX + 3 * offset)) {
-                    if ((bttY + offset) < y && y < (bttY + 3 * offset)) {
+                if ((bttX + offset) < x && x < (bttX + 5 * offset)) {
+                    if ((bttY + offset) < y && y < (bttY + 5 * offset)) {
 
                         // handling if touch inside a button
                         boolean ret = checkOnTouch(i, j);
