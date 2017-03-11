@@ -59,7 +59,7 @@ public class ChooseModeMainActivity extends AppCompatActivity {
                                                 Intent myIntent = new Intent(getApplicationContext(),
                                                 PlayerActivity.class);
 //                                                myIntent.putExtra("difficultylevel", String.valueOf(selectedDifficultyLevel));
-						  myIntent.putExtra("LEVEL", Integer.toString(selectedDifficultyLevel));  
+						  myIntent.putExtra("LEVEL", Integer.toString(selectedDifficultyLevel));
                                                 startActivity(myIntent);
                                             }
                                         })

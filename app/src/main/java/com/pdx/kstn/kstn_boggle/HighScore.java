@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -21,13 +22,20 @@ import static com.pdx.kstn.kstn_boggle.R.raw.scores;
 
 public class HighScore {
     public ArrayList<String> scores = new ArrayList<String>();
-
+    private String difficulty = "";
     public Context activity_context;
+    private ArrayList<String> levels = new ArrayList<String>();
 
-    HighScore(Context context) {
+    HighScore(Context context, String difficult) {
+        levels.add("easy");
+        levels.add("medium");
+        levels.add("hard");
         this.activity_context = context;
+        System.out.println("Here in HighScores " + difficult);
+        this.difficulty = levels.get(Integer.parseInt(difficult));
         try {
-            FileOutputStream test = activity_context.openFileOutput("scores.txt", Context.MODE_APPEND);
+            FileOutputStream test = activity_context.openFileOutput(this.difficulty + "scores.txt", Context.MODE_APPEND);
+            System.out.println(this.difficulty + "scores.txt");
             test.close();
         } catch (Exception e) { e.printStackTrace(); }
         loadScores();
@@ -47,11 +55,10 @@ public class HighScore {
     private void loadScores() {
         // load scores from text file
         try {
-            FileInputStream fis = activity_context.openFileInput("scores.txt");
+            FileInputStream fis = activity_context.openFileInput(difficulty + "scores.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
             String line = null;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
                 scores.add(line);
             }
             System.out.println(scores);
@@ -75,7 +82,6 @@ public class HighScore {
         while (it.hasNext()) {
             String currentString = "";
             String temp = it.next();
-            System.out.println(temp);
             int len = temp.length();
             // this for loops is necessary to extract the score section from
             //// the entire string stored in the txt file. The String is of form
@@ -92,9 +98,7 @@ public class HighScore {
             //// if the score is higher than our current score in the list
             //// remove current score and add it at the current index.
             //
-            System.out.println("score = " + score + " currentscore = " + currentScore);
             if (score >= currentScore) {
-                System.out.println("Found High Score\n");
                 scores.add(track, name + ": " + score);
                 if (scores.size() > 5) scores.remove(scores.size() - 1);
                 writeBack();
@@ -105,7 +109,6 @@ public class HighScore {
         if(scores.size() < 5) {
             scores.add(name + ": " + score);
             writeBack();
-            System.out.println("High Score less than five");
         }
         return false;
 
@@ -122,7 +125,7 @@ public class HighScore {
     // format is name: score\n
     private void writeBack() throws IOException {
         try {
-            FileOutputStream fos = activity_context.openFileOutput("scores.txt", Context.MODE_PRIVATE);
+            FileOutputStream fos = activity_context.openFileOutput(difficulty + "scores.txt", Context.MODE_PRIVATE);
             Iterator<String> it = scores.iterator();
             while(it.hasNext()) {
                 fos.write(it.next().toString().getBytes());

@@ -29,6 +29,7 @@ public class GameOver extends Activity {
     private String name = "";
     private HighScore highScore;
     private int score;
+    private String difficulty = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,11 @@ public class GameOver extends Activity {
         setContentView(R.layout.gameover);
 
         // setListAdapter(adapter);
-
-        highScore = new HighScore(getApplicationContext());
-
         Intent intent = getIntent();
         score = Integer.parseInt(intent.getStringExtra("PLAYER_SCORE"));
+        this.difficulty = intent.getStringExtra("PLAYER_LEVEL");
+        System.out.println("Here in GameOver " + this.difficulty);
+        highScore = new HighScore(getApplicationContext(), difficulty);
         Toast.makeText(this,"score is " +Integer.toString(score),Toast.LENGTH_LONG).show();
         ArrayList<String> foundWords = intent.getStringArrayListExtra("FOUND_WORDS");
         ArrayList<String> possibleWords = intent.getStringArrayListExtra("POSSIBLE_WORDS");
@@ -49,11 +50,10 @@ public class GameOver extends Activity {
         ResultAdapter adapter = new ResultAdapter(this, score, possibleWords, foundWords);
         listView.setAdapter(adapter);
 
-        System.out.println("Total possible words: " + possibleWords.size());
+//        System.out.println("Total possible words: " + possibleWords.size());
         //HighScore highScore = new HighScore(getApplicationContext());
         if (score >= highScore.lowestScore() || highScore.scores.size() < 5) {
             getName();
-            System.out.println("Name: " + name);
             /*try {
                 highScore.updateScore(name, score);
             } catch (Exception e) {e.printStackTrace();}*/
@@ -98,12 +98,10 @@ public class GameOver extends Activity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                System.out.println("Hey, here is name");
                 name  = input.getText().toString();
                 try {
                     highScore.updateScore(name, score);
                 } catch (Exception e) {e.printStackTrace();}
-                System.out.println(name);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

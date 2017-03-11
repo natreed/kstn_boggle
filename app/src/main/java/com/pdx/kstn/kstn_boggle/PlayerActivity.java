@@ -53,6 +53,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
     public Player player;
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
+    private int level;
     // load dictionary file
 
 
@@ -100,7 +101,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
         super.onCreate(savedInstanceState);
         setContentView(R.layout.double_player_activity_layout);
         Intent intent = getIntent();
-		int level = Integer.parseInt(intent.getStringExtra("LEVEL"));
+        this.level = Integer.parseInt(intent.getStringExtra("LEVEL"));
        
         if(level ==0){
             level_selected ="Easy";
@@ -268,7 +269,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
         player = new Player(text_timer, getApplicationContext());
         allValidWords = BoggleSolver.solver(board, dictionary);
         player.setAllVallidWords(allValidWords);
-
+        player.difficulty = Integer.toString(this.level);
         resetPressedStatus();
         initBoard();
         p1_score.setText("Score: 0");
@@ -435,7 +436,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
         intend.putExtra("PLAYER_SCORE", Integer.toString(player.getScore()));
         intend.putExtra("FOUND_WORDS", player.getFoundWords());
         intend.putExtra("POSSIBLE_WORDS", allValidWords);
-	intend.putExtra("PLAYER_LEVEL", level_selected);    
+	    intend.putExtra("PLAYER_LEVEL", this.level);
 
         startActivity(intend);
     }

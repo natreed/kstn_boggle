@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,27 +25,44 @@ import java.util.ArrayList;
  */
 
 public class ScoresActivity extends MainActivity {
+
+    public String difficulty = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ArrayList<String> levels = new ArrayList<String>();
+        levels.add("Easy");
+        levels.add("Med.");
+        levels.add("Hard");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_scores);
+        Intent intent = getIntent();
+        difficulty = intent.getStringExtra("PLAYER_LEVEL");
         // load and display high scores
-        ArrayList<String> scores = null;
+        ArrayList<String> scores = new ArrayList<String>(); //, mediumScores = null, hardScores = null;
 
         try {
             //InputStream in = getResources().openRawResource(R.raw.scores);
             /*
             // Add this block of code at the end of the game.
              */
-            HighScore highScore = new HighScore(ScoresActivity.this);
+            HighScore highScore = new HighScore(ScoresActivity.this, difficulty);
+            //HighScore mediumHighScore = new HighScore(ScoresActivity.this, "medium");
+            //HighScore hardHighScore = new HighScore(ScoresActivity.this, "hard");
+
             //highScore.resetScores();
             //highScore.updateScore("New_Player_two", 2);
             scores = new ArrayList<String>(highScore.scores);
+            //mediumScores = new ArrayList<String>(easyHighScore.scores);
+            //hardScores = new ArrayList<String>(easyHighScore.scores);
         } catch (Exception e) { e.printStackTrace();}
 
         ArrayAdapter<String> scoreAdapter = new ArrayAdapter<String>(ScoresActivity.this, R.layout.mywhite_listview, scores);
         ListView scoreList = (ListView) findViewById(R.id.Score_List);
         scoreList.setAdapter(scoreAdapter);
+        TextView titleView = (TextView) findViewById(R.id.difficulty_text);
+        String title = levels.get(Integer.parseInt(difficulty)) + " Scores";
+        titleView.setText(title);
 
         final Button resetButton = (Button) findViewById(R.id.reset_button);
 
@@ -52,10 +70,18 @@ public class ScoresActivity extends MainActivity {
             public void onClick(View v) {
                 // Perform action on click
                 // Start NewActivity.class
-                HighScore highScore = new HighScore(ScoresActivity.this);
+                HighScore highScore = new HighScore(ScoresActivity.this, difficulty);
                 try {
                     highScore.resetScores();
                 } catch (Exception e) {e.printStackTrace();}
+//                highScore = new HighScore(ScoresActivity.this, "medium");
+//                try {
+//                    highScore.resetScores();
+//                } catch (Exception e) {e.printStackTrace();}
+//                highScore = new HighScore(ScoresActivity.this, "hard");
+//                try {
+//                    highScore.resetScores();
+//                } catch (Exception e) {e.printStackTrace();}
             }
         });
 
