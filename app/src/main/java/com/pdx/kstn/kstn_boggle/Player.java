@@ -34,6 +34,7 @@ public class Player {
     private boolean isPaused = false;
     public boolean isTimeUp = false;
     public boolean isMultiplay = false;
+    public String difficulty = null;
 
 
     public ArrayList<String> allValidWords = new ArrayList<String>();
@@ -240,10 +241,11 @@ public class Player {
         intend.putExtra("PLAYER_SCORE", Integer.toString(getScore()));
         intend.putExtra("FOUND_WORDS", getFoundWords());
         intend.putExtra("POSSIBLE_WORDS", allValidWords);
+        intend.putExtra("PLAYER_LEVEL", difficulty);
         intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        System.out.println("reach 1");
+        //System.out.println("reach 1");
         context.startActivity(intend);
-        System.out.println("reach 2");
+        //System.out.println("reach 2");
     }
 
     public void gameOverMultiplayer (final Context context, boolean isWinner, boolean isCutthroat, int opponentScore) {

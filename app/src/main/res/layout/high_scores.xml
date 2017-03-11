@@ -4,21 +4,33 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_iokanan">
 
-    <ListView
-        android:id="@+id/Score_List"
+    <TextView
+        android:text=" Scores"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:footerDividersEnabled="false"
+        android:id="@+id/difficulty_text"
         android:gravity="center_vertical|center_horizontal"
-        android:headerDividersEnabled="false"
-        android:textColor="@android:color/white"
-        android:textSize="50dp"
+        android:textColor = "@android:color/white"
         android:textStyle="normal|bold"
-        android:typeface="serif" />
+        android:typeface="serif"
+        android:textSize = "30dp"
+        android:layout_weight="0.77" />
+
+    <ListView
+        android:headerDividersEnabled="false"
+        android:footerDividersEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="306dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:id="@+id/Score_List"
+        android:textColor = "@android:color/white"
+        android:textStyle="normal|bold"
+        android:typeface="serif"
+        android:textSize = "50dp"
+        android:layout_weight="0.86" />
 
     <Button
-        android:text="reset scores"
+        android:text="reset"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="@android:dimen/app_icon_size"
