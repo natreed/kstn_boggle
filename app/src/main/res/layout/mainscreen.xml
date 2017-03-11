@@ -64,18 +64,18 @@
         android:textSize="@android:dimen/app_icon_size" />
 
     <Button
+        android:id="@+id/button_quit"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="0.12"
+        android:background="@drawable/background5"
+        android:paddingTop="0dp"
         android:text="Quit"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:background="@drawable/background5"
-        android:layout_width="325dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_quit"
-        android:layout_weight="0.12"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="60dp"
-        android:paddingTop="0dp"
         android:textSize="@android:dimen/app_icon_size" />
 
     <!--Cannot make background transparent -->

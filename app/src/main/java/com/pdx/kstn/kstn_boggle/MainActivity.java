@@ -13,7 +13,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//THIS IS WHERE NATHANS CODE STARTS
         setContentView(R.layout.mainscreen);
 
         final Button button_play_game = (Button) findViewById(R.id.button_play);
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Perform action on click
                 // Start NewActivity.class
-                finish();
+                //finish();
                 System.exit(0);
             }
         });

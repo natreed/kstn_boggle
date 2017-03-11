@@ -314,10 +314,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                             isMaster = true;
                             stateChangeMsgRead = true;
                         }
-//                        else if (msg.arg1 == BluetoothConnectionService.STATE_CONNECTED && !opponentIsMaster && !stateChangeMsgRead) {
-//                            isMaster = true;
-//                            sendImMaster();
-//                        }
 
                     break;
                 case MESSAGE_READ:
@@ -402,17 +398,18 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                             break;
 
                         case MESSAGE_TYPE_END_GAME:
-
+                            String msg1 = realMsg.split(";")[0];
                             if (gameoverMsgSent == false) {
                                 gameoverSignal();  // send back game score;
                                 isWinner = true;
                                 gameoverMsgSent = true;
-                                opponentScore  = Integer.parseInt(realMsg);
+
+                                opponentScore  = Integer.parseInt(msg1);
                                 isGameOver = true;
                                 break;
                             }
                             else {
-                                opponentScore = Integer.parseInt(realMsg);
+                                opponentScore = Integer.parseInt(msg1);
                                 isGameOver = true;
                                 break;
                             }
@@ -827,7 +824,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     }
 
     private void gameoverSignal() {
-        String msg = "" + player.getScore();
+        String msg = "" + player.getScore() + ";";
         if (isMaster)
             System.out.println("Score sent from Master " + msg);
         System.out.println("Score sent from Slave " + msg);
@@ -846,13 +843,13 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                     if (player.isTimeUp && flag == false) {
                         if (isCutthroat && isMaster) {
-                            sendMessage("" + player.getScore(), MESSAGE_TYPE_END_GAME);
+                            sendMessage("" + player.getScore() + ";", MESSAGE_TYPE_END_GAME);
                             flag = true;
                             System.out.println("HELLOMSG 1");
                             gameoverMsgSent = true;
-                        } else if (!isCutthroat) {
-                            sendMessage("" + player.getScore(), MESSAGE_TYPE_END_GAME);
-                            System.out.println("HELLOMSG 1");
+                        } else if (!isCutthroat && flag == false) {
+                            sendMessage("" + player.getScore() + ";", MESSAGE_TYPE_END_GAME);
+                            System.out.println("HELLOMSG 2");
                             flag = true;
                             gameoverMsgSent = true;
                         }

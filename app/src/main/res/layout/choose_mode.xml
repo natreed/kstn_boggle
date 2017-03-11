@@ -67,23 +67,22 @@
         android:layout_marginBottom="39dp" />
 
     <TextView
-        android:text="Choose Mode"
+        android:id="@+id/gameTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/gameTitle"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="19dp"
         android:layout_weight="1"
-        android:gravity="center_vertical|center_horizontal"
-        android:textColorLink="@android:color/black"
         android:fadingEdge="horizontal"
-        android:textStyle="normal|bold"
-        android:typeface="serif"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Choose Mode"
+        android:textColor="@android:color/white"
+        android:textColorLink="@android:color/black"
         android:textSize="50dp"
-        android:layout_above="@+id/button_single_player_mode"
-        android:layout_alignLeft="@+id/button_single_player_mode"
-        android:layout_alignStart="@+id/button_single_player_mode"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="61dp" />
+        android:textStyle="normal|bold"
+        android:typeface="serif" />
 
 </RelativeLayout>
 

@@ -5,17 +5,17 @@
     android:background="@drawable/background_iokanan">
 
     <ListView
-        android:headerDividersEnabled="false"
-        android:footerDividersEnabled="false"
+        android:id="@+id/Score_List"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:footerDividersEnabled="false"
         android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/Score_List"
-        android:textColor = "@android:color/white"
+        android:headerDividersEnabled="false"
+        android:textColor="@android:color/white"
+        android:textSize="50dp"
         android:textStyle="normal|bold"
-        android:typeface="serif"
-        android:textSize = "50dp" />
+        android:typeface="serif" />
 
     <Button
         android:text="reset scores"
