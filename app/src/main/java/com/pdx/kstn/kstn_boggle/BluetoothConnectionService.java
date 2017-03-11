@@ -1,6 +1,8 @@
 package com.pdx.kstn.kstn_boggle;
 
+ import android.app.Application;
  import android.bluetooth.BluetoothAdapter;
+ import android.bluetooth.BluetoothClass;
  import android.bluetooth.BluetoothDevice;
  import android.bluetooth.BluetoothServerSocket;
  import android.bluetooth.BluetoothSocket;
@@ -28,8 +30,8 @@ public class BluetoothConnectionService {
     private static final UUID MY_UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
 
     // Member fields
-    private final BluetoothAdapter mAdapter;
-    private final Handler mHandler;
+    private  BluetoothAdapter mAdapter;
+    private  Handler mHandler;
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;

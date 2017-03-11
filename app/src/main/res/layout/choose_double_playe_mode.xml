@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:fontFamily="cursive"
+        android:layout_marginTop="20dp"
+        android:text="Choose Mode"
+        android:textStyle="bold"
+        android:textSize="45dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5" />
+
+    <RadioGroup
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/group_mode">
+
+        <TextView
+            android:textStyle="bold"
+            android:fontFamily="serif-monospace"
+            android:text="Game Mode"
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView6"
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
+
+        <RadioButton
+            android:checked="true"
+            android:layout_marginLeft="30dp"
+            android:text="Basic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_basic"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:layout_marginLeft="30dp"
+            android:text="Cutthroat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_cutthroat"
+            android:layout_weight="1" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:layout_marginBottom="25dp"
+        android:id="@+id/group_difficulty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:fontFamily="serif-monospace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Choose Difficulty"/>
+
+        <RadioButton
+            android:checked="true"
+            android:layout_marginLeft="30dp"
+            android:text="Easy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_easy"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:layout_marginLeft="30dp"
+
+            android:text="Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_medium"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:layout_marginLeft="30dp"
+            android:text="Hard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_hard"
+            android:layout_weight="1" />
+
+
+    </RadioGroup>
+
+
+    <Button
+        android:text="Start Game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_start_game" />
+
+    <Button
+        android:text="Connection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_connection" />
+
+    <Button
+        android:text="Make Discoverable "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_discoverable" />
+
+</LinearLayout>

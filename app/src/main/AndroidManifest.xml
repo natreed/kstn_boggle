@@ -58,7 +58,16 @@
             android:name=".MultiPlayerActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
+            android:noHistory="true"
             ></activity>
+
+        <activity
+            android:name=".ChooseModeDouble"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            ></activity>
+
+
 
         <activity
             android:name=".DeviceListActivity"

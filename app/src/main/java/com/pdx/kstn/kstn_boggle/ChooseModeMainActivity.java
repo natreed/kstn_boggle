@@ -26,8 +26,6 @@ public class ChooseModeMainActivity extends AppCompatActivity {
         final Button single_player_mode = (Button) findViewById(R.id.button_single_player_mode);
         final Button double_player_mode = (Button) findViewById(R.id.button_double_player_mode);
 
-        System.out.print("Hello hello\n");
-
         single_player_mode.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
@@ -79,84 +77,96 @@ public class ChooseModeMainActivity extends AppCompatActivity {
             }
         });
 
-        // double player mode
+
         double_player_mode.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                CharSequence[] mode = {"Basic Mode","Cutthroat Mode"};
-                // 1. Instantiate an AlertDialog.Builder with its constructor
-                AlertDialog.Builder builder = new AlertDialog.Builder(ChooseModeMainActivity.this);
-                // 2. Chain together various setter methods to set the dialog characteristics
-                builder.setSingleChoiceItems(mode, selectedDoublePlayerMode, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
-                        selectedDoublePlayerMode = which;
-                    }
-                })
-                        .setTitle("Which Mode do you want to Play??")
-                        // Set the action buttons
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User clicked OK
-                                CharSequence[] difficultylevel = {"Easy","Medium","Hard"};
-                                // 1. Instantiate an AlertDialog.Builder with its constructor
-                                AlertDialog.Builder builder_difficulty_level = new AlertDialog.Builder(ChooseModeMainActivity.this);
-
-                                // 2. Chain together various setter methods to set the dialog characteristics
-                                builder_difficulty_level.setSingleChoiceItems(difficultylevel, selectedDifficultyLevelDoublePlayer, new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // TODO Auto-generated method stub
-                                        selectedDifficultyLevelDoublePlayer =which;
-                                    }
-                                })
-                                        .setTitle(R.string.dialog_title)
-                                        // Set the action buttons
-                                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                // User clicked OK, so save the mSelectedItems results somewhere
-                                                // or return them to the component that opened the dialog
-                                                Intent myDoubleIntent = new Intent(getApplicationContext(),
-                                                        MultiPlayerActivity.class);
-												myDoubleIntent.putExtra("MODE", Integer.toString(selectedDoublePlayerMode));
-                                                startActivity(myDoubleIntent);
-
-                                            }
-                                        })
-                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int id) {
-
-                                            }
-                                        });
-
-                                // 3. Get the AlertDialog from create()
-                                AlertDialog dialog_difficulty_level_multi = builder_difficulty_level.create();
-                                dialog_difficulty_level_multi.show();
-
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            //User clicked cancel
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-
-                            }
-                        });
-
-                // 3. Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
+            public void onClick(View view) {
+                Intent myIntent = new Intent(getApplicationContext(), ChooseModeDouble.class);
+                startActivity(myIntent);
             }
+        });
 
 
-            });
+
+
+//        // double player mode
+//        double_player_mode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                CharSequence[] mode = {"Basic Mode","Cutthroat Mode"};
+//                // 1. Instantiate an AlertDialog.Builder with its constructor
+//                AlertDialog.Builder builder = new AlertDialog.Builder(ChooseModeMainActivity.this);
+//                // 2. Chain together various setter methods to set the dialog characteristics
+//                builder.setSingleChoiceItems(mode, selectedDoublePlayerMode, new DialogInterface.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // TODO Auto-generated method stub
+//                        selectedDoublePlayerMode = which;
+//                    }
+//                })
+//                        .setTitle("Which Mode do you want to Play??")
+//                        // Set the action buttons
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                // User clicked OK
+//                                CharSequence[] difficultylevel = {"Easy","Medium","Hard"};
+//                                // 1. Instantiate an AlertDialog.Builder with its constructor
+//                                AlertDialog.Builder builder_difficulty_level = new AlertDialog.Builder(ChooseModeMainActivity.this);
+//
+//                                // 2. Chain together various setter methods to set the dialog characteristics
+//                                builder_difficulty_level.setSingleChoiceItems(difficultylevel, selectedDifficultyLevelDoublePlayer, new DialogInterface.OnClickListener() {
+//
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        // TODO Auto-generated method stub
+//                                        selectedDifficultyLevelDoublePlayer =which;
+//                                    }
+//                                })
+//                                        .setTitle(R.string.dialog_title)
+//                                        // Set the action buttons
+//                                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int id) {
+//                                                // User clicked OK, so save the mSelectedItems results somewhere
+//                                                // or return them to the component that opened the dialog
+//                                                Intent myDoubleIntent = new Intent(getApplicationContext(),
+//                                                        MultiPlayerActivity.class);
+//												myDoubleIntent.putExtra("MODE", Integer.toString(selectedDoublePlayerMode));
+//                                                startActivity(myDoubleIntent);
+//
+//                                            }
+//                                        })
+//                                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int id) {
+//
+//                                            }
+//                                        });
+//
+//                                // 3. Get the AlertDialog from create()
+//                                AlertDialog dialog_difficulty_level_multi = builder_difficulty_level.create();
+//                                dialog_difficulty_level_multi.show();
+//
+//                            }
+//                        })
+//                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                            //User clicked cancel
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int id) {
+//
+//                            }
+//                        });
+//
+//                // 3. Get the AlertDialog from create()
+//                AlertDialog dialog = builder.create();
+//                dialog.show();
+//
+//            }
+//
+//
+//            });
 
 
    }
