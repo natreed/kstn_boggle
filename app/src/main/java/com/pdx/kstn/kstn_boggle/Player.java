@@ -29,11 +29,11 @@ public class Player {
     public CountDownTimer timer = null;
     public TextView text_timer;
     public Context activity_context;
-    final long START_TIME = 10000;
+    final long START_TIME = 20000;
     public long totalTime = START_TIME;
     private boolean isPaused = false;
     public boolean isTimeUp = false;
-    private boolean isMultiplay = false;
+    public boolean isMultiplay = false;
 
 
     public ArrayList<String> allValidWords = new ArrayList<String>();

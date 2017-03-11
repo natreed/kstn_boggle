@@ -104,6 +104,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 //    public Player player1 = null;
 //    public Player player2 = null;
     public static final int NEW_ROUND_COND = 2;
+    public boolean stateChangeMsgRead = false;
     public Player player = null;
     private boolean isMaster = false;
     private boolean isGameOn = false;
@@ -115,6 +116,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     private boolean isGameOver = false;
     private boolean isWinner = false;
     private int opponentScore = 0;
+    private boolean opponentIsMaster;
     private int p1NumFound = 0, p2NumFound = 0;
     private ArrayList<String> foundWordsList = new ArrayList<String>();
 
@@ -134,6 +136,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     public static final int MESSAGE_TYPE_START_GAME = 4;
     public static final int MESSAGE_TYPE_END_GAME = 5;
     public static final int MESSAGE_TYPE_SIGNAL_NEW_ROUND = 6;
+    public static final int MESSAGE_TYPE_OPPONENT_MASTER = 7;
     public boolean gameoverMsgSent = false;
 
     @Override
@@ -179,7 +182,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         }
 
 
-
+        //gameOver();
 
     }
 
@@ -194,10 +197,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             if (mBluetoothService == null)
                 // Initialize the BluetoothService to perform bluetooth connections
                 mBluetoothService = new BluetoothConnectionService(this, mHandler);
-
         }
-
         gameOver();
+
     }
 
     @Override
@@ -298,7 +300,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     }
 
-
+    private void sendImMaster () {
+        sendMessage("", MESSAGE_TYPE_OPPONENT_MASTER);
+    }
     // The Handler that gets information back from the BluetoothService
     private final Handler mHandler = new Handler() {
         @Override
@@ -308,7 +312,12 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                         if (msg.arg1 == BluetoothConnectionService.STATE_CONNECTING) {
                             isMaster = true;
+                            stateChangeMsgRead = true;
                         }
+//                        else if (msg.arg1 == BluetoothConnectionService.STATE_CONNECTED && !opponentIsMaster && !stateChangeMsgRead) {
+//                            isMaster = true;
+//                            sendImMaster();
+//                        }
 
                     break;
                 case MESSAGE_READ:
@@ -340,6 +349,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                                 }
                             }
 
+                            break;
+
+                        case MESSAGE_TYPE_OPPONENT_MASTER:
+                            opponentIsMaster = true;
                             break;
 
                         case MESSAGE_TYPE_START_GAME:
@@ -391,15 +404,18 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                         case MESSAGE_TYPE_END_GAME:
 
                             if (gameoverMsgSent == false) {
-                                gameoverSignal(realMsg);  // send back game score;
+                                gameoverSignal();  // send back game score;
                                 isWinner = true;
                                 gameoverMsgSent = true;
+                                opponentScore  = Integer.parseInt(realMsg);
+                                isGameOver = true;
+                                break;
                             }
-
-                            opponentScore  = Integer.parseInt(realMsg);
-                            isGameOver = true;
-
-                            break;
+                            else {
+                                opponentScore = Integer.parseInt(realMsg);
+                                isGameOver = true;
+                                break;
+                            }
 
                     }
 
@@ -570,6 +586,11 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             case R.id.item_start: {
                 if (mBluetoothService.getState() == BluetoothConnectionService.STATE_CONNECTED) {
 
+//                    if (!opponentIsMaster) {
+//                        isMaster = true;
+//                        sendMessage("", MESSAGE_TYPE_OPPONENT_MASTER);
+//                    }
+
                     if (isMaster) {
 
                         if (newGameFlag == false) {
@@ -734,6 +755,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         }
 
         player = new Player(text_timer, getApplicationContext());
+        player.isMultiplay = true;
         // handling cancel button, need to move to somewhere else
         btt_cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -804,8 +826,12 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         });
     }
 
-    private void gameoverSignal(String msg) {
-        sendMessage("" + player.getScore(), MESSAGE_TYPE_END_GAME);
+    private void gameoverSignal() {
+        String msg = "" + player.getScore();
+        if (isMaster)
+            System.out.println("Score sent from Master " + msg);
+        System.out.println("Score sent from Slave " + msg);
+        sendMessage(msg, MESSAGE_TYPE_END_GAME);
     }
 
 
@@ -822,16 +848,26 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                         if (isCutthroat && isMaster) {
                             sendMessage("" + player.getScore(), MESSAGE_TYPE_END_GAME);
                             flag = true;
+                            System.out.println("HELLOMSG 1");
                             gameoverMsgSent = true;
                         } else if (!isCutthroat) {
                             sendMessage("" + player.getScore(), MESSAGE_TYPE_END_GAME);
+                            System.out.println("HELLOMSG 1");
                             flag = true;
                             gameoverMsgSent = true;
                         }
                     }
                 }
 
+                System.out.println("myscore" + player.getScore());
+                System.out.println("opponent score " + opponentScore);
                 player.gameOverMultiplayer(getApplicationContext(), isWinner, isCutthroat, opponentScore);
+//                Intent intend = new Intent(getApplicationContext(), GameOverMultiplayer.class);
+//                intend.putExtra("WINNER", toString().valueOf(isWinner));
+//                intend.putExtra("MY_SCORE", player.getScore());
+//                intend.putExtra("OP_SCORE", opponentScore);
+//                intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                getApplicationContext().startActivity(intend);
 //                player.gameOver(getApplicationContext());
             }
         });

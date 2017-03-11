@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         final Button button_play_game = (Button) findViewById(R.id.button_play);
         final Button button_scores = (Button) findViewById(R.id.button_scores);
         final Button button_rules = (Button) findViewById(R.id.button_rules);
+        final Button button_quit = (Button) findViewById(R.id.button_quit);
 
         button_play_game.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -50,7 +51,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//THIS IS WHERE NATHANS CODE ENDS
+        button_quit.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                // Start NewActivity.class
+                finish();
+                System.exit(0);
+            }
+        });
+
 
         //setContentView(R.layout.activity_main);
 
