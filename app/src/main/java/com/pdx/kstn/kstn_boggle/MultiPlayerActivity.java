@@ -49,8 +49,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     public String tInputWord = "";
     public boolean isTouchAble = false;
 
-
-
     // layout variables
     public Button BoardButton[] = new Button[16];
     public Button btt_cancel;
@@ -91,7 +89,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
     // double player variables
 
-    public static final int NEW_ROUND_COND = 2;
+    public static final int NEW_ROUND_COND = 5;
     public boolean stateChangeMsgRead = false;
     public Player player = null;
     private boolean isMaster = false;
@@ -131,7 +129,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.double_player_activity_layout);
-		
+
+        // extract game mode, and difficulty from previous activity
 		Intent intent = getIntent();
         String mode = intent.getStringExtra("MODE");
         if (mode.equals("cutthroat")) {
@@ -141,7 +140,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         // call init layout, players variables, dictionary
         initVariables();
-		
 
         // init location on screen for all components
         mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
@@ -171,9 +169,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             return;
         }
 
-
-        //gameOver();
-
     }
 
     @Override
@@ -188,8 +183,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 // Initialize the BluetoothService to perform bluetooth connections
                 mBluetoothService = new BluetoothConnectionService(this, mHandler);
         }
-        gameOver();
 
+        // constantly running to check gameover condition
+        gameOver();
     }
 
     @Override
@@ -231,10 +227,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 30);
             startActivity(discoverableIntent);
         }
-    }
-
-    public void discoverable(View v) {
-        ensureDiscoverable();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -285,9 +277,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         // Get the message bytes and tell the Bluetooth service  to write
         byte[] send = mes.getBytes();
         mBluetoothService.write(send);
-
-        // may add something to show that some stuff is sending out
-
     }
 
     private void sendImMaster () {
@@ -299,9 +288,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MESSAGE_STATE_CHANGE:
-
-
                     break;
+
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
@@ -324,7 +312,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                                 Toast.makeText(getApplicationContext(), "Press Start to Ready", Toast.LENGTH_LONG).show();
                             } else {
                                 // new round:
-                                if (p1NumFound >= 2 && p2NumFound >= 2) {
+                                if (p1NumFound >= NEW_ROUND_COND && p2NumFound >= NEW_ROUND_COND) {
                                     board = MessageConverter.messageToBoard(realMsg);
                                     Toast.makeText(getApplicationContext(), "New Round Start!", Toast.LENGTH_LONG).show();
                                     player2StartGame();
@@ -334,7 +322,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                             break;
 
                         case MESSAGE_TYPE_HOST_SELECTED:
-
                             if (isMaster == true)
                                 isMaster = false;
 
@@ -359,7 +346,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                                     ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, R.layout.mywhite_listview, foundWords);
                                     wordList.setAdapter(wordAdapter);
                                 }
-                                Toast.makeText(getApplicationContext(), "Player 1 found 1 more word", Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getApplicationContext(), "Player 1 found 1 more word", Toast.LENGTH_LONG).show();
                             } else {
                                 p2NumFound++;
                                 if (isCutthroat) {
@@ -371,7 +358,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                                     ArrayAdapter<String> wordAdapter = new ArrayAdapter<String>(MultiPlayerActivity.this, R.layout.mywhite_listview, foundWords);
                                     wordList.setAdapter(wordAdapter);
                                 }
-                                Toast.makeText(getApplicationContext(), "Player 2 found 1 more word", Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getApplicationContext(), "Player 2 found 1 more word", Toast.LENGTH_LONG).show();
                             }
 
                             break;
@@ -406,12 +393,14 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                     }
 
                     break;
+
                 case MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
                     Toast.makeText(getApplicationContext(), "Connected to "
                             + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                     break;
+
                 case MESSAGE_TOAST:
                     Toast.makeText(getApplicationContext(), msg.getData().getString(TOAST),
                             Toast.LENGTH_LONG).show();
@@ -634,30 +623,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //============================== stuff from single player activity ==========================
+    // ========= setup layout, drag to select, set onClickListener,
 
     @SuppressWarnings("deprecation")
     private void removeLayoutListenerPre16(ViewTreeObserver observer, ViewTreeObserver.OnGlobalLayoutListener listener) {

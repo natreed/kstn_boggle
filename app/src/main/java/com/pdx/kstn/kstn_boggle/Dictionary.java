@@ -9,6 +9,8 @@ import java.util.ArrayList;
  * Created by thanhhoang on 1/28/17.
  */
 
+
+// read dictionary from inputstream, then add them into trie
 public class Dictionary {
 
     private Node root;

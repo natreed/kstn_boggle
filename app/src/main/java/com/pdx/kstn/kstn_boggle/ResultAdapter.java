@@ -16,6 +16,8 @@ import java.util.HashSet;
  * Created by thanhhoang on 2/18/17.
  */
 
+
+
 public class ResultAdapter extends BaseAdapter {
     TextView txtFirst;
     TextView txtSecond;
@@ -93,36 +95,6 @@ public class ResultAdapter extends BaseAdapter {
                 txtSecond.setText(" ");
             txtThird.setText(" ");
         }
-
-
-//        int pos1, pos2, pos3;
-//        pos1 = i*3 + 0;
-//        pos2 = i*3 + 1;
-//        pos3 = i*3 + 2;
-//
-//        if (pos1 < possible.size()) {
-//            txtFirst.setText(pos1 + " " + possible.get(pos1));
-//            txtFirst.setTextColor(Color.BLACK);
-//            if (found.contains(possible.get(pos1))) {
-//                txtFirst.setTextColor(Color.RED);
-//            }
-//        }
-//
-//        if (pos2 < possible.size()) {
-//            txtSecond.setText(pos2 + " " + possible.get(pos2));
-//            txtSecond.setTextColor(Color.BLACK);
-//            if (found.contains(possible.get(pos2))) {
-//                txtSecond.setTextColor(Color.RED);
-//            }
-//        }
-//
-//        if (pos3 < possible.size()) {
-//            txtThird.setText(pos3 + " " + possible.get(pos3));
-//            txtThird.setTextColor(Color.BLACK);
-//            if (found.contains(possible.get(pos3))) {
-//                txtThird.setTextColor(Color.RED);
-//            }
-//        }
 
         return view;
     }

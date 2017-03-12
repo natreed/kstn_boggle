@@ -23,15 +23,6 @@ public class ChooseModeDouble extends Activity{
     public Button btt_startgame;
     public RadioGroup radioGroup_mode, radioGroup_difficulty;
     public RadioButton rbtt_mode, rbtt_difficulty;
-//    public RadioButton rbtt_basic, rbtt_cutthroat;
-//    public RadioButton rbtt_easy, rbtt_medium, rbtt_hard;
-
-    /**
-     * Name of the connected device
-     */
-    private String mConnectedDeviceName = null;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +61,10 @@ public class ChooseModeDouble extends Activity{
                 if (str_mode.length() < 1 || str_difficulty.length() < 1)
                     return;
 
-                // check bluetooth connection
-                    Intent intend = new Intent(getApplicationContext(), MultiPlayerActivity.class);
-                    intend.putExtra("MODE", str_mode);
-                    intend.putExtra("DIFFICULTY", str_difficulty);
-                    startActivity(intend);
-
-
+                Intent intend = new Intent(getApplicationContext(), MultiPlayerActivity.class);
+                intend.putExtra("MODE", str_mode);
+                intend.putExtra("DIFFICULTY", str_difficulty);
+                startActivity(intend);
 
             }
         });

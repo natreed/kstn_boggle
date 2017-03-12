@@ -29,7 +29,7 @@ public class Player {
     public CountDownTimer timer = null;
     public TextView text_timer;
     public Context activity_context;
-    final long START_TIME = 20000;
+    final long START_TIME = 180000;
     public long totalTime = START_TIME;
     private boolean isPaused = false;
     public boolean isTimeUp = false;
@@ -83,6 +83,8 @@ public class Player {
         return foundWordsCurrentRound.size();
     }
 
+    // this will reset score for current round,
+    // also reset add more time to timer
     public void moveToNextRound() {
         // update timer
         isPaused = false;
@@ -243,9 +245,7 @@ public class Player {
         intend.putExtra("POSSIBLE_WORDS", allValidWords);
         intend.putExtra("PLAYER_LEVEL", difficulty);
         intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //System.out.println("reach 1");
         context.startActivity(intend);
-        //System.out.println("reach 2");
     }
 
     public void gameOverMultiplayer (final Context context, boolean isWinner, boolean isCutthroat, int opponentScore) {

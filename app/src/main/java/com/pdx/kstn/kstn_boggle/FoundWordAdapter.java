@@ -16,6 +16,10 @@ import java.util.HashSet;
  * Created by thanhhoang on 3/9/17.
  */
 
+
+/**
+ * custom adapter, enable list view to display 2 items in same row
+ */
 public class FoundWordAdapter extends BaseAdapter {
     TextView txtFirst;
     TextView txtSecond;

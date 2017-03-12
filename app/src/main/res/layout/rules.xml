@@ -28,6 +28,7 @@
 
 
         <TextView
+            android:textSize="15dp"
             android:text="@string/text_rules_paragraph"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

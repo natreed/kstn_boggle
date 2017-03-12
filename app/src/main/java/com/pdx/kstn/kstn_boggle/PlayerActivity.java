@@ -56,14 +56,6 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
     private int level;
     // load dictionary file
 
-
-    // variables for on-going game
-//    public int pressCount = 0;
-//    public int lastRow = 0;
-//    public int lastCol = 0;
-//    boolean[][] buttonStatus = new boolean[4][4];
-//    String inputWord = "";
-
     String[] foundWords = {};
     public long totalTime = 180000;
 
@@ -169,7 +161,6 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
             Toast.makeText(this, "ACCELEROMETER sensor is NOT available on device", Toast.LENGTH_SHORT).show();
         }
 
-
     }
 
     @SuppressWarnings("deprecation")
@@ -254,14 +245,6 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
 
 
     private void setupNewGame() {
-
-//        System.out.println("DICTIONARY LOADED");
-//        dictionary = null;
-//        try {
-//            InputStream in = getResources().openRawResource(R.raw.dictionary);
-//            dictionary = new dictionary();
-//            dictionary.createDictionary(in);
-//        } catch (Exception e) { }
 
         // generate and solve board
 
@@ -632,58 +615,3 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
 
 
 }
-
-
-
-// ============================= comment out stuffs
-//    private boolean checkOnClick(int row, int col) {
-//        if (buttonStatus[row][col] == true) {
-//            resetPressedStatus();
-//            return false;
-//        }
-//
-//        if (pressCount == 0) {
-//            pressCount += 1;
-//            lastRow = row;
-//            lastCol = col;
-//
-//            buttonStatus[row][col] = true;
-//
-//            inputWord = inputWord + board[row][col];
-//
-//            return true;
-//        }
-//
-//        boolean isNextToLastButton = false;
-//        int[] rowIdx = {0, 0, 1, 1, 1, -1, -1, -1};
-//        int[] colIdx = {1, -1, 0, 1, -1, 0, 1, -1};
-//        int tempRow, tempCol;
-//
-//        for (int i = 0; i < 8; i++) {
-//            tempRow = lastRow + rowIdx[i];
-//            tempCol = lastCol + colIdx[i];
-//            if (tempRow < 0 || tempCol < 0 || tempRow > 3 || tempCol > 3)
-//                continue;
-//            if ((tempRow == row) && (tempCol == col)) {
-//                isNextToLastButton = true;
-//                break;
-//            }
-//        }
-//
-//        if (isNextToLastButton == true) {
-//            pressCount += 1;
-//            lastRow = row;
-//            lastCol = col;
-//            buttonStatus[row][col] = true;
-//
-//            inputWord = inputWord + board[row][col];
-//
-//            return true;
-//        } else {
-//            resetPressedStatus();
-//            return false;
-//        }
-//
-//    }
-
-
