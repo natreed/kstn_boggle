@@ -10,80 +10,83 @@
     android:id="@+id/mainscreen_layout">
 
     <TextView
+        android:layout_marginTop="30dp"
         android:text="BOGGLE"
+        android:textColor="#FBE3D1"
+        android:fontFeatureSettings="@string/app_name"
+        android:includeFontPadding="true"
+        android:fontFamily="cursive"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/gameTitle"
         android:gravity="center_vertical|center_horizontal"
         android:textColorLink="@android:color/black"
         android:fadingEdge="horizontal"
-        android:textStyle="normal|bold"
+        android:textStyle="bold"
         android:typeface="serif"
-        android:textSize="80dp"
+        android:textSize="85dp"
         android:layout_weight="0.13" />
 
     <Button
+        android:textStyle="bold"
+        android:fontFamily="casual"
         android:text="play game"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:background="@drawable/background5"
-        android:layout_width="325dp"
-        android:layout_height="wrap_content"
+        android:textColor="#9B4302"
+        android:background="@drawable/background6"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
         android:id="@+id/button_play"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="75dp"
         android:paddingTop="0dp"
-        android:textSize="@android:dimen/app_icon_size" />
+        android:textSize="35dp" />
 
 
     <Button
+        android:textStyle="bold"
+        android:fontFamily="casual"
         android:text="scores"
-        android:background="@drawable/background5"
-        android:layout_width="331dp"
-        android:layout_height="wrap_content"
+        android:background="@drawable/background6"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
+        android:textColor="#9B4302"
         android:id="@+id/button_scores"
-        android:layout_weight="0.16"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
-        android:textSize="@android:dimen/app_icon_size" />
+        android:textSize="35dp" />
 
     <Button
+        android:textStyle="bold"
+        android:fontFamily="casual"
         android:text="rules"
-        android:background="@drawable/background5"
-        android:layout_width="325dp"
-        android:layout_height="wrap_content"
+        android:background="@drawable/background6"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
+        android:textColor="#9B4302"
         android:id="@+id/button_rules"
-        android:layout_weight="0.08"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
-        android:textSize="@android:dimen/app_icon_size" />
+        android:textSize="35dp" />
 
-    <Button
-        android:id="@+id/button_quit"
-        android:layout_width="325dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="0.12"
-        android:background="@drawable/background5"
-        android:paddingTop="0dp"
-        android:text="Quit"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="@android:dimen/app_icon_size" />
-
-    <!--Cannot make background transparent -->
-
-    <!--Cannot make background transparent -->
-
-    <!--Cannot make background transparent -->
-
+    <!--<Button-->
+        <!--android:id="@+id/button_quit"-->
+        <!--android:layout_width="325dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_weight="0.12"-->
+        <!--android:background="@drawable/background5"-->
+        <!--android:paddingTop="0dp"-->
+        <!--android:text="Quit"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textSize="@android:dimen/app_icon_size" />-->
 
 
 </LinearLayout>
