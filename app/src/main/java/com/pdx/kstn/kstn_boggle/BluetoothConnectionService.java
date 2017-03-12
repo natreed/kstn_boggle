@@ -336,6 +336,7 @@ public class BluetoothConnectionService {
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
+                    System.out.println("Socket fails to close");
                 }
                 // Start the service over to restart listening mode
                 BluetoothConnectionService.this.start();

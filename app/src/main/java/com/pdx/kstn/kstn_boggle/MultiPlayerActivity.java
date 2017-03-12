@@ -89,20 +89,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
      */
     private String mConnectedDeviceName = null;
 
-    /**
-     * Array adapter for the conversation thread
-     */
-    private ArrayAdapter<String> mConversationArrayAdapter;
-
-    /**
-     * String buffer for outgoing messages
-     */
-    private StringBuffer mOutStringBuffer;
-
-
     // double player variables
-//    public Player player1 = null;
-//    public Player player2 = null;
+
     public static final int NEW_ROUND_COND = 2;
     public boolean stateChangeMsgRead = false;
     public Player player = null;
@@ -132,11 +120,11 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     // type of message string
     public static final int MESSAGE_TYPE_BOGGLE_BOARD = 1;
     public static final int MESSAGE_TYPE_PLAYER_FOUND_WORD = 2;
-    public static final int MESSAGE_TYPE_GAME_MODE = 3;
     public static final int MESSAGE_TYPE_START_GAME = 4;
     public static final int MESSAGE_TYPE_END_GAME = 5;
     public static final int MESSAGE_TYPE_SIGNAL_NEW_ROUND = 6;
     public static final int MESSAGE_TYPE_OPPONENT_MASTER = 7;
+    public static final int MESSAGE_TYPE_HOST_SELECTED = 8;
     public boolean gameoverMsgSent = false;
 
     @Override
@@ -145,9 +133,11 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         setContentView(R.layout.double_player_activity_layout);
 		
 		Intent intent = getIntent();
-		int mode = Integer.parseInt(intent.getStringExtra("MODE"));
-		isCutthroat = mode ==1?true:false;
-        Toast.makeText(this,"cutthroat " +String.valueOf(isCutthroat),Toast.LENGTH_LONG).show();
+        String mode = intent.getStringExtra("MODE");
+        if (mode.equals("cutthroat")) {
+            isCutthroat = true;
+            Toast.makeText(this, "Playing in cutthroat mode",Toast.LENGTH_LONG).show();
+        }
 
         // call init layout, players variables, dictionary
         initVariables();
@@ -238,7 +228,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
         if (mBluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 30);
             startActivity(discoverableIntent);
         }
     }
@@ -310,10 +300,6 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
             switch (msg.what) {
                 case MESSAGE_STATE_CHANGE:
 
-                        if (msg.arg1 == BluetoothConnectionService.STATE_CONNECTING) {
-                            isMaster = true;
-                            stateChangeMsgRead = true;
-                        }
 
                     break;
                 case MESSAGE_READ:
@@ -347,8 +333,11 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                             break;
 
-                        case MESSAGE_TYPE_OPPONENT_MASTER:
-                            opponentIsMaster = true;
+                        case MESSAGE_TYPE_HOST_SELECTED:
+
+                            if (isMaster == true)
+                                isMaster = false;
+
                             break;
 
                         case MESSAGE_TYPE_START_GAME:
@@ -567,10 +556,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 // Launch the DeviceListActivity to see devices and do scan
                 Intent serverIntent = new Intent(this, DeviceListActivity.class);
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-                if (mBluetoothService.getState() == BluetoothConnectionService.STATE_LISTEN) {
-                    isMaster = true;
-                    text_display.setText("Listening!");
-                }
+//                if (mBluetoothService.getState() == BluetoothConnectionService.STATE_LISTEN) {
+//                    isMaster = true;
+//                    text_display.setText("Listening!");
+//                }
                 return true;
             }
 
@@ -580,13 +569,16 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 return true;
             }
 
+            case R.id.item_ashost: {
+                isMaster = true;
+                sendMessage("host selected", MESSAGE_TYPE_HOST_SELECTED);
+
+                return true;
+            }
+
+
             case R.id.item_start: {
                 if (mBluetoothService.getState() == BluetoothConnectionService.STATE_CONNECTED) {
-
-//                    if (!opponentIsMaster) {
-//                        isMaster = true;
-//                        sendMessage("", MESSAGE_TYPE_OPPONENT_MASTER);
-//                    }
 
                     if (isMaster) {
 
@@ -609,6 +601,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                 return true;
             }
+
 
             case R.id.item_end: {
 
@@ -858,14 +851,9 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
                 System.out.println("myscore" + player.getScore());
                 System.out.println("opponent score " + opponentScore);
+                mBluetoothService = null;
                 player.gameOverMultiplayer(getApplicationContext(), isWinner, isCutthroat, opponentScore);
-//                Intent intend = new Intent(getApplicationContext(), GameOverMultiplayer.class);
-//                intend.putExtra("WINNER", toString().valueOf(isWinner));
-//                intend.putExtra("MY_SCORE", player.getScore());
-//                intend.putExtra("OP_SCORE", opponentScore);
-//                intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                getApplicationContext().startActivity(intend);
-//                player.gameOver(getApplicationContext());
+
             }
         });
         thread_gameOver.start();

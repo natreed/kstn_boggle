@@ -58,7 +58,6 @@
             android:name=".MultiPlayerActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:noHistory="true"
             ></activity>
 
         <activity

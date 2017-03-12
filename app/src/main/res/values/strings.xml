@@ -59,5 +59,6 @@
     <string name="item_start">Start</string>
     <string name="item_end">end</string>
     <string name="item_stop">stop</string>
+    <string name="item_play_as_host">Play as Host</string>
 
 </resources>

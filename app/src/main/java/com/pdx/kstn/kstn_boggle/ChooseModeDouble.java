@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 public class ChooseModeDouble extends Activity{
 
-    public Button btt_startgame, btt_discoverable, btt_connection;
+    public Button btt_startgame;
     public RadioGroup radioGroup_mode, radioGroup_difficulty;
     public RadioButton rbtt_mode, rbtt_difficulty;
 //    public RadioButton rbtt_basic, rbtt_cutthroat;
@@ -45,8 +45,6 @@ public class ChooseModeDouble extends Activity{
 
     private void initLayout() {
         btt_startgame = (Button) findViewById(R.id.button_start_game);
-        btt_discoverable = (Button) findViewById(R.id.button_discoverable);
-        btt_connection = (Button) findViewById(R.id.button_connection);
 
         radioGroup_mode = (RadioGroup) findViewById(R.id.group_mode);
         radioGroup_difficulty = (RadioGroup) findViewById(R.id.group_difficulty);

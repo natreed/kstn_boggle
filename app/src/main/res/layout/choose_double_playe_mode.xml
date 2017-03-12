@@ -102,16 +102,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/button_start_game" />
 
-    <Button
-        android:text="Connection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_connection" />
+    <!--<Button-->
+        <!--android:text="Connection"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/button_connection" />-->
 
-    <Button
-        android:text="Make Discoverable "
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_discoverable" />
+    <!--<Button-->
+        <!--android:text="Make Discoverable "-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/button_discoverable" />-->
 
 </LinearLayout>
