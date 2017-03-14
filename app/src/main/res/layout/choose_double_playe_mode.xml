@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@drawable/background_iokanan"
     android:layout_height="match_parent">
 
     <TextView
-        android:fontFamily="cursive"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:text="Choose Mode"
-        android:textStyle="bold"
-        android:textSize="45dp"
-        android:gravity="center"
+        android:textColor="#FBE3D1"
+        android:fontFeatureSettings="@string/app_name"
+        android:includeFontPadding="true"
+        android:fontFamily="cursive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView5" />
+        android:gravity="center_vertical|center_horizontal"
+        android:textColorLink="@android:color/black"
+        android:fadingEdge="horizontal"
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:textSize="65dp"
+        android:layout_weight="0.1" />
 
     <RadioGroup
         android:layout_marginBottom="25dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/group_mode">
 
         <TextView
+            android:textColor="#ffffff"
             android:textStyle="bold"
             android:fontFamily="serif-monospace"
             android:text="Game Mode"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView6"
@@ -33,6 +41,7 @@
             android:layout_gravity="center"/>
 
         <RadioButton
+            android:textColor="#ffffff"
             android:checked="true"
             android:layout_marginLeft="30dp"
             android:text="Basic"
@@ -42,6 +51,7 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
             android:text="Cutthroat"
             android:layout_width="wrap_content"
@@ -57,8 +67,9 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:textColor="#ffffff"
             android:textStyle="bold"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:fontFamily="serif-monospace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,6 +78,7 @@
             android:text="Choose Difficulty"/>
 
         <RadioButton
+            android:textColor="#ffffff"
             android:checked="true"
             android:layout_marginLeft="30dp"
             android:text="Easy"
@@ -76,6 +88,7 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
 
             android:text="Medium"
@@ -85,6 +98,7 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
             android:text="Hard"
             android:layout_width="wrap_content"
@@ -96,22 +110,26 @@
     </RadioGroup>
 
 
+    <!--<Button-->
+        <!--android:text="Start Game"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/button_start_game" />-->
+
     <Button
-        android:text="Start Game"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_start_game" />
-
-    <!--<Button-->
-        <!--android:text="Connection"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/button_connection" />-->
-
-    <!--<Button-->
-        <!--android:text="Make Discoverable "-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/button_discoverable" />-->
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
+        android:text="Start"
+        android:background="@drawable/background6"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:textAllCaps="false"
+        android:textColor="#9B4302"
+        android:id="@+id/button_start_game"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:textSize="35dp" />
 
 </LinearLayout>
