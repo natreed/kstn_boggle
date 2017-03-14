@@ -209,9 +209,11 @@ public class Player {
     }
 
     public void updateTimer (int seconsToAdd) {
-        this.totalTime = this.totalTime + seconsToAdd*1000;
+
+        long localTotalTime = this.totalTime + seconsToAdd*1000;
         timer.cancel();
-        new PlayerTimer(totalTime, 1000);
+        System.out.println("TotalTime: " + localTotalTime);
+        timer = new PlayerTimer(localTotalTime, 1000);
         timer.start();
     }
 
