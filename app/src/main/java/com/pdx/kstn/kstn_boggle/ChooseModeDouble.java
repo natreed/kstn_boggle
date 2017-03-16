@@ -63,7 +63,7 @@ public class ChooseModeDouble extends Activity{
 
                 Intent intend = new Intent(getApplicationContext(), MultiPlayerActivity.class);
                 intend.putExtra("MODE", str_mode);
-                intend.putExtra("DIFFICULTY", str_difficulty);
+                intend.putExtra("LEVEL", str_difficulty);
                 startActivity(intend);
 
             }

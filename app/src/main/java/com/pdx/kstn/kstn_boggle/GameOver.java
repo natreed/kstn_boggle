@@ -54,9 +54,9 @@ public class GameOver extends Activity {
         //HighScore highScore = new HighScore(getApplicationContext());
         if (score >= highScore.lowestScore() || highScore.scores.size() < 5) {
             getName();
-            /*try {
+            try {
                 highScore.updateScore(name, score);
-            } catch (Exception e) {e.printStackTrace();}*/
+            } catch (Exception e) {e.printStackTrace();}
 
         }
 

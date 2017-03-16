@@ -26,6 +26,9 @@ public class GameOverMultiplayer extends Activity {
     private String name = "";
     private HighScore highScore;
     private int score;
+    String difficulty = null;
+    String mode = null;
+    String fileName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +38,14 @@ public class GameOverMultiplayer extends Activity {
         Intent intent = getIntent();
         int myScore = intent.getIntExtra("MY_SCORE", 0);
         int theirScore =  intent.getIntExtra("OP_SCORE", 0);
-        /*
-        ArrayList<String> foundWords = intent.getStringArrayListExtra("FOUND_WORDS");
-        ArrayList<String> possibleWords = intent.getStringArrayListExtra("POSSIBLE_WORDS");
 
-        ListView listView = (ListView) findViewById(R.id.list);
-        ResultAdapter adapter = new ResultAdapter(this, myScore, possibleWords, foundWords);
-        listView.setAdapter(adapter);
-         */
-        String p1score = Integer.toString(intent.getIntExtra("MY_SCORE", 0));
+        this.difficulty = intent.getStringExtra("PLAYER_LEVEL");
+        this.mode = intent.getStringExtra("PLAYER_MODE");
+        fileName = mode + difficulty;
+
+        highScore = new HighScore(getApplicationContext(), fileName);
+
+        final String p1score = Integer.toString(intent.getIntExtra("MY_SCORE", 0));
         String p2score = Integer.toString(intent.getIntExtra("OP_SCORE", 0));
 
 
@@ -79,13 +81,54 @@ public class GameOverMultiplayer extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
 //                       Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //                        startActivity(intent);
-                        /*
-                        if (myScore >= highScore.lowestScore() || highScore.scores.size() < 5) {
-                        getName();
-                        */
+
+                        if (Integer.valueOf(p1score) >= highScore.lowestScore() || highScore.scores.size() < 5) {
+                            getName();
+                            try {
+                                highScore.updateScore(name, score);
+                            } catch (Exception e) { e.printStackTrace(); }
+
+                        }
+                        else {
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        }
+
+
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
 
+
+    }
+
+    private void getName() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New High Score! Enter Name:");
+
+
+        final EditText input = new EditText(this); //(EditText) promptView.findViewById(R.id.player_name);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Player name");
+        builder.setView(input);
+        //setup Buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                name  = input.getText().toString();
+                try {
+                    highScore.updateScore(name, score);
+                } catch (Exception e) {e.printStackTrace();}
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
 
     }
 

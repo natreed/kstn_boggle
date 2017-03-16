@@ -250,22 +250,28 @@ public class Player {
         context.startActivity(intend);
     }
 
-    public void gameOverMultiplayer (final Context context, boolean isWinner, boolean isCutthroat, int opponentScore) {
+    public void gameOverMultiplayer (final Context context, boolean isWinner, boolean isCutthroat,
+                                     int opponentScore, String difficulty, String mode) {
         if (isCutthroat) {
             if (this.score >= opponentScore)
                 isWinner = true;
         }
 
         Intent intend = new Intent(context, GameOverMultiplayer.class);
+
         intend.putExtra("WINNER", toString().valueOf(isWinner));
         intend.putExtra("MY_SCORE", this.score);
         intend.putExtra("OP_SCORE", opponentScore);
+        intend.putExtra("PLAYER_LEVEL", difficulty);
+        intend.putExtra("PLAYER_MODE", mode);
+
+
         /*
         intend.putExtra("FOUND_WORDS", getFoundWords());
         intend.putExtra("POSSIBLE_WORDS", allValidWords);
 
          */
-        intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intend);
     }
 }
