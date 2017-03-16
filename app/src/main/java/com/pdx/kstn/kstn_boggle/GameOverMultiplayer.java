@@ -77,8 +77,12 @@ public class GameOverMultiplayer extends Activity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                       Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+//                       Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                        startActivity(intent);
+                        /*
+                        if (myScore >= highScore.lowestScore() || highScore.scores.size() < 5) {
+                        getName();
+                        */
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
 
