@@ -34,6 +34,10 @@ public class ScoresActivity extends MainActivity {
         levels.add("Easy");
         levels.add("Med.");
         levels.add("Hard");
+        /*
+        levels.add("Basic");
+        levels.add("Cutthroat");
+         */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_scores);
         Intent intent = getIntent();

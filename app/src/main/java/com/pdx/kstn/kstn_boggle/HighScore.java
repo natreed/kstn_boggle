@@ -30,6 +30,10 @@ public class HighScore {
         levels.add("easy");
         levels.add("medium");
         levels.add("hard");
+        /*
+        levels.add("basic");
+        levels.add("cutthroat");
+         */
         this.activity_context = context;
         System.out.println("Here in HighScores " + difficult);
         this.difficulty = levels.get(Integer.parseInt(difficult));

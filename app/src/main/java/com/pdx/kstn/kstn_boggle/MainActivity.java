@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Perform action on click
                 CharSequence[] difficultylevel = {"Easy","Medium","Hard"};
-
+                //CharSequence[] difficultylevel = {"Easy","Medium","Hard","Basic","Cutthroat"};
                 AlertDialog.Builder builder_difficulty_level = new AlertDialog.Builder(MainActivity.this);
 
                 // 2. Chain together various setter methods to set the dialog characteristics
