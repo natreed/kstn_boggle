@@ -64,7 +64,10 @@ public class GameOverMultiplayer extends Activity {
         else {
             msg = "ITS A TIE!!!" + "\nYour Score:" + myScore + "\nTheir Score: " + theirScore;
         }
-
+        /*
+        if (myScore >= highScore.lowestScore() || highScore.scores.size() < 5) {
+              getName();
+         */
         new AlertDialog.Builder(this)
                 .setTitle("GAME OVER")
 
