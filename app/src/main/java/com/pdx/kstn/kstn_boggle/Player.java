@@ -29,7 +29,7 @@ public class Player {
     public CountDownTimer timer = null;
     public TextView text_timer;
     public Context activity_context;
-    final long START_TIME = 180000;
+    final long START_TIME = 18000;
     public long totalTime = START_TIME;
     private boolean isPaused = false;
     public boolean isTimeUp = false;
@@ -260,6 +260,11 @@ public class Player {
         intend.putExtra("WINNER", toString().valueOf(isWinner));
         intend.putExtra("MY_SCORE", this.score);
         intend.putExtra("OP_SCORE", opponentScore);
+        /*
+        intend.putExtra("FOUND_WORDS", getFoundWords());
+        intend.putExtra("POSSIBLE_WORDS", allValidWords);
+
+         */
         intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intend);
     }

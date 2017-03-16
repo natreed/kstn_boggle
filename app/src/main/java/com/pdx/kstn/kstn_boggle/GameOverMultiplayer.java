@@ -35,6 +35,14 @@ public class GameOverMultiplayer extends Activity {
         Intent intent = getIntent();
         int myScore = intent.getIntExtra("MY_SCORE", 0);
         int theirScore =  intent.getIntExtra("OP_SCORE", 0);
+        /*
+        ArrayList<String> foundWords = intent.getStringArrayListExtra("FOUND_WORDS");
+        ArrayList<String> possibleWords = intent.getStringArrayListExtra("POSSIBLE_WORDS");
+
+        ListView listView = (ListView) findViewById(R.id.list);
+        ResultAdapter adapter = new ResultAdapter(this, myScore, possibleWords, foundWords);
+        listView.setAdapter(adapter);
+         */
         String p1score = Integer.toString(intent.getIntExtra("MY_SCORE", 0));
         String p2score = Integer.toString(intent.getIntExtra("OP_SCORE", 0));
 
