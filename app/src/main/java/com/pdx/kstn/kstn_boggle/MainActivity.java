@@ -36,42 +36,42 @@ public class MainActivity extends AppCompatActivity {
         button_scores.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                CharSequence[] difficultylevel = {"Easy","Medium","Hard"};
-                //CharSequence[] difficultylevel = {"Easy","Medium","Hard","Basic","Cutthroat"};
-                AlertDialog.Builder builder_difficulty_level = new AlertDialog.Builder(MainActivity.this);
-
-                // 2. Chain together various setter methods to set the dialog characteristics
-                builder_difficulty_level.setSingleChoiceItems(difficultylevel, selectedDifficultyLevel, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-///                     Auto-generated method stub
-                        selectedDifficultyLevel=which;}
-                    })
-                        .setTitle(R.string.dialog_title)
-                        // Set the action buttons
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User clicked OK, so save the mSelectedItems results somewhere
-                                // or return them to the component that opened the dialog
+//                CharSequence[] difficultylevel = {"Easy","Medium","Hard"};
+//                //CharSequence[] difficultylevel = {"Easy","Medium","Hard","Basic","Cutthroat"};
+//                AlertDialog.Builder builder_difficulty_level = new AlertDialog.Builder(MainActivity.this);
+//
+//                // 2. Chain together various setter methods to set the dialog characteristics
+//                builder_difficulty_level.setSingleChoiceItems(difficultylevel, selectedDifficultyLevel, new DialogInterface.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+/////                     Auto-generated method stub
+//                        selectedDifficultyLevel=which;}
+//                    })
+//                        .setTitle(R.string.dialog_title)
+//                        // Set the action buttons
+//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                // User clicked OK, so save the mSelectedItems results somewhere
+//                                // or return them to the component that opened the dialog
                                 Intent myIntent = new Intent(getApplicationContext(),
-                                        ScoresActivity.class);
+                                        MainScoreActivity.class);
                                 myIntent.putExtra("PLAYER_LEVEL", Integer.toString(selectedDifficultyLevel));
                                 startActivity(myIntent);
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-
-                            }
-
-                        });
+                    //        }
+                    //    })
+//                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int id) {
+//
+//                            }
+//
+//                        });
 
                 // 3. Get the AlertDialog from create()
-                AlertDialog dialog = builder_difficulty_level.create();
-                dialog.show();
+//                AlertDialog dialog = builder_difficulty_level.create();
+//                dialog.show();
 
 //                // Start NewActivity.class
 //                Intent myIntent = new Intent(getApplicationContext(),

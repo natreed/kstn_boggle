@@ -27,12 +27,14 @@ import java.util.ArrayList;
 public class ScoresActivity extends MainActivity {
 
     public String difficulty = null;
+    public String mode = null;
+    public String fileName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ArrayList<String> levels = new ArrayList<String>();
         levels.add("Easy");
-        levels.add("Med.");
+        levels.add("Medium");
         levels.add("Hard");
         /*
         levels.add("Basic");
@@ -41,7 +43,11 @@ public class ScoresActivity extends MainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_scores);
         Intent intent = getIntent();
-        difficulty = intent.getStringExtra("PLAYER_LEVEL");
+        difficulty = intent.getStringExtra("LEVEL");
+        mode = intent.getStringExtra("MODE");
+        fileName = mode + difficulty;
+
+        System.out.println(fileName);
         // load and display high scores
         ArrayList<String> scores = new ArrayList<String>(); //, mediumScores = null, hardScores = null;
 
@@ -50,7 +56,7 @@ public class ScoresActivity extends MainActivity {
             /*
             // Add this block of code at the end of the game.
              */
-            HighScore highScore = new HighScore(ScoresActivity.this, difficulty);
+            HighScore highScore = new HighScore(ScoresActivity.this, fileName);
             //HighScore mediumHighScore = new HighScore(ScoresActivity.this, "medium");
             //HighScore hardHighScore = new HighScore(ScoresActivity.this, "hard");
 
@@ -65,8 +71,8 @@ public class ScoresActivity extends MainActivity {
         ListView scoreList = (ListView) findViewById(R.id.Score_List);
         scoreList.setAdapter(scoreAdapter);
         TextView titleView = (TextView) findViewById(R.id.difficulty_text);
-        String title = levels.get(Integer.parseInt(difficulty)) + " Scores";
-        titleView.setText(title);
+//        String title = levels.get(Integer.parseInt(difficulty)) + " Scores";
+//        titleView.setText(title);
 
         final Button resetButton = (Button) findViewById(R.id.reset_button);
 

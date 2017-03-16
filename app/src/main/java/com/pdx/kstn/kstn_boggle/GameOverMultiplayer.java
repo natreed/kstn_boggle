@@ -79,14 +79,10 @@ public class GameOverMultiplayer extends Activity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-//                       Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                        startActivity(intent);
+//
 
                         if (Integer.valueOf(p1score) >= highScore.lowestScore() || highScore.scores.size() < 5) {
                             getName();
-                            try {
-                                highScore.updateScore(name, score);
-                            } catch (Exception e) { e.printStackTrace(); }
 
                         }
                         else {
@@ -115,10 +111,14 @@ public class GameOverMultiplayer extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 name  = input.getText().toString();
+
                 try {
                     highScore.updateScore(name, score);
                 } catch (Exception e) {e.printStackTrace();}
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
+
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override

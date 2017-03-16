@@ -41,7 +41,7 @@ public class GameOver extends Activity {
         score = Integer.parseInt(intent.getStringExtra("PLAYER_SCORE"));
         this.difficulty = intent.getStringExtra("PLAYER_LEVEL");
         System.out.println("Here in GameOver " + this.difficulty);
-        highScore = new HighScore(getApplicationContext(), difficulty);
+        highScore = new HighScore(getApplicationContext(), "singleplayer" + difficulty);
         Toast.makeText(this,"score is " +Integer.toString(score),Toast.LENGTH_LONG).show();
         ArrayList<String> foundWords = intent.getStringArrayListExtra("FOUND_WORDS");
         ArrayList<String> possibleWords = intent.getStringArrayListExtra("POSSIBLE_WORDS");
