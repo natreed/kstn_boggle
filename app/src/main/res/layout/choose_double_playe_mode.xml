@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/screen_title"
         android:layout_marginTop="5dp"
         android:text="Choose Mode"
         android:textColor="#FBE3D1"
@@ -39,10 +40,22 @@
             android:id="@+id/textView6"
             android:layout_weight="1"
             android:layout_gravity="center"/>
+        <RadioButton
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="30dp"
+            android:text="SinglePlayer"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_single_player_mode"
+            android:layout_weight="1" />
 
         <RadioButton
             android:textColor="#ffffff"
-            android:checked="true"
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:layout_marginLeft="30dp"
             android:text="Basic"
             android:layout_width="wrap_content"
@@ -51,6 +64,8 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
             android:text="Cutthroat"
@@ -78,6 +93,8 @@
             android:text="Choose Difficulty"/>
 
         <RadioButton
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:checked="true"
             android:layout_marginLeft="30dp"
@@ -88,6 +105,9 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textSize="18dp"
+
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
 
@@ -98,6 +118,8 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
             android:text="Hard"
@@ -115,6 +137,14 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:id="@+id/button_start_game" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </LinearLayout>
+
 
     <Button
         android:paddingLeft="15dp"

@@ -111,6 +111,8 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
     public String[][] board = new String[4][4];
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
+    public String difficulty, mode;
+
     // load dictionary file
 
     String[] foundWords = {};
@@ -132,7 +134,10 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
 
         // extract game mode, and difficulty from previous activity
 		Intent intent = getIntent();
-        String mode = intent.getStringExtra("MODE");
+
+        difficulty = intent.getStringExtra("LEVEL");
+
+        mode = intent.getStringExtra("MODE");
         if (mode.equals("cutthroat")) {
             isCutthroat = true;
             Toast.makeText(this, "Playing in cutthroat mode",Toast.LENGTH_LONG).show();
@@ -819,7 +824,7 @@ public class MultiPlayerActivity extends AppCompatActivity implements View.OnTou
                 System.out.println("myscore" + player.getScore());
                 System.out.println("opponent score " + opponentScore);
                 mBluetoothService = null;
-                player.gameOverMultiplayer(getApplicationContext(), isWinner, isCutthroat, opponentScore);
+                player.gameOverMultiplayer(getApplicationContext(), isWinner, isCutthroat, opponentScore, difficulty, mode);
 
             }
         });

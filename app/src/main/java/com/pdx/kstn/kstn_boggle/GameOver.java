@@ -41,7 +41,7 @@ public class GameOver extends Activity {
         score = Integer.parseInt(intent.getStringExtra("PLAYER_SCORE"));
         this.difficulty = intent.getStringExtra("PLAYER_LEVEL");
         System.out.println("Here in GameOver " + this.difficulty);
-        highScore = new HighScore(getApplicationContext(), difficulty);
+        highScore = new HighScore(getApplicationContext(), "singleplayer" + difficulty);
         Toast.makeText(this,"score is " +Integer.toString(score),Toast.LENGTH_LONG).show();
         ArrayList<String> foundWords = intent.getStringArrayListExtra("FOUND_WORDS");
         ArrayList<String> possibleWords = intent.getStringArrayListExtra("POSSIBLE_WORDS");
@@ -54,34 +54,24 @@ public class GameOver extends Activity {
         //HighScore highScore = new HighScore(getApplicationContext());
         if (score >= highScore.lowestScore() || highScore.scores.size() < 5) {
             getName();
-            /*try {
+            try {
                 highScore.updateScore(name, score);
-            } catch (Exception e) {e.printStackTrace();}*/
+            } catch (Exception e) {e.printStackTrace();}
 
         }
 
-//        final Button bttReplay = (Button) findViewById(R.id.button_replay);
-//        final Button bttHome = (Button) findViewById(R.id.button_home);
-//
-//        bttReplay.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Perform action on click
-//                // Start NewActivity.class
-//                Intent myIntent = new Intent(getApplicationContext(),
-//                        PlayerActivity.class);
-//                startActivity(myIntent);
-//            }
-//        });
-//
-//        bttHome.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Perform action on click
-//                // Start NewActivity.class
-//                Intent myIntent = new Intent(getApplicationContext(),
-//                        MainActivity.class);
-//                startActivity(myIntent);
-//            }
-//        });
+        final Button btt_return = (Button) findViewById(R.id.button_return);
+
+        btt_return.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                // Start NewActivity.class
+                Intent myIntent = new Intent(getApplicationContext(),
+                        MainActivity.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(myIntent);
+            }
+        });
 
     }
 
