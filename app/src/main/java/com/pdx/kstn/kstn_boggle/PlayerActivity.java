@@ -53,7 +53,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
     public Player player;
     public Dictionary dictionary = new Dictionary();
     public ArrayList<String> allValidWords = new ArrayList<String>();
-    private String level;
+    private int level;
     // load dictionary file
 
     String[] foundWords = {};
@@ -93,20 +93,17 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
         super.onCreate(savedInstanceState);
         setContentView(R.layout.double_player_activity_layout);
         Intent intent = getIntent();
-
-        this.level = intent.getStringExtra("LEVEL");
-
-//        this.level = Integer.parseInt(intent.getStringExtra("LEVEL"));
-//
-//        if(level ==0){
-//            level_selected ="Easy";
-//        }
-//        else if (level==1)
-//        {
-//            level_selected ="Meidum";
-//        }
-//        else
-//            level_selected ="Hard";
+        this.level = Integer.parseInt(intent.getStringExtra("LEVEL"));
+       
+        if(level ==0){
+            level_selected ="Easy";
+        }
+        else if (level==1)
+        {
+            level_selected ="Meidum";
+        }
+        else
+            level_selected ="Hard";
 
         // load dictionary file
         try {
@@ -255,7 +252,7 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
         player = new Player(text_timer, getApplicationContext());
         allValidWords = BoggleSolver.solver(board, dictionary);
         player.setAllVallidWords(allValidWords);
-        player.difficulty = this.level;
+        player.difficulty = Integer.toString(this.level);
         resetPressedStatus();
         initBoard();
         p1_score.setText("Score: 0");
@@ -606,36 +603,15 @@ public class PlayerActivity extends Activity implements View.OnTouchListener, Se
 
     }
 
-//    // make start and end menu invisible
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        MenuItem start = menu.findItem(R.id.item_start);
-//        MenuItem end = menu.findItem(R.id.item_end);
-//        start.setVisible(false);
-//        end.setVisible(false);
-//        return true;
-//    }
-
-
+    // make start and end menu invisible
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item1 = menu.findItem(R.id.item_start);
-        MenuItem item2= menu.findItem(R.id.item_end);
-        MenuItem item3 = menu.findItem(R.id.item_connection);
-        MenuItem item4 = menu.findItem(R.id.item_discoverable);
-        MenuItem item5 = menu.findItem(R.id.item_ashost);
-
-        item1.setVisible(false);
-        item2.setVisible(false);
-        item3.setVisible(false);
-        item4.setVisible(false);
-        item5.setVisible(false);
-
-
+        MenuItem start = menu.findItem(R.id.item_start);
+        MenuItem end = menu.findItem(R.id.item_end);
+        start.setVisible(false);
+        end.setVisible(false);
         return true;
     }
-
-
 
 
 }
