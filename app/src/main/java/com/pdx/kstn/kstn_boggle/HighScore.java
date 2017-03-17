@@ -30,21 +30,12 @@ public class HighScore {
         levels.add("easy");
         levels.add("medium");
         levels.add("hard");
-
-        levels.add("basiceasy");
-        levels.add("basicmedium");
-        levels.add("basichard");
-        levels.add("cutthroateasy");
-        levels.add("cutthroatmedium");
-        levels.add("cutthroathard");
-
         this.activity_context = context;
         System.out.println("Here in HighScores " + difficult);
-       // this.difficulty = levels.get(Integer.parseInt(difficult));
-        this.difficulty = difficult;
+        this.difficulty = levels.get(Integer.parseInt(difficult));
         try {
             FileOutputStream test = activity_context.openFileOutput(this.difficulty + "scores.txt", Context.MODE_APPEND);
-            System.out.println(difficulty + "scores.txt");
+            System.out.println(this.difficulty + "scores.txt");
             test.close();
         } catch (Exception e) { e.printStackTrace(); }
         loadScores();
