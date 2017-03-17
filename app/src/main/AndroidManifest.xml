@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -13,69 +13,71 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
+
+        <activity android:name=".MainActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<activity-->
-            <!--android:name=".ChooseModeActivity"-->
-            <!--android:configChanges="orientation"-->
-            <!--android:noHistory="true"-->
-            <!--android:screenOrientation="portrait" />-->
-        <activity
-            android:name=".RulesActivity"
-            android:configChanges="orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".PlayerActivity"
-            android:configChanges="orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ScoresActivity"
-            android:configChanges="orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".GameOver"
-            android:configChanges="orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".GameOverMultiplayer"
-            android:configChanges="orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".MultiPlayerActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ChooseModeMainActivity"
             android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
+        <activity
+            android:name=".RulesActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
+        <activity
+            android:name=".PlayerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
+        <activity
+            android:name=".ScoresActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
+        <activity
+            android:name=".GameOver"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
+        <activity
+            android:name=".GameOverMultiplayer"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:noHistory="true" />
+        <activity
+            android:name=".MultiPlayerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            ></activity>
+
+        <activity
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:name=".ChooseModeDouble"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            ></activity>
+
+
+
         <activity
             android:name=".DeviceListActivity"
             android:configChanges="orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <!--
- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
-        -->
+            android:screenOrientation="portrait"
+            android:noHistory="true" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <activity android:name=".MainScoreActivity"></activity>
     </application>
 
 </manifest>
