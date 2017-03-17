@@ -211,7 +211,7 @@ public class Player {
     public void updateTimer (int seconsToAdd) {
         this.totalTime = this.totalTime + seconsToAdd*1000;
         timer.cancel();
-        timer = new PlayerTimer(totalTime, 1000);
+        new PlayerTimer(totalTime, 1000);
         timer.start();
     }
 
