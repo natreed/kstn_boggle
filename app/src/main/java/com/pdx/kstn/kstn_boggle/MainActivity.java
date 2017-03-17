@@ -1,7 +1,5 @@
 package com.pdx.kstn.kstn_boggle;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,48 +33,10 @@ public class MainActivity extends AppCompatActivity {
 
         button_scores.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
-//                CharSequence[] difficultylevel = {"Easy","Medium","Hard"};
-//                //CharSequence[] difficultylevel = {"Easy","Medium","Hard","Basic","Cutthroat"};
-//                AlertDialog.Builder builder_difficulty_level = new AlertDialog.Builder(MainActivity.this);
-//
-//                // 2. Chain together various setter methods to set the dialog characteristics
-//                builder_difficulty_level.setSingleChoiceItems(difficultylevel, selectedDifficultyLevel, new DialogInterface.OnClickListener() {
-//
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-/////                     Auto-generated method stub
-//                        selectedDifficultyLevel=which;}
-//                    })
-//                        .setTitle(R.string.dialog_title)
-//                        // Set the action buttons
-//                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                // User clicked OK, so save the mSelectedItems results somewhere
-//                                // or return them to the component that opened the dialog
-                                Intent myIntent = new Intent(getApplicationContext(),
+                 Intent myIntent = new Intent(getApplicationContext(),
                                         MainScoreActivity.class);
-                                myIntent.putExtra("PLAYER_LEVEL", Integer.toString(selectedDifficultyLevel));
-                                startActivity(myIntent);
-                    //        }
-                    //    })
-//                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int id) {
-//
-//                            }
-//
-//                        });
+                startActivity(myIntent);
 
-                // 3. Get the AlertDialog from create()
-//                AlertDialog dialog = builder_difficulty_level.create();
-//                dialog.show();
-
-//                // Start NewActivity.class
-//                Intent myIntent = new Intent(getApplicationContext(),
-//                        ScoresActivity.class);
-//                startActivity(myIntent);
             }
         });
 
@@ -90,35 +50,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*button_quit.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                // Start NewActivity.class
-                //finish();
-                System.exit(0);
-            }
-        });*/
-
-
-        //setContentView(R.layout.activity_main);
-
-
-//        final Button single_player_mode = (Button) findViewById(R.id.button_single_player_mode);
-//        final Button double_player_mode = (Button) findViewById(R.id.button_double_player_mode);
-//
-//        System.out.print("Hello hello\n");
-//
-//
-
-//        single_player_mode.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Perform action on click
-//                // Start NewActivity.class
-//                Intent myIntent = new Intent(getApplicationContext(),
-//                        SinglePlayerActivity.class);
-//                startActivity(myIntent);
-//            }
-//        });
 
     }
 

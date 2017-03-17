@@ -41,6 +41,8 @@
             android:layout_weight="1"
             android:layout_gravity="center"/>
         <RadioButton
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
             android:text="SinglePlayer"
@@ -52,7 +54,8 @@
 
         <RadioButton
             android:textColor="#ffffff"
-
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:layout_marginLeft="30dp"
             android:text="Basic"
             android:layout_width="wrap_content"
@@ -61,6 +64,8 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
             android:text="Cutthroat"
@@ -88,6 +93,8 @@
             android:text="Choose Difficulty"/>
 
         <RadioButton
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:checked="true"
             android:layout_marginLeft="30dp"
@@ -98,6 +105,9 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textSize="18dp"
+
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
 
@@ -108,6 +118,8 @@
             android:layout_weight="1" />
 
         <RadioButton
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:textColor="#ffffff"
             android:layout_marginLeft="30dp"
             android:text="Hard"

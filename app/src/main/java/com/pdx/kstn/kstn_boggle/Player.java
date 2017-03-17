@@ -245,8 +245,8 @@ public class Player {
         intend.putExtra("PLAYER_SCORE", Integer.toString(getScore()));
         intend.putExtra("FOUND_WORDS", getFoundWords());
         intend.putExtra("POSSIBLE_WORDS", allValidWords);
-        intend.putExtra("PLAYER_LEVEL", "singleplayer" + difficulty);
-        intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intend.putExtra("PLAYER_LEVEL", difficulty);
+        intend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intend);
     }
 

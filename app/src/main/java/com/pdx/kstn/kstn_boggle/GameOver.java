@@ -60,28 +60,18 @@ public class GameOver extends Activity {
 
         }
 
-//        final Button bttReplay = (Button) findViewById(R.id.button_replay);
-//        final Button bttHome = (Button) findViewById(R.id.button_home);
-//
-//        bttReplay.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Perform action on click
-//                // Start NewActivity.class
-//                Intent myIntent = new Intent(getApplicationContext(),
-//                        PlayerActivity.class);
-//                startActivity(myIntent);
-//            }
-//        });
-//
-//        bttHome.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Perform action on click
-//                // Start NewActivity.class
-//                Intent myIntent = new Intent(getApplicationContext(),
-//                        MainActivity.class);
-//                startActivity(myIntent);
-//            }
-//        });
+        final Button btt_return = (Button) findViewById(R.id.button_return);
+
+        btt_return.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                // Start NewActivity.class
+                Intent myIntent = new Intent(getApplicationContext(),
+                        MainActivity.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(myIntent);
+            }
+        });
 
     }
 
